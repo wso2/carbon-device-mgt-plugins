@@ -85,7 +85,8 @@
                         class="fw fw-success"></i></span>
                 <span id="cosu-profile-configuration-ok" class="has-success status-icon hidden"><i
                         class="fw fw-success"></i></span>
-                <span id="cosu-profile-configuration-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+                <span id="cosu-profile-configuration-error" class="has-error status-icon hidden"><i
+                        class="fw fw-error"></i></span>
             </a>
             <a href="javascript:void(0)" onclick="showAdvanceOperation('app-restriction', this)">
             <span class="fw-stack fw-lg">
@@ -109,7 +110,8 @@
                         class="fw fw-success"></i></span>
                 <span id="runtime-permission-policy-ok" class="has-success status-icon hidden"><i
                         class="fw fw-success"></i></span>
-                <span id="runtime-permission-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+                <span id="runtime-permission-policy-error" class="has-error status-icon hidden"><i
+                        class="fw fw-error"></i></span>
             </a>
             <a href="javascript:void(0)" class="worker-profile"
                onclick="showAdvanceOperation('cosu-system-update-policy', this)">
@@ -157,7 +159,8 @@
                     </h2>
                     <div class="panel-title-description">
                         Enforce a configured passcode policy on Android devices.
-                        Once this profile is applied, the device owners won't be able to modify the password settings on their devices.
+                        Once this profile is applied, the device owners won't be able to modify the password settings on
+                        their devices.
                     </div>
                 </div>
                 <div id="passcode-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
@@ -307,7 +310,8 @@
                     </h2>
                     <div class="panel-title-description">
                         Restrict predefined settings on Android devices.
-                        Once this profile is applied, the device owners won't be able to modify the configured settings on their devices.
+                        Once this profile is applied, the device owners won't be able to modify the configured settings
+                        on their devices.
                     </div>
                 </div>
                 <div id="camera-body" class="panel-collapse panel-body collapse" role="tabpanel"
@@ -337,6 +341,7 @@
                                     <b>work-profile owner</b> or <b>device owner</b>.</a>
                             </ul>
                         </div>
+                        <br/>
                         <div class="wr-input-control worker-profile-or-owner">
                             <label class="wr-input-control checkbox">
                                 <input id="disallow-configuring-credentials-enabled" type="checkbox"
@@ -518,203 +523,221 @@
                                 <a id="policy-listing-status-msg"> Below Restrictions are valid only when the Agent is
                                     the
                                     <b>device owner</b>.</a>
+                                {{#unless isdeviceownerenabled}}
+                                    <p><i>Please change the configuration <b>'isDeviceOwnerEnabled'</b> to
+                                        <b>'true'</b> if you have enabled device owner for the agent.</i></p>
+                                {{/unless}}
                             </ul>
                         </div>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-SMS-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowSMS"/>
-                                <span class="helper" title="Having this checked would disallow SMS.">
+                        <br/>
+                        <div
+                            {{#unless isdeviceownerenabled}}
+                            class="testing" title="Please change the configuration 'isDeviceOwnerEnabled' to
+                         'true' if you have enabled device owner for the agent."
+                            {{/unless}}
+                        >
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-SMS-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowSMS"/>
+                                    <span class="helper" title="Having this checked would disallow SMS.">
                                 Disallow SMS
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="volume-adjust-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowAdjustVolumeEnabled"/>
-                                <span class="helper" title="Having this checked would disallow volume adjust.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="volume-adjust-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowAdjustVolumeEnabled"/>
+                                    <span class="helper" title="Having this checked would disallow volume adjust.">
                                 Disallow volume adjust
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-configuring-cell-broadcast-enabled" type="checkbox"
-                                       class="operationDataKeys"
-                                       data-key="disallowConfigCellBroadcasts"/>
-                                <span class="helper"
-                                      title="Having this checked would disallow configuring cell broadcast.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-configuring-cell-broadcast-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowConfigCellBroadcasts"/>
+                                    <span class="helper"
+                                          title="Having this checked would disallow configuring cell broadcast.">
                                 Disallow cell broadcast
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-configuring-bluetooth-enabled" type="checkbox"
-                                       class="operationDataKeys"
-                                       data-key="disallowConfigBluetooth"/>
-                                <span class="helper" title="Having this checked would disallow configuring bluetooth.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-configuring-bluetooth-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowConfigBluetooth"/>
+                                    <span class="helper"
+                                          title="Having this checked would disallow configuring bluetooth.">
                                 Disallow configuring bluetooth.
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-configuring-mobile-networkst-enabled" type="checkbox"
-                                       class="operationDataKeys"
-                                       data-key="disallowConfigMobileNetworks"/>
-                                <span class="helper"
-                                      title="Having this checked would disallow configuring mobile networks.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-configuring-mobile-networkst-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowConfigMobileNetworks"/>
+                                    <span class="helper"
+                                          title="Having this checked would disallow configuring mobile networks.">
                                 Disallow configuring mobile networks
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-configuring-tethering-enabled" type="checkbox"
-                                       class="operationDataKeys"
-                                       data-key="disallowConfigTethering"/>
-                                <span class="helper" title="Having this checked would disallow configuring tethering.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-configuring-tethering-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowConfigTethering"/>
+                                    <span class="helper"
+                                          title="Having this checked would disallow configuring tethering.">
                                 Disallow configuring tethering
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-configuring-Wifi-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowConfigWifi"/>
-                                <span class="helper" title="Having this checked would disallow configuring Wifi.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-configuring-Wifi-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowConfigWifi"/>
+                                    <span class="helper" title="Having this checked would disallow configuring Wifi.">
                                 Disallow configuring Wifi
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-safe-boot-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowSafeBoot"/>
-                                <span class="helper" title="Having this checked would disallow safe boot.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-safe-boot-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowSafeBoot"/>
+                                    <span class="helper" title="Having this checked would disallow safe boot.">
                                 Disallow safe boot
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-outgoing-calls-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowOutgoingCalls"/>
-                                <span class="helper" title="Having this checked would disallow outgoing calls.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-outgoing-calls-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowOutgoingCalls"/>
+                                    <span class="helper" title="Having this checked would disallow outgoing calls.">
                                 Disallow outgoing calls
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-mount-physical-media-enabled" type="checkbox"
-                                       class="operationDataKeys"
-                                       data-key="disallowMountPhysicalMedia"/>
-                                <span class="helper" title="Having this checked would disallow mount physical media.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-mount-physical-media-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowMountPhysicalMedia"/>
+                                    <span class="helper"
+                                          title="Having this checked would disallow mount physical media.">
                                 Disallow mount physical media
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-create-window-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowCreateWindows"/>
-                                <span class="helper" title="Having this checked would disallow create window.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-create-window-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowCreateWindows"/>
+                                    <span class="helper" title="Having this checked would disallow create window.">
                                 Disallow create window
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-factory-reset-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowFactoryReset"/>
-                                <span class="helper" title="Having this checked would disallow factory reset.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-factory-reset-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowFactoryReset"/>
+                                    <span class="helper" title="Having this checked would disallow factory reset.">
                                 Disallow factory reset
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-remove-user-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowRemoveUser"/>
-                                <span class="helper" title="Having this checked would disallow remove user.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-remove-user-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowRemoveUser"/>
+                                    <span class="helper" title="Having this checked would disallow remove user.">
                                 Disallow remove user
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-add-user-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowAddUser"/>
-                                <span class="helper" title="Having this checked would disallow add user.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-add-user-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowAddUser"/>
+                                    <span class="helper" title="Having this checked would disallow add user.">
                                 Disallow add user
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-network-reset-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowNetworkReset"/>
-                                <span class="helper" title="Having this checked would disallow network reset.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-network-reset-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowNetworkReset"/>
+                                    <span class="helper" title="Having this checked would disallow network reset.">
                                 Disallow network reset
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-USB-transfer-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowUSBFileTransfer"/>
-                                <span class="helper" title="Having this checked would disallow USB file transfer.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-USB-transfer-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disallowUSBFileTransfer"/>
+                                    <span class="helper" title="Having this checked would disallow USB file transfer.">
                                 Disallow USB file transfer
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control device-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disallow-unmute-microphone-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disallowUnmuteMicrophone"/>
-                                <span class="helper" title="Having this checked would disallow unmute microphone.">
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disallow-unmute-microphone-enabled" type="checkbox"
+                                           class="operationDataKeys"
+                                           data-key="disallowUnmuteMicrophone"/>
+                                    <span class="helper" title="Having this checked would disallow unmute microphone.">
                                 Disallow unmute microphone
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            </label>
+                                </label>
+                            </div>
                         </div>
                         <br>
-                        <div class="device-owner">
+                        <div class="">
                             <ul class="message message-info">
                                 <i class="icon fw fw-info"></i>
                                 <a id="policy-listing-status-msg">Below restrictions will be applied on devices with
@@ -722,7 +745,8 @@
                                     version 6.0 Marshmallow onwards only.</a>
                             </ul>
                         </div>
-                        <div class="wr-input-control device-owner">
+                        <br/>
+                        <div class="wr-input-control">
                             <label class="wr-input-control checkbox">
                                 <input id="disable-status-bar-enabled" type="checkbox" class="operationDataKeys"
                                        data-key="disableStatusBar"/>
@@ -754,8 +778,10 @@
                         </label>
                     </h2>
                     <div class="panel-title-description">
-                        Encrypt data on an Android device when the device is locked and make it readable when the device is unlocked.
-                        Once this profile is applied, the device owners won't be able to modify the configured settings on their devices.
+                        Encrypt data on an Android device when the device is locked and make it readable when the device
+                        is unlocked.
+                        Once this profile is applied, the device owners won't be able to modify the configured settings
+                        on their devices.
                     </div>
                 </div>
                 <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel"
@@ -798,7 +824,8 @@
                     </h2>
                     <div class="panel-title-description">
                         Configure the Wi-Fi settings on Android devices.
-                        Once this profile is applied, the device owners won't be able to modify the configured settings on their devices.
+                        Once this profile is applied, the device owners won't be able to modify the configured settings
+                        on their devices.
                     </div>
                 </div>
                 <div id="wifi-body" class="panel-collapse panel-body collapse" role="tabpanel"
@@ -1083,7 +1110,8 @@
                 <div id="cosu-profile-configuration-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="cosu-profile-configuration-body">
                     <hr/>
-                    <div id="cosu-profile-configuration-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                    <div id="cosu-profile-configuration-feature-error-msg" class="alert alert-danger hidden"
+                         role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
                     <form class="form-horizontal">
@@ -1092,7 +1120,7 @@
                                 <label class="control-label">Restrict device operation time</label>
                                 <label class="switch">
                                     <input type="checkbox" id="gridGuideToggle" data-toggle="collapse"
-                                           data-target="#cosu-profile-restrict-operation-time" >
+                                           data-target="#cosu-profile-restrict-operation-time">
                                     <span class="helper"></span>
                                 </label>
                             </div>
@@ -1248,7 +1276,8 @@
                     </h2>
                     <div class="panel-title-description">
                         Configure the VPN settings on Android devices.
-                        Once this profile is applied, the device owners won't be able to modify the configured settings on their devices.
+                        Once this profile is applied, the device owners won't be able to modify the configured settings
+                        on their devices.
                     </div>
                 </div>
                 <div id="vpn-body" class="panel-collapse panel-body collapse" role="tabpanel"
@@ -1320,7 +1349,8 @@
                         </label>
                     </h2>
                     <div class="panel-title-description">
-                        Configure these settings to manage the applications in the work profile.                    </div>
+                        Configure these settings to manage the applications in the work profile.
+                    </div>
                 </div>
                 <div id="work-profile-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="work-profile-policy-body">
@@ -1353,11 +1383,13 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="work-profile-policy-enable-system-apps">
                             Enable System Apps
-                            <span class="helper" title="The system applications that needs to enabled in the work-profile.">
+                            <span class="helper"
+                                  title="The system applications that needs to enabled in the work-profile.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            (Provide the exact package name. Multiple package names can be provided as comma separated values. Ex: com.google.android.apps.maps,
+                            (Provide the exact package name. Multiple package names can be provided as comma separated
+                            values. Ex: com.google.android.apps.maps,
                             com.google.android.calculator)
                         </label>
                         <textarea id="workProfilePolicyEnableSystemApps" type="text"
@@ -1367,11 +1399,13 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="work-profile-policy-hide-system-apps">
                             Hide System Apps
-                            <span class="helper" title="The system applications that needs to be hidden in the work-profile.">
+                            <span class="helper"
+                                  title="The system applications that needs to be hidden in the work-profile.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            (Provide the exact package name. Multiple package names can be provided as comma separated values. Ex: com.google.android.apps.maps,
+                            (Provide the exact package name. Multiple package names can be provided as comma separated
+                            values. Ex: com.google.android.apps.maps,
                             com.google.android.calculator)
                         </label>
                         <textarea id="work-profile-policy-hide-system-apps" class="form-control operationDataKeys"
@@ -1380,10 +1414,12 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="work-profile-policy-unhide-system-apps">
                             Unhide System Apps
-                            <span class="helper" title=" The system applications that needs to be shown in the work-profile."></span>
+                            <span class="helper"
+                                  title=" The system applications that needs to be shown in the work-profile."></span>
                             </span>
                             <br>
-                            (Provide the exact package name. Multiple package names can be provided as comma separated values. Ex: com.google.android.apps.maps,
+                            (Provide the exact package name. Multiple package names can be provided as comma separated
+                            values. Ex: com.google.android.apps.maps,
                             com.google.android.calculator)
                         </label>
                         <textarea id="work-profile-policy-unhide-system-apps" class="form-control operationDataKeys"
@@ -1397,7 +1433,8 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            (Provide the exact package name. Multiple package names can be provided as comma separated values. Ex: com.google.android.apps.maps,
+                            (Provide the exact package name. Multiple package names can be provided as comma separated
+                            values. Ex: com.google.android.apps.maps,
                             com.google.android.calculator)
                         </label>
                         <textarea id="work-profile-policy-install-playstore-apps" class="form-control operationDataKeys"
@@ -1492,7 +1529,8 @@
                                             <span class="index"></span>
                                         </td>
                                         <td data-title="App Name">
-                                            <input type="text" class="form-control grid-input-text" data-child-key="appName"
+                                            <input type="text" class="form-control grid-input-text"
+                                                   data-child-key="appName"
                                                    maxlength="50" data-default="" placeholder="[ Android Pay ]"/>
                                         </td>
                                         <td data-title="Package Name">
@@ -1516,7 +1554,8 @@
                                         </td>
                                         <td>
                                             <span class="list-group-item-actions">
-                                                <a href="#runtime-permission-applications-grid" class="grid-input-remove"
+                                                <a href="#runtime-permission-applications-grid"
+                                                   class="grid-input-remove"
                                                    data-click-event="remove-form">
                                                     <span class="fw-stack helper" title="Remove Entry">
                                                         <i class="fw fw-circle-outline fw-stack-2x"></i>
@@ -1538,7 +1577,8 @@
                             Already granted or denied permissions are not affected by this policy.
                             <br>
                             <i class="icon fw fw-info"></i>
-                            Permissions can be granted or revoked only for applications built with a Target SDK Version of Android Marshmallow or later.
+                            Permissions can be granted or revoked only for applications built with a Target SDK Version
+                            of Android Marshmallow or later.
                         </ul>
                     </div>
                 </div>
@@ -1560,7 +1600,7 @@
                         </label>
                     </h2>
                     <div class="panel-title-description">
-                        Configure the settings to install system updates on single-purpose or COSU devices. 
+                        Configure the settings to install system updates on single-purpose or COSU devices.
                     </div>
                 </div>
                 <div id="cosu-system-update-policy-body" class="panel-collapse panel-body collapse"

@@ -36,7 +36,7 @@
             }
         </style>
         {{#each controlOperations}}
-            <a {{#unless isDisabled}} class="operation-tile" href="javascript:operationSelect('{{operation}}')" {{else}} href="javascript:void(0)" class="operation-tile op-disabled"{{/unless}}>
+            <a {{#unless isDisabled}} href="javascript:operationSelect('{{operation}}')" {{else}} href="javascript:void(0)" class="operation-tile op-disabled" title="{{disabledText}}" data-toggle="tooltip" {{/unless}}>
                 {{#if iconFont}}
                     <i class="fw {{iconFont}}"></i>
                 {{else}}
@@ -132,7 +132,7 @@
         <div class="row">
             <div class="col-lg-5 col-md-6 col-centered">
                 <h3>
-                    <span class="fw-stack">
+                    <span class="fw-stack center-block">
                         <i class="fw fw-circle-outline fw-stack-2x"></i>
                         <i id="status-icon" class="fw fw-error fw-stack-1x"></i>
                     </span>

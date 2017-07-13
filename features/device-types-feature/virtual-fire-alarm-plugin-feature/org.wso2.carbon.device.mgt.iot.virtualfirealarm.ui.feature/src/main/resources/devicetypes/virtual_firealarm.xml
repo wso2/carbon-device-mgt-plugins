@@ -23,9 +23,6 @@
             <Name>Control buzzer</Name>
             <Description>Control buzzer on Virtual Firealarm</Description>
             <Operation context="/virtual_firealarm/device/{deviceId}/buzz" method="POST">
-                <FormParameters>
-                    <Parameter>state</Parameter>
-                </FormParameters>
             </Operation>
         </Feature>
     </Features>

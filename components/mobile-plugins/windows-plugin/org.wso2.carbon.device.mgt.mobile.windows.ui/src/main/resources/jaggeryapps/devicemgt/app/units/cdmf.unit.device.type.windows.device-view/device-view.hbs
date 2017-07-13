@@ -1,4 +1,3 @@
-{{unit "cdmf.unit.device.type.windows.leaflet"}}
 {{unit "cdmf.unit.lib.editable"}}
 {{unit "cdmf.unit.lib.qrcode"}}
 {{unit "cdmf.unit.device.type.qr-modal"}}
@@ -72,14 +71,33 @@
         {{/zone}}
 
         {{#zone "device-details-tab-injected"}}
-            <li><a data-toggle="tab" href="#location">Location</a></li>
+            <li><a data-toggle="tab" href="#location"
+                   data-lat="{{device.location.latitude}}"
+                   data-long="{{device.location.longitude}}"
+                   class="initGeoLocationLink">Location</a></li>
             <li><a data-toggle="tab" href="#policy">Policy Compliance</a></li>
         {{/zone}}
 
         {{#zone "device-view-tab-injected-conents"}}
             <div id="location" class="tab-pane fade ">
-                <iframe width="100%" height="100%" frameborder="0" style="border:0"
-                    src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJk_gsqyVZ4joR4UxR7brwMnA&key=AIzaSyChgf100i4rBz6neCNRyK1D05g9VLY8jvo" allowfullscreen></iframe>
+                {{#if device.location}}
+                    <div class="tab-actions">
+                        <div class="action-btn-container" id="location-action-bar">
+                        </div>
+                    </div>
+                    <br/>
+                    {{unit "cdmf.unit.geo-dashboard" device=device noGeoFencing=false hideSearch=true}}
+                {{else}}
+                    <div id="map-error" class="message message-warning">
+                        <h4 class="remove-margin">
+                            <i class="icon fw fw-warning"></i>
+                            Device location information is not available.
+                        </h4>
+                    </div>
+                    <p class="add-padding-5x"></p>
+                    <p class="add-padding-5x"></p>
+                    <p class="add-padding-5x"></p>
+                {{/if}}
             </div>
             <div id="policy" class="tab-pane fade">
               <div id="policy-list-container">
@@ -112,7 +130,5 @@
                 data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
                 type="text/x-handlebars-template"></script>
         {{js "js/device-detail.js"}}
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-        {{js "js/load-map.js"}}
     {{/if}}
 {{/zone}}
