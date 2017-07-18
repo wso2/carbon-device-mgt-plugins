@@ -221,13 +221,21 @@ public class ArduinoServiceImpl implements ArduinoService {
         String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
                 .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
                 .getThreadLocalCarbonContext().getTenantDomain();
-        ;
         if (apiApplicationKey == null) {
+            String adminUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration().getAdminUserName();
+            String tenantAdminDomainName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {ArduinoConstants.DEVICE_TYPE};
-            apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
-                    ArduinoConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
-                    ArduinoConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            try{
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantAdminDomainName);
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(adminUsername);
+                apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                        ArduinoConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
+                        ArduinoConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId + " perm:arduino:enroll";
