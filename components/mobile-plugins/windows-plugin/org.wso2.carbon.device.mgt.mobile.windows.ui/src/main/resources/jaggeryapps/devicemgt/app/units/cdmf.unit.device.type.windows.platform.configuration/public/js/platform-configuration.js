@@ -193,24 +193,24 @@ $(document).ready(function () {
                         $("#config-save-form").addClass("hidden");
                         $("#record-created-msg").removeClass("hidden");
                     } else if (data == 500) {
-                        $(errorMsg).text("Exception occurred at backend.");
+                        $(errorMsgWindows).text("Exception occurred at backend.");
                     } else if (data == 400) {
-                        $(errorMsg).text("Configurations cannot be empty.");
+                        $(errorMsgWindows).text("Configurations cannot be empty.");
                     } else {
-                        $(errorMsg).text("An unexpected error occurred.");
+                        $(errorMsgWindows).text("An unexpected error occurred.");
                     }
 
                     $(errorMsgWrapperWindows).removeClass("hidden");
                 }, function (data) {
                     data = data.status;
                     if (data == 500) {
-                        $(errorMsg).text("Exception occurred at backend.");
+                        $(errorMsgWindows).text("Exception occurred at backend.");
                     } else if (data == 403) {
-                        $(errorMsg).text("Action was not permitted.");
+                        $(errorMsgWindows).text("Action was not permitted.");
                     } else {
-                        $(errorMsg).text("An unexpected error occurred.");
+                        $(errorMsgWindows).text("An unexpected error occurred.");
                     }
-                    $(errorMsgWrapper).removeClass("hidden");
+                    $(errorMsgWrapperWindows).removeClass("hidden");
                 }
             );
         }
