@@ -102,9 +102,10 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
         String message;
         ConfigurationEntry licenseEntry = null;
         PlatformConfiguration configuration = new PlatformConfiguration();
+        configuration.setConfiguration(windowsPlatformConfiguration.getConfiguration());
         try {
             configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            List<ConfigurationEntry> configs = configuration.getConfiguration();
+            List<ConfigurationEntry> configs = windowsPlatformConfiguration.getConfiguration();
             for (ConfigurationEntry entry : configs) {
                 if (PluginConstants.TenantConfigProperties.LICENSE_KEY.equals(entry.getName())) {
                     License license = new License();
