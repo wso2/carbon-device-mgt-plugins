@@ -22,13 +22,13 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>carbon-device-mgt-plugins-parent</artifactId>
-        <version>4.0.36</version>
+        <version>4.0.37-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>device-types-feature</artifactId>
-    <version>4.0.36</version>
+    <version>4.0.37-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Device Management IoT Plugins Feature</name>
     <url>http://wso2.org</url>
