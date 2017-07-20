@@ -42,6 +42,8 @@ var utils = function () {
     };
 
     publicMethods["getDynamicClientAppCredentials"] = function (username, password) {
+        log.error("username"+ username);
+        log.error("password"+password);
         // setting up dynamic client application properties
         var dcAppProperties = {
             "applicationName": deviceMgtProps["oauthProvider"]["appRegistration"]["applicationName"],
