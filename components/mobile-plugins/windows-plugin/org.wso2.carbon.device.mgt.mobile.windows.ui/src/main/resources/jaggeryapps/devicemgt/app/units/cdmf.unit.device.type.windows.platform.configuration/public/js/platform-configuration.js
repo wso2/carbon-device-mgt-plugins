@@ -84,7 +84,7 @@ $(document).ready(function () {
         toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
     });
 
-    var windowsConfigAPI = "/api/device-mgt/windows/v1.0/services/configuration";
+    var windowsConfigAPI = "/api/device-mgt/windows/v1.0/configuration";
 
     invokerUtil.get(
         windowsConfigAPI,
