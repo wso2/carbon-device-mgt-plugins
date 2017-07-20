@@ -203,14 +203,23 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
             throw new DeviceManagementException(msg);
         }
         if (apiApplicationKey == null) {
+            String adminUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration().getAdminUserName();
+            String tenantAdminDomainName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
             String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
                     .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
                     .getThreadLocalCarbonContext().getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {RaspberrypiConstants.DEVICE_TYPE};
-            apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
-                    RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
-                    RaspberrypiConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            try{
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantAdminDomainName);
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(adminUsername);
+                apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                        RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
+                        RaspberrypiConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId;
