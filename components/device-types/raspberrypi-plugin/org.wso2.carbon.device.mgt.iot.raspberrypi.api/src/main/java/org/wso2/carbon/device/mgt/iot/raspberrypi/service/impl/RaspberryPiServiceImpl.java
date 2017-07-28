@@ -110,10 +110,10 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
     @Produces("application/json")
     public Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
                                                    @QueryParam("from") long from, @QueryParam("to") long to) {
-        String fromDate = String.valueOf(from);
-        String toDate = String.valueOf(to);
-        String query = "deviceId:" + deviceId + " AND deviceType:" +
-                RaspberrypiConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String fromDate = String.valueOf(from*1000);
+        String toDate = String.valueOf(to*1000);
+        String query = "meta_deviceId:" + deviceId + " AND meta_deviceType:" +
+                RaspberrypiConstants.DEVICE_TYPE + " AND meta_time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
@@ -121,7 +121,7 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SortByField> sortByFields = new ArrayList<>();
-            SortByField sortByField = new SortByField("time", SortType.ASC);
+            SortByField sortByField = new SortByField("meta_time", SortType.ASC);
             sortByFields.add(sortByField);
             List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
@@ -203,14 +203,23 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
             throw new DeviceManagementException(msg);
         }
         if (apiApplicationKey == null) {
+            String adminUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration().getAdminUserName();
+            String tenantAdminDomainName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
             String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
                     .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
                     .getThreadLocalCarbonContext().getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {RaspberrypiConstants.DEVICE_TYPE};
-            apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
-                    RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
-                    RaspberrypiConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            try{
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantAdminDomainName);
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(adminUsername);
+                apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                        RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
+                        RaspberrypiConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId;
@@ -221,7 +230,7 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
         String refreshToken = accessTokenInfo.getRefreshToken();
         ZipUtil ziputil = new ZipUtil();
         return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(), sketchType,
-                                                   deviceId, deviceName, accessToken, refreshToken);
+                                                   deviceId, deviceName, accessToken, refreshToken, apiApplicationKey.toString());
     }
 
     private static String shortUUID() {

@@ -34,6 +34,7 @@ public class MQTTBrokerConnectionConfiguration {
     private boolean cleanSession = true;
     private int keepAlive;
     private boolean globalCredentailSet;
+    private int qos;
 
     public String getTokenUrl() {
         return tokenUrl;
@@ -75,6 +76,9 @@ public class MQTTBrokerConnectionConfiguration {
         return globalCredentailSet;
     }
 
+    public int getQos() {
+        return qos;
+    }
     public MQTTBrokerConnectionConfiguration(OutputEventAdapterConfiguration eventAdapterConfiguration,
                                              Map<String, String> globalProperties) {
         adapterName = eventAdapterConfiguration.getName();
@@ -98,14 +102,28 @@ public class MQTTBrokerConnectionConfiguration {
         if (scopes == null) {
             this.scopes = MQTTEventAdapterConstants.EMPTY_STRING;
         }
-        this.cleanSession = Boolean.parseBoolean(eventAdapterConfiguration.getStaticProperties()
-                                                         .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
+        String cleanSession = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION);
+        if (cleanSession == null || cleanSession.isEmpty()) {
+            this.cleanSession = Boolean.parseBoolean(eventAdapterConfiguration.getStaticProperties()
+                                                             .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
+        } else {
+            this.cleanSession = Boolean.parseBoolean(cleanSession);
+        }
         //If global properties are available those will be assigned else constant values will be assigned
         if (globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE) != null) {
             keepAlive = Integer.parseInt((globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE)));
         } else {
             keepAlive = MQTTEventAdapterConstants.ADAPTER_CONF_DEFAULT_KEEP_ALIVE;
         }
+        String qosVal = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);
+        if (qosVal != null && !qosVal.isEmpty()) {
+            this.qos = Integer.parseInt(qosVal);
+        } else {
+            qosVal = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);
+            this.qos = Integer.parseInt(qosVal);
+        }
+
+
     }
 
 }

@@ -27,6 +27,11 @@ function operationSelect(selection) {
     showPopup();
 }
 
+var resetLoader = function () {
+    $("#btnSend").removeClass("hidden");
+    $('#lbl-execution').addClass("hidden");
+};
+
 function submitForm(formId) {
     $("#btnSend").addClass("hidden");
     $("#lbl-execution").removeClass("hidden");
@@ -48,9 +53,9 @@ function submitForm(formId) {
         } else if (input.data("param-type") == "form") {
             var prefix = (uriencodedFormStr == "") ? "" : "&";
             uriencodedFormStr += prefix + input.attr("id") + "=" + input.val();
-            if(input.attr("type") == "text"){
+            if (input.attr("type") == "text") {
                 payload[input.attr("id")] = input.val();
-            } else if(input.attr("type") == "checkbox"){
+            } else if (input.attr("type") == "checkbox") {
                 payload[input.attr("id")] = input.is(":checked");
             }
         }
@@ -58,71 +63,75 @@ function submitForm(formId) {
     uri += uriencodedQueryStr;
     var httpMethod = form.attr("method").toUpperCase();
     //var contentType = form.attr("enctype");
+    var validaterString = validatePayload(operationCode, payload);
 
-    if (contentType == undefined || contentType == "") {
-        contentType = "application/x-www-form-urlencoded";
-        payload = uriencodedFormStr;
-    }
+    if (validaterString == "OK") {
 
-    //setting responses callbacks
-    var defaultStatusClasses = "fw fw-stack-1x";
-    var content = $("#operation-response-template").find(".content");
-    var title = content.find("#title");
-    var statusIcon = content.find("#status-icon");
-    var description = content.find("#description");
-    description.html("");
-
-    var resetLoader = function () {
-        $("#btnSend").removeClass("hidden");
-        $('#lbl-execution').addClass("hidden");
-    };
-
-    var successCallBack = function (response) {
-        var res = response;
-        try {
-            res = JSON.parse(response).messageFromServer;
-        } catch (err) {
-            //do nothing
+        if (contentType == undefined || contentType == "") {
+            contentType = "application/x-www-form-urlencoded";
+            payload = uriencodedFormStr;
         }
-        title.html("Operation Triggered!");
-        statusIcon.attr("class", defaultStatusClasses + " fw-check");
-        description.html(res);
-        // console.log("success!");
-        resetLoader();
-        $(modalPopupContent).html(content.html());
-    };
-    var errorCallBack = function (response) {
-        // console.log(response);
-        title.html("An Error Occurred!");
-        statusIcon.attr("class", defaultStatusClasses + " fw-error");
-        var reason = (response.responseText == "null")?response.statusText:response.responseText;
-        try {
-            reason = JSON.parse(reason).message;
-        } catch (err) {
-            //do nothing
+
+        //setting responses callbacks
+        var defaultStatusClasses = "fw fw-stack-1x";
+        var content = $("#operation-response-template").find(".content");
+        var title = content.find("#title");
+        title.attr("class","center-block text-center");
+        var statusIcon = content.find("#status-icon");
+        var description = content.find("#description");
+        description.html("");
+
+        var successCallBack = function (response) {
+            var res = response;
+            try {
+                res = JSON.parse(response).messageFromServer;
+            } catch (err) {
+                //do nothing
+            }
+            title.html("Operation Triggered!");
+            statusIcon.attr("class", defaultStatusClasses + " fw-check");
+            description.html(res);
+            // console.log("success!");
+            resetLoader();
+            $(modalPopupContent).html(content.html());
+        };
+        var errorCallBack = function (response) {
+            // console.log(response);
+            title.html("An Error Occurred!");
+            statusIcon.attr("class", defaultStatusClasses + " fw-error");
+            var reason = (response.responseText == "null") ? response.statusText : response.responseText;
+            try {
+                reason = JSON.parse(reason).message;
+            } catch (err) {
+                //do nothing
+            }
+            description.html(reason);
+            // console.log("Error!");
+            resetLoader();
+            $(modalPopupContent).html(content.html());
+        };
+        //executing http request
+        if (httpMethod == "GET") {
+            invokerUtil.get(uri, successCallBack, errorCallBack, contentType);
+        } else if (httpMethod == "POST") {
+            var deviceList = [deviceId];
+            payload = generatePayload(operationCode, payload, deviceList);
+            invokerUtil.post(uri, payload, successCallBack, errorCallBack, contentType);
+        } else if (httpMethod == "PUT") {
+            invokerUtil.put(uri, payload, successCallBack, errorCallBack, contentType);
+        } else if (httpMethod == "DELETE") {
+            invokerUtil.delete(uri, successCallBack, errorCallBack, contentType);
+        } else {
+            title.html("An Error Occurred!");
+            statusIcon.attr("class", defaultStatusClasses + " fw-error");
+            description.html("This operation requires http method: " + httpMethod + " which is not supported yet!");
+            resetLoader();
+            $(modalPopupContent).html(content.html());
         }
-        description.html(reason);
-        // console.log("Error!");
-        resetLoader();
-        $(modalPopupContent).html(content.html());
-    };
-    //executing http request
-    if (httpMethod == "GET") {
-        invokerUtil.get(uri, successCallBack, errorCallBack, contentType);
-    } else if (httpMethod == "POST") {
-        var deviceList = [deviceId];
-        payload = generatePayload(operationCode, payload, deviceList);
-        invokerUtil.post(uri, payload, successCallBack, errorCallBack, contentType);
-    } else if (httpMethod == "PUT") {
-        invokerUtil.put(uri, payload, successCallBack, errorCallBack, contentType);
-    } else if (httpMethod == "DELETE") {
-        invokerUtil.delete(uri, successCallBack, errorCallBack, contentType);
     } else {
-        title.html("An Error Occurred!");
-        statusIcon.attr("class", defaultStatusClasses + " fw-error");
-        description.html("This operation requires http method: " + httpMethod + " which is not supported yet!");
         resetLoader();
-        $(modalPopupContent).html(content.html());
+        $(".modal #operation-error-msg span").text(validaterString);
+        $(".modal #operation-error-msg").removeClass("hidden");
     }
 }
 
@@ -161,6 +170,21 @@ var operationTypeConstants = {
     "COMMAND": "command"
 };
 
+function validatePayload(operationCode, payload) {
+    console.log(payload);
+    var returnVal = "OK";
+    switch (operationCode) {
+        case "NOTIFICATION":
+            if (!payload.messageText) {
+                returnVal = "Message Body Can't be empty !";
+            }
+            break;
+        default:
+            break;
+
+    }
+    return returnVal;
+}
 
 var generatePayload = function (operationCode, operationData, deviceList) {
     var payload;
@@ -170,40 +194,40 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "CAMERA" : operationData["cameraEnabled"],
-                    "DISALLOW_ADJUST_VOLUME" : operationData["disallowAdjustVolumeEnabled"],
-                    "DISALLOW_CONFIG_BLUETOOTH" : operationData["disallowConfigBluetooth"],
-                    "DISALLOW_CONFIG_CELL_BROADCASTS" : operationData["disallowConfigCellBroadcasts"],
-                    "DISALLOW_CONFIG_CREDENTIALS" : operationData["disallowConfigCredentials"],
-                    "DISALLOW_CONFIG_MOBILE_NETWORKS" : operationData["disallowConfigMobileNetworks"],
-                    "DISALLOW_CONFIG_TETHERING" : operationData["disallowConfigTethering"],
-                    "DISALLOW_CONFIG_VPN" : operationData["disallowConfigVpn"],
-                    "DISALLOW_CONFIG_WIFI" : operationData["disallowConfigWifi"],
-                    "DISALLOW_APPS_CONTROL" : operationData["disallowAppControl"],
-                    "DISALLOW_CREATE_WINDOWS" : operationData["disallowCreateWindows"],
-                    "DISALLOW_CROSS_PROFILE_COPY_PASTE" : operationData["disallowCrossProfileCopyPaste"],
-                    "DISALLOW_DEBUGGING_FEATURES" : operationData["disallowDebugging"],
-                    "DISALLOW_FACTORY_RESET" : operationData["disallowFactoryReset"],
-                    "DISALLOW_ADD_USER" : operationData["disallowAddUser"],
-                    "DISALLOW_INSTALL_APPS" : operationData["disallowInstallApps"],
-                    "DISALLOW_INSTALL_UNKNOWN_SOURCES" : operationData["disallowInstallUnknownSources"],
-                    "DISALLOW_MODIFY_ACCOUNTS" : operationData["disallowModifyAccounts"],
-                    "DISALLOW_MOUNT_PHYSICAL_MEDIA" : operationData["disallowMountPhysicalMedia"],
-                    "DISALLOW_NETWORK_RESET" : operationData["disallowNetworkReset"],
-                    "DISALLOW_OUTGOING_BEAM" : operationData["disallowOutgoingBeam"],
-                    "DISALLOW_OUTGOING_CALLS" : operationData["disallowOutgoingCalls"],
-                    "DISALLOW_REMOVE_USER" : operationData["disallowRemoveUser"],
-                    "DISALLOW_SAFE_BOOT" : operationData["disallowSafeBoot"],
-                    "DISALLOW_SHARE_LOCATION" : operationData["disallowLocationSharing"],
-                    "DISALLOW_SMS" : operationData["disallowSMS"],
-                    "DISALLOW_UNINSTALL_APPS" : operationData["disallowUninstallApps"],
-                    "DISALLOW_UNMUTE_MICROPHONE" : operationData["disallowUnmuteMicrophone"],
-                    "DISALLOW_USB_FILE_TRANSFER" : operationData["disallowUSBFileTransfer"],
-                    "ALLOW_PARENT_PROFILE_APP_LINKING" : operationData["disallowParentProfileAppLinking"],
-                    "ENSURE_VERIFY_APPS" : operationData["ensureVerifyApps"],
-                    "AUTO_TIME" : operationData["enableAutoTime"],
-                    "SET_SCREEN_CAPTURE_DISABLED" : operationData["disableScreenCapture"],
-                    "SET_STATUS_BAR_DISABLED" : operationData["disableStatusBar"]
+                    "CAMERA": operationData["cameraEnabled"],
+                    "DISALLOW_ADJUST_VOLUME": operationData["disallowAdjustVolumeEnabled"],
+                    "DISALLOW_CONFIG_BLUETOOTH": operationData["disallowConfigBluetooth"],
+                    "DISALLOW_CONFIG_CELL_BROADCASTS": operationData["disallowConfigCellBroadcasts"],
+                    "DISALLOW_CONFIG_CREDENTIALS": operationData["disallowConfigCredentials"],
+                    "DISALLOW_CONFIG_MOBILE_NETWORKS": operationData["disallowConfigMobileNetworks"],
+                    "DISALLOW_CONFIG_TETHERING": operationData["disallowConfigTethering"],
+                    "DISALLOW_CONFIG_VPN": operationData["disallowConfigVpn"],
+                    "DISALLOW_CONFIG_WIFI": operationData["disallowConfigWifi"],
+                    "DISALLOW_APPS_CONTROL": operationData["disallowAppControl"],
+                    "DISALLOW_CREATE_WINDOWS": operationData["disallowCreateWindows"],
+                    "DISALLOW_CROSS_PROFILE_COPY_PASTE": operationData["disallowCrossProfileCopyPaste"],
+                    "DISALLOW_DEBUGGING_FEATURES": operationData["disallowDebugging"],
+                    "DISALLOW_FACTORY_RESET": operationData["disallowFactoryReset"],
+                    "DISALLOW_ADD_USER": operationData["disallowAddUser"],
+                    "DISALLOW_INSTALL_APPS": operationData["disallowInstallApps"],
+                    "DISALLOW_INSTALL_UNKNOWN_SOURCES": operationData["disallowInstallUnknownSources"],
+                    "DISALLOW_MODIFY_ACCOUNTS": operationData["disallowModifyAccounts"],
+                    "DISALLOW_MOUNT_PHYSICAL_MEDIA": operationData["disallowMountPhysicalMedia"],
+                    "DISALLOW_NETWORK_RESET": operationData["disallowNetworkReset"],
+                    "DISALLOW_OUTGOING_BEAM": operationData["disallowOutgoingBeam"],
+                    "DISALLOW_OUTGOING_CALLS": operationData["disallowOutgoingCalls"],
+                    "DISALLOW_REMOVE_USER": operationData["disallowRemoveUser"],
+                    "DISALLOW_SAFE_BOOT": operationData["disallowSafeBoot"],
+                    "DISALLOW_SHARE_LOCATION": operationData["disallowLocationSharing"],
+                    "DISALLOW_SMS": operationData["disallowSMS"],
+                    "DISALLOW_UNINSTALL_APPS": operationData["disallowUninstallApps"],
+                    "DISALLOW_UNMUTE_MICROPHONE": operationData["disallowUnmuteMicrophone"],
+                    "DISALLOW_USB_FILE_TRANSFER": operationData["disallowUSBFileTransfer"],
+                    "ALLOW_PARENT_PROFILE_APP_LINKING": operationData["disallowParentProfileAppLinking"],
+                    "ENSURE_VERIFY_APPS": operationData["ensureVerifyApps"],
+                    "AUTO_TIME": operationData["enableAutoTime"],
+                    "SET_SCREEN_CAPTURE_DISABLED": operationData["disableScreenCapture"],
+                    "SET_STATUS_BAR_DISABLED": operationData["disableStatusBar"]
                 }
             };
             break;
@@ -211,7 +235,7 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "lockCode" : operationData["lockCode"]
+                    "lockCode": operationData["lockCode"]
                 }
             };
             break;
@@ -219,7 +243,7 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "encrypted" : operationData["encryptStorageEnabled"]
+                    "encrypted": operationData["encryptStorageEnabled"]
                 }
             };
             break;
@@ -228,8 +252,8 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             payload = {
                 "operation": {
                     //"message" : operationData["message"]
-                    "messageText": operationData["messageText"],
-                    "messageTitle": operationData["messageTitle"]
+                    "messageTitle": operationData["messageTitle"],
+                    "messageText": operationData["messageText"]
                 }
             };
             break;
@@ -237,8 +261,8 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "schedule" : operationData["schedule"],
-                    "server" : operationData["server"]
+                    "schedule": operationData["schedule"],
+                    "server": operationData["server"]
                 }
             };
             break;
@@ -246,7 +270,7 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "pin" : operationData["pin"]
+                    "pin": operationData["pin"]
                 }
             };
             break;
@@ -255,15 +279,15 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             payload = {
                 "operation": {
                     "ssid": operationData["wifiSSID"],
-                    "type":  operationData["wifiType"],
-                    "password" : operationData["wifiPassword"],
-                    "eap" : operationData["wifiEAP"],
-                    "phase2" : operationData["wifiPhase2"],
-                    "provisioning" : operationData["wifiProvisioning"],
-                    "identity" : operationData["wifiIdentity"],
-                    "anonymousIdentity" : operationData["wifiAnoIdentity"],
-                    "cacert" : operationData["wifiCaCert"],
-                    "cacertName" : operationData["wifiCaCertName"]
+                    "type": operationData["wifiType"],
+                    "password": operationData["wifiPassword"],
+                    "eap": operationData["wifiEAP"],
+                    "phase2": operationData["wifiPhase2"],
+                    "provisioning": operationData["wifiProvisioning"],
+                    "identity": operationData["wifiIdentity"],
+                    "anonymousIdentity": operationData["wifiAnoIdentity"],
+                    "cacert": operationData["wifiCaCert"],
+                    "cacertName": operationData["wifiCaCertName"]
                 }
             };
             break;
@@ -282,8 +306,8 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "message" : operationData["lock-message"],
-                    "isHardLockEnabled" : operationData["hard-lock"]
+                    "message": operationData["lock-message"],
+                    "isHardLockEnabled": operationData["hard-lock"]
                 }
             };
             break;
@@ -375,39 +399,39 @@ var androidOperationConstants = {
     "LOCK_OPERATION_CODE": "DEVICE_LOCK",
     "UPGRADE_FIRMWARE": "UPGRADE_FIRMWARE",
     "DISALLOW_ADJUST_VOLUME": "DISALLOW_ADJUST_VOLUME",
-    "DISALLOW_CONFIG_BLUETOOTH" : "DISALLOW_CONFIG_BLUETOOTH",
-    "DISALLOW_CONFIG_CELL_BROADCASTS" : "DISALLOW_CONFIG_CELL_BROADCASTS",
-    "DISALLOW_CONFIG_CREDENTIALS" : "DISALLOW_CONFIG_CREDENTIALS",
-    "DISALLOW_CONFIG_MOBILE_NETWORKS" : "DISALLOW_CONFIG_MOBILE_NETWORKS",
-    "DISALLOW_CONFIG_TETHERING" : "DISALLOW_CONFIG_TETHERING",
-    "DISALLOW_CONFIG_VPN" : "DISALLOW_CONFIG_VPN",
-    "DISALLOW_CONFIG_WIFI" : "DISALLOW_CONFIG_WIFI",
-    "DISALLOW_APPS_CONTROL" : "DISALLOW_APPS_CONTROL",
-    "DISALLOW_CREATE_WINDOWS" : "DISALLOW_CREATE_WINDOWS",
-    "DISALLOW_CROSS_PROFILE_COPY_PASTE" : "DISALLOW_CROSS_PROFILE_COPY_PASTE",
-    "DISALLOW_DEBUGGING_FEATURES" : "DISALLOW_DEBUGGING_FEATURES",
-    "DISALLOW_FACTORY_RESET" : "DISALLOW_FACTORY_RESET",
-    "DISALLOW_ADD_USER" : "DISALLOW_ADD_USER",
-    "DISALLOW_INSTALL_APPS" : "DISALLOW_INSTALL_APPS",
-    "DISALLOW_INSTALL_UNKNOWN_SOURCES" : "DISALLOW_INSTALL_UNKNOWN_SOURCES",
-    "DISALLOW_MODIFY_ACCOUNTS" : "DISALLOW_MODIFY_ACCOUNTS",
-    "DISALLOW_MOUNT_PHYSICAL_MEDIA" : "DISALLOW_MOUNT_PHYSICAL_MEDIA",
-    "DISALLOW_NETWORK_RESET" : "DISALLOW_NETWORK_RESET",
-    "DISALLOW_OUTGOING_BEAM" : "DISALLOW_OUTGOING_BEAM",
-    "DISALLOW_OUTGOING_CALLS" : "DISALLOW_OUTGOING_CALLS",
-    "DISALLOW_REMOVE_USER" : "DISALLOW_REMOVE_USER",
-    "DISALLOW_SAFE_BOOT" : "DISALLOW_SAFE_BOOT",
-    "DISALLOW_SHARE_LOCATION" : "DISALLOW_SHARE_LOCATION",
-    "DISALLOW_SMS" : "DISALLOW_SMS",
-    "DISALLOW_UNINSTALL_APPS" : "DISALLOW_UNINSTALL_APPS",
-    "DISALLOW_UNMUTE_MICROPHONE" : "DISALLOW_UNMUTE_MICROPHONE",
-    "DISALLOW_USB_FILE_TRANSFER" : "DISALLOW_USB_FILE_TRANSFER",
-    "ALLOW_PARENT_PROFILE_APP_LINKING" : "ALLOW_PARENT_PROFILE_APP_LINKING",
-    "ENSURE_VERIFY_APPS" : "ENSURE_VERIFY_APPS",
-    "AUTO_TIME" : "AUTO_TIME",
-    "SET_SCREEN_CAPTURE_DISABLED" : "SET_SCREEN_CAPTURE_DISABLED",
-    "SET_STATUS_BAR_DISABLED" : "SET_STATUS_BAR_DISABLED",
-    "APPLICATION_OPERATION_CODE":"APP-RESTRICTION",
+    "DISALLOW_CONFIG_BLUETOOTH": "DISALLOW_CONFIG_BLUETOOTH",
+    "DISALLOW_CONFIG_CELL_BROADCASTS": "DISALLOW_CONFIG_CELL_BROADCASTS",
+    "DISALLOW_CONFIG_CREDENTIALS": "DISALLOW_CONFIG_CREDENTIALS",
+    "DISALLOW_CONFIG_MOBILE_NETWORKS": "DISALLOW_CONFIG_MOBILE_NETWORKS",
+    "DISALLOW_CONFIG_TETHERING": "DISALLOW_CONFIG_TETHERING",
+    "DISALLOW_CONFIG_VPN": "DISALLOW_CONFIG_VPN",
+    "DISALLOW_CONFIG_WIFI": "DISALLOW_CONFIG_WIFI",
+    "DISALLOW_APPS_CONTROL": "DISALLOW_APPS_CONTROL",
+    "DISALLOW_CREATE_WINDOWS": "DISALLOW_CREATE_WINDOWS",
+    "DISALLOW_CROSS_PROFILE_COPY_PASTE": "DISALLOW_CROSS_PROFILE_COPY_PASTE",
+    "DISALLOW_DEBUGGING_FEATURES": "DISALLOW_DEBUGGING_FEATURES",
+    "DISALLOW_FACTORY_RESET": "DISALLOW_FACTORY_RESET",
+    "DISALLOW_ADD_USER": "DISALLOW_ADD_USER",
+    "DISALLOW_INSTALL_APPS": "DISALLOW_INSTALL_APPS",
+    "DISALLOW_INSTALL_UNKNOWN_SOURCES": "DISALLOW_INSTALL_UNKNOWN_SOURCES",
+    "DISALLOW_MODIFY_ACCOUNTS": "DISALLOW_MODIFY_ACCOUNTS",
+    "DISALLOW_MOUNT_PHYSICAL_MEDIA": "DISALLOW_MOUNT_PHYSICAL_MEDIA",
+    "DISALLOW_NETWORK_RESET": "DISALLOW_NETWORK_RESET",
+    "DISALLOW_OUTGOING_BEAM": "DISALLOW_OUTGOING_BEAM",
+    "DISALLOW_OUTGOING_CALLS": "DISALLOW_OUTGOING_CALLS",
+    "DISALLOW_REMOVE_USER": "DISALLOW_REMOVE_USER",
+    "DISALLOW_SAFE_BOOT": "DISALLOW_SAFE_BOOT",
+    "DISALLOW_SHARE_LOCATION": "DISALLOW_SHARE_LOCATION",
+    "DISALLOW_SMS": "DISALLOW_SMS",
+    "DISALLOW_UNINSTALL_APPS": "DISALLOW_UNINSTALL_APPS",
+    "DISALLOW_UNMUTE_MICROPHONE": "DISALLOW_UNMUTE_MICROPHONE",
+    "DISALLOW_USB_FILE_TRANSFER": "DISALLOW_USB_FILE_TRANSFER",
+    "ALLOW_PARENT_PROFILE_APP_LINKING": "ALLOW_PARENT_PROFILE_APP_LINKING",
+    "ENSURE_VERIFY_APPS": "ENSURE_VERIFY_APPS",
+    "AUTO_TIME": "AUTO_TIME",
+    "SET_SCREEN_CAPTURE_DISABLED": "SET_SCREEN_CAPTURE_DISABLED",
+    "SET_STATUS_BAR_DISABLED": "SET_STATUS_BAR_DISABLED",
+    "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
     "SYSTEM_UPDATE_POLICY_CODE": "SYSTEM_UPDATE_POLICY",
     "KIOSK_APPS_CODE": "KIOSK_APPS"
 };

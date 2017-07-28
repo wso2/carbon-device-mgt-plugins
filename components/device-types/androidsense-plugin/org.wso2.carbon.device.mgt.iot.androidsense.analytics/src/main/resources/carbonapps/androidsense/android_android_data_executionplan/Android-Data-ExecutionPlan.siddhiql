@@ -2,10 +2,10 @@
 
 @Plan:description('Calculate the total network usage of mobile data and others')
 
-@Import('org.wso2.iot.android.data:1.0.0')
+@Import('iot.per.device.stream.android.data:1.0.0')
 define stream DataStream (meta_owner string, meta_deviceId string, meta_timestamp long, type string, received long, sent long);
 
-@Export('org.wso2.iot.android.data.stats:1.0.0')
+@Export('iot.per.device.stream.android.data.stats:1.0.0')
 define stream DataStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, type string, total long, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of DataStream)

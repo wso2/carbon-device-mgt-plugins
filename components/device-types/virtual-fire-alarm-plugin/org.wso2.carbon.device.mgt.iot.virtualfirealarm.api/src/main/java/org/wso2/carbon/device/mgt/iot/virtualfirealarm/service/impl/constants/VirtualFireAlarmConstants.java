@@ -30,7 +30,7 @@ public class VirtualFireAlarmConstants {
 	public static final String POLICY_CONTEXT = "POLICY";
 
     //sensor events sumerized table name for temperature
-    public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
+    public static final String TEMPERATURE_EVENT_TABLE = "IOT_PER_DEVICE_STREAM_VIRTUALFIREALARM_TEMPERATURE";
     public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
     //mqtt tranport related constants

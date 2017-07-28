@@ -77,7 +77,8 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
             if (isAuthorized) {
                 try {
                     PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tdomain, true);
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(authenticationInfo.getTenantDomain()
+                            , true);
                     ServiceHolder.getInstance().getWebsocketOutputCallbackControllerService().subscribeWebsocket(streamName
                             , version, session);
                 } finally {

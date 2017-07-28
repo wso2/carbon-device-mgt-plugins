@@ -32,6 +32,20 @@ CREATE TABLE WIN_FEATURE (
 /
 
 -- -----------------------------------------------------
+-- Table `WINDOWS_ENROLLMENT_TOKEN`
+-- -----------------------------------------------------
+CREATE TABLE WINDOWS_ENROLLMENT_TOKEN (
+  ID INT NOT NULL,
+  TENANT_DOMAIN VARCHAR(45) NOT NULL,
+  ENROLLMENT_TOKEN VARCHAR(100) NULL,
+  DEVICE_ID VARCHAR(100) NULL,
+  USERNAME VARCHAR(45) NULL,
+  OWNERSHIP VARCHAR(45) NULL,
+  PRIMARY KEY (ID)
+)
+/
+
+-- -----------------------------------------------------
 -- Sequence `WIN_FEATURE_ID_INC_SEQ`
 -- -----------------------------------------------------
 CREATE SEQUENCE WIN_FEATURE_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE

@@ -44,7 +44,6 @@ public class AgentManager {
     private boolean deviceReady = false;
     private boolean isAlarmOn = false;
 
-    private String deviceMgtControlUrl, deviceMgtAnalyticUrl;
     private String deviceName, agentStatus;
 
     private int pushInterval;               // seconds
@@ -96,9 +95,6 @@ public class AgentManager {
                                                   AgentConstants.DEVICE_TYPE,
                                                   agentConfigs.getDeviceId());
 
-        this.deviceMgtAnalyticUrl = agentConfigs.getHTTPS_ServerEndpoint() + analyticsPageContext;
-        this.deviceMgtControlUrl = agentConfigs.getHTTPS_ServerEndpoint() + controlPageContext;
-
         this.agentStatus = AgentConstants.NOT_REGISTERED;
         this.deviceName = this.agentConfigs.getDeviceName();
 
@@ -118,8 +114,8 @@ public class AgentManager {
             agentCommunicator.put(AgentConstants.XMPP_PROTOCOL, xmppCommunicator);
 
         } catch (TransportHandlerException e) {
-            log.error("XMPP Endpoint String - " + agentConfigs.getXmppServerEndpoint() +
-                              ", provided in the configuration file is invalid.");
+            log.info("XMPP Endpoint String - " + agentConfigs.getXmppServerEndpoint() +
+                    ", provided in the configuration file is invalid. XMPP is not configured.");
         }
         String mqttTopic = String.format(AgentConstants.MQTT_SUBSCRIBE_TOPIC, agentConfigs.getTenantDomain(),
                                          agentConfigs.getDeviceId());
@@ -232,14 +228,6 @@ public class AgentManager {
 
     public void setDeviceReady(boolean deviceReady) {
         this.deviceReady = deviceReady;
-    }
-
-    public String getDeviceMgtControlUrl() {
-        return deviceMgtControlUrl;
-    }
-
-    public String getDeviceMgtAnalyticUrl() {
-        return deviceMgtAnalyticUrl;
     }
 
     public AgentConfiguration getAgentConfigs() {

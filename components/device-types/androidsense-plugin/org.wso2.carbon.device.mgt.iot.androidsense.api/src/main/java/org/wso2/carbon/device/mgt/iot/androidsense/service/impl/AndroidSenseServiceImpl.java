@@ -27,9 +27,6 @@ import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
-import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
-import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
-import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
@@ -40,130 +37,13 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 /**
- * The api for
+ * This api is for Android Sense Device Type
  */
 public class AndroidSenseServiceImpl implements AndroidSenseService {
 
     private static Log log = LogFactory.getLog(AndroidSenseServiceImpl.class);
-
-    @Path("device/{deviceId}/words")
-    @POST
-    public Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords) {
-        try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                    AndroidSenseConstants.DEVICE_TYPE))) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-            String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
-                    + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/words";
-
-            Operation commandOp = new CommandOperation();
-            commandOp.setCode("keywords");
-            commandOp.setType(Operation.Type.COMMAND);
-            commandOp.setEnabled(true);
-            commandOp.setPayLoad(keywords);
-
-            Properties props = new Properties();
-            props.setProperty(AndroidSenseConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
-            commandOp.setProperties(props);
-
-            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-            deviceIdentifiers.add(new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE));
-            APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
-                    deviceIdentifiers);
-            return Response.ok().build();
-        } catch (InvalidDeviceException e) {
-            String msg = "Invalid Device Identifiers found.";
-            log.error(msg, e);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        } catch (DeviceAccessAuthorizationException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        } catch (OperationManagementException e) {
-            log.error("Error occurred while executing command operation to send keywords", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @Path("device/{deviceId}/words/threshold")
-    @POST
-    public Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold) {
-        try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                    AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-            String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
-                    + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/threshold";
-
-            Operation commandOp = new CommandOperation();
-            commandOp.setCode("threshold");
-            commandOp.setType(Operation.Type.COMMAND);
-            commandOp.setEnabled(true);
-            commandOp.setPayLoad(threshold);
-
-            Properties props = new Properties();
-            props.setProperty(AndroidSenseConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
-            commandOp.setProperties(props);
-
-            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-            deviceIdentifiers.add(new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE));
-            APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
-                                                              deviceIdentifiers);
-            return Response.ok().build();
-        } catch (InvalidDeviceException e) {
-            String msg = "Invalid Device Identifiers found.";
-            log.error(msg, e);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        } catch (DeviceAccessAuthorizationException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        } catch (OperationManagementException e) {
-            log.error("Error occurred while executing command operation to set threashold", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @Path("device/{deviceId}/words")
-    @DELETE
-    public Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words) {
-        try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-            String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
-                    + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/remove";
-
-            Operation commandOp = new CommandOperation();
-            commandOp.setCode("remove");
-            commandOp.setType(Operation.Type.COMMAND);
-            commandOp.setEnabled(true);
-            commandOp.setPayLoad(words);
-
-            Properties props = new Properties();
-            props.setProperty(AndroidSenseConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
-            commandOp.setProperties(props);
-
-            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-            deviceIdentifiers.add(new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE));
-            APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
-                                                              deviceIdentifiers);
-            return Response.ok().build();
-        } catch (InvalidDeviceException e) {
-            String msg = "Invalid Device Identifiers found.";
-            log.error(msg, e);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        } catch (DeviceAccessAuthorizationException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        } catch (OperationManagementException e) {
-            log.error("Error occurred while executing command operation to remove words", e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
     @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
@@ -173,11 +53,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                                         @QueryParam("from") long from, @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
-        String query = "deviceId:" + deviceId + " AND deviceType:" +
-                AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
-        if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
-            query = "deviceId:" + deviceId;
-        }
+        String query = "meta_deviceId:" + deviceId + " AND meta_timestamp : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = getSensorEventTableName(sensor);
 
         try {
@@ -186,14 +62,10 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SensorRecord> sensorDatas;
-            if (!sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
-                List<SortByField> sortByFields = new ArrayList<>();
-                SortByField sortByField = new SortByField("time", SortType.ASC);
-                sortByFields.add(sortByField);
-                sensorDatas = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
-            } else {
-                sensorDatas = APIUtil.getAllEventsForDevice(sensorTableName, query, null);
-            }
+            List<SortByField> sortByFields = new ArrayList<>();
+            SortByField sortByField = new SortByField("meta_timestamp", SortType.ASC);
+            sortByFields.add(sortByField);
+            sensorDatas = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             return Response.ok().entity(sensorDatas).build();
         } catch (AnalyticsException e) {
             String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
@@ -212,37 +84,31 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
         String sensorEventTableName;
         switch (sensorName) {
             case AndroidSenseConstants.SENSOR_ACCELEROMETER:
-                sensorEventTableName = "DEVICE_ACCELEROMETER_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_ACCELEROMETER_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_BATTERY:
-                sensorEventTableName = "DEVICE_BATTERY_SUMMARY";
-                break;
-            case AndroidSenseConstants.SENSOR_GPS:
-                sensorEventTableName = "DEVICE_GPS_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_BATTERY_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_GRAVITY:
-                sensorEventTableName = "DEVICE_GRAVITY_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_GRAVITY_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_GYROSCOPE:
-                sensorEventTableName = "DEVICE_GYROSCOPE_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_GYROSCOPE_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_LIGHT:
-                sensorEventTableName = "DEVICE_LIGHT_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_LIGHT_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_MAGNETIC:
-                sensorEventTableName = "DEVICE_MAGNETIC_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_MAGNETIC_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_PRESSURE:
-                sensorEventTableName = "DEVICE_PRESSURE_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_PRESSURE_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_PROXIMITY:
-                sensorEventTableName = "DEVICE_PROXIMITY_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_PROXIMITY_TABLE;
                 break;
             case AndroidSenseConstants.SENSOR_ROTATION:
-                sensorEventTableName = "DEVICE_ROTATION_SUMMARY";
-                break;
-            case AndroidSenseConstants.SENSOR_WORDCOUNT:
-                sensorEventTableName = "WORD_COUNT_SUMMARY";
+                sensorEventTableName = AndroidSenseConstants.SENSOR_ROTATION_TABLE;
                 break;
             default:
                 sensorEventTableName = "";
@@ -257,7 +123,8 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
-            if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
+            Device enrolledDevice = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
+            if (enrolledDevice != null && !enrolledDevice.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.REMOVED)) {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 androidConfiguration.setMqttEndpoint(APIUtil.getMqttEndpoint());

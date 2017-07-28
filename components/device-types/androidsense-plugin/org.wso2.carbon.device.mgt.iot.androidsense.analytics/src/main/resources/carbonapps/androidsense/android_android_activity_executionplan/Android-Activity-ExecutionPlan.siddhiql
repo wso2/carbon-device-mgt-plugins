@@ -2,10 +2,10 @@
 
 @Plan:description('Identify the start and end of each activities')
 
-@Import('org.wso2.iot.android.activity:1.0.0')
+@Import('iot.per.device.stream.android.activity:1.0.0')
 define stream ActivitySream (meta_owner string, meta_deviceId string, meta_timestamp long, action string);
 
-@Export('org.wso2.iot.android.activity.stats:1.0.0')
+@Export('iot.per.device.stream.android.activity.stats:1.0.0')
 define stream ActivityStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, action string, duration long, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of ActivitySream)

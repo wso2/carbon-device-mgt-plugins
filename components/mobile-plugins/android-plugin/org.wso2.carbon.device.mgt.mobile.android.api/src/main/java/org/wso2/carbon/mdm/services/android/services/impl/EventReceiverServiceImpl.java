@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.mdm.services.android.services.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
@@ -34,14 +36,24 @@ import org.wso2.carbon.mdm.services.android.util.Message;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/events")
 public class EventReceiverServiceImpl implements EventReceiverService {
-    private static final String EVENT_STREAM_DEFINITION = "org.wso2.android.agent.Stream";
+    private static final String EVENT_STREAM_DEFINITION = "org.wso2.iot.LocationStream";
     private static final Log log = LogFactory.getLog(EventReceiverServiceImpl.class);
+    private Gson gson = new Gson();
+
+    private static final String LONGITUDE = "longitude";
+    private static final String LATITUDE = "latitude";
+    private static final String TIME_STAMP = "timeStamp";
+    private static final String LOCATION_EVENT_TYPE = "location";
 
     @POST
     @Path("/publish")
@@ -50,10 +62,21 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android device even logging.");
         }
+        String eventType = eventBeanWrapper.getType();
+        if (!LOCATION_EVENT_TYPE.equals(eventType)) {
+            String msg = "Dropping Android " + eventType + " Event.Only Location Event Type is supported.";
+            log.warn(msg);
+            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+        }
         Message message = new Message();
-
-        Object payload[] = {eventBeanWrapper.getDeviceIdentifier(), eventBeanWrapper.getPayload(),
-                eventBeanWrapper.getType()};
+        Object metaData[] = {eventBeanWrapper.getDeviceIdentifier(), eventType};
+        String eventPayload = eventBeanWrapper.getPayload();
+        JsonObject jsonObject = gson.fromJson(eventPayload, JsonObject.class);
+        Object payload[] = {
+                jsonObject.get(TIME_STAMP),
+                jsonObject.get(LONGITUDE),
+                jsonObject.get(LATITUDE)
+        };
         try {
             if (AndroidAPIUtils.getEventPublisherService().publishEvent(
                     EVENT_STREAM_DEFINITION, "1.0.0", new Object[0], new Object[0], payload)) {

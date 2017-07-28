@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>carbon-device-mgt-plugins-parent</artifactId>
-        <version>3.0.34-SNAPSHOT</version>
+        <version>4.0.42-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -37,6 +37,7 @@
         <module>cdmf-transport-adapters</module>
         <module>mb-extensions</module>
         <module>siddhi-extensions</module>
+		<module>pull-notification-listeners</module>
     </modules>
 
     <build>

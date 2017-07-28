@@ -2,10 +2,10 @@
 
 @Plan:description('Process received and sent SMS details')
 
-@Import('org.wso2.iot.android.sms:1.0.0')
+@Import('iot.per.device.stream.android.sms:1.0.0')
 define stream SmsStream (meta_owner string, meta_deviceId string, meta_timestamp long, number string, type string, body string);
 
-@Export('org.wso2.iot.android.sms.stats:1.0.0')
+@Export('iot.per.device.stream.android.sms.stats:1.0.0')
 define stream SmsStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, number string, type string, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of SmsStream)

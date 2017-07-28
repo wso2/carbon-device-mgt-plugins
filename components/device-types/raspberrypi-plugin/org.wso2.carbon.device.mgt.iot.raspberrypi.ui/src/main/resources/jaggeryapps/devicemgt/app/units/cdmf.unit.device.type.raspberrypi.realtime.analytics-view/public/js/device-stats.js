@@ -73,9 +73,9 @@ $(window).load(function () {
     connect(websocketUrl)
 });
 
-$(window).unload(function () {
+window.onbeforeunload = function() {
     disconnect();
-});
+};
 
 //websocket connection
 function connect(target) {

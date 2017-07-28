@@ -18,63 +18,100 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.common.util;
 
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.CacheEntry;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsTokenService;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
 
-import javax.cache.Cache;
-import javax.cache.CacheConfiguration;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Class for generate random token for XCEP and WSTEP.
  */
 public class DeviceUtil {
 
-    private static final String TOKEN_CACHE_MANAGER = "TOKEN_CACHE_MANAGER";
-    private static final String TOKEN_CACHE = "TOKEN_CACHE";
-    private static final long CACHE_DURATION = 15l;
-    private static boolean isContextCacheInitialized = false;
+    private static WindowsTokenService tokenService;
+
+    private static final Log log = LogFactory.getLog(DeviceUtil.class);
+
+    static {
+          tokenService = WindowsAPIUtils.getEnrollmentTokenService();
+    }
 
     public static String generateRandomToken() {
         return String.valueOf(UUID.randomUUID());
     }
 
-    public static void persistChallengeToken(String token, String deviceID, String username) {
-
-        Object objCacheEntry = getCacheEntry(token);
-        CacheEntry cacheEntry;
-        if (objCacheEntry == null) {
-            cacheEntry = new CacheEntry();
-            cacheEntry.setUsername(username);
-        } else {
-            cacheEntry = (CacheEntry) objCacheEntry;
+    public static void persistChallengeToken(String token, String deviceID, String username)
+            throws  WindowsDeviceEnrolmentException {
+        try {
+            if(tokenService == null) {
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
+            }
+            MobileCacheEntry existingCacheEntry = tokenService.getCacheToken(token);
+            PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            if (existingCacheEntry == null) {
+                MobileCacheEntry newCacheEntry = new MobileCacheEntry();
+                newCacheEntry.setDeviceID(deviceID);
+                newCacheEntry.setUsername(username);
+                newCacheEntry.setCacheToken(token);
+                newCacheEntry.setTenantDomain(carbonCtx.getTenantDomain());
+                newCacheEntry.setTenanatID(carbonCtx.getTenantId());
+                tokenService.saveCacheToken(newCacheEntry);
+            } else {
+                existingCacheEntry.setDeviceID(deviceID);
+                existingCacheEntry.setCacheToken(token);
+                tokenService.updateCacheToken(existingCacheEntry);
+            }
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error occurred when saving cache token for device: " + deviceID;
+            throw new WindowsDeviceEnrolmentException(msg, e);
         }
-        if (deviceID != null) {
-            cacheEntry.setDeviceID(deviceID);
+    }
+
+    public static MobileCacheEntry getTokenEntry(String token)
+            throws WindowsDeviceEnrolmentException {
+        MobileCacheEntry tokenEntry;
+        try {
+            if (tokenService == null) {
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
+            }
+            tokenEntry = tokenService.getCacheToken(token);
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error occurred when retrieving enrollment token.";
+            throw new WindowsDeviceEnrolmentException(msg, e);
         }
-        getTokenCache().put(token.trim(), cacheEntry);
+        return tokenEntry;
     }
 
-    public static void removeToken(String token) {
-        getTokenCache().remove(token);
+    public static MobileCacheEntry getTokenEntryFromDeviceId(String deviceId)
+            throws WindowsDeviceEnrolmentException {
+        MobileCacheEntry tokenEntry;
+        try {
+            if (tokenService == null) {
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
+            }
+            tokenEntry = tokenService.getCacheTokenFromDeviceId(deviceId);
+
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error occurred when retrieving enrollment token.";
+            throw new WindowsDeviceEnrolmentException(msg, e);
+        }
+        return tokenEntry;
     }
 
-    public static Object getCacheEntry(String token) {
-        return getTokenCache().get(token);
-    }
-
-    private static Cache getTokenCache() {
-        CacheManager contextCacheManager = Caching.getCacheManager(TOKEN_CACHE_MANAGER).
-                getCache(TOKEN_CACHE).getCacheManager();
-        if (!isContextCacheInitialized) {
-            return Caching.getCacheManager(TOKEN_CACHE_MANAGER).getCache(TOKEN_CACHE);
-        } else {
-            isContextCacheInitialized = true;
-            return contextCacheManager.createCacheBuilder(TOKEN_CACHE_MANAGER).setExpiry(
-                    CacheConfiguration.ExpiryType.MODIFIED,
-                    new CacheConfiguration.Duration(TimeUnit.MINUTES, CACHE_DURATION)).setStoreByValue(false).build();
+    public static void removeTokenEntry(String token) {
+        try {
+            if (tokenService == null) {
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
+            }
+            tokenService.removeCacheToken(token);
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error occurred when removing enrollment token.";
+            log.error(msg);
         }
     }
 }

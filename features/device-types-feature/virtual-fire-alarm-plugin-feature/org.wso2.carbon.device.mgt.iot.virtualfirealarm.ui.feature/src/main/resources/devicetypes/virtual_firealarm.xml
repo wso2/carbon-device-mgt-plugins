@@ -23,9 +23,6 @@
             <Name>Control buzzer</Name>
             <Description>Control buzzer on Virtual Firealarm</Description>
             <Operation context="/virtual_firealarm/device/{deviceId}/buzz" method="POST">
-                <FormParameters>
-                    <Parameter>state</Parameter>
-                </FormParameters>
             </Operation>
         </Feature>
     </Features>
@@ -34,17 +31,12 @@
         <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
 
-    <PushNotificationProvider type="MQTT">
+    <PushNotificationProviderConfig type="MQTT">
         <FileBasedProperties>true</FileBasedProperties>
         <!--if file based properties is set to false then the configuration will be picked from platform configuration-->
-        <ConfigProperties>
-            <Property Name="mqttAdapterName">virtualfirealarm.mqtt.adapter</Property>
-            <Property Name="qos">0</Property>
-            <Property Name="clearSession">true</Property>
-        </ConfigProperties>
-    </PushNotificationProvider>
+    </PushNotificationProviderConfig>
 
-    <!--<PushNotificationProvider type="XMPP">-->
+    <!--<PushNotificationProviderConfig type="XMPP">-->
         <!--<FileBasedProperties>true</FileBasedProperties>-->
         <!--&lt;!&ndash;if file based properties is set to false then the configuration will be picked from platform configuration&ndash;&gt;-->
         <!--<ConfigProperties>-->
@@ -56,7 +48,7 @@
             <!--<Property Name="jid">admin@localhost</Property>-->
             <!--<Property Name="server.name">localhost</Property>-->
         <!--</ConfigProperties>-->
-    <!--</PushNotificationProvider>-->
+    <!--</PushNotificationProviderConfig>-->
 
     <License>
         <Language>en_US</Language>

@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.34-SNAPSHOT</version>
+        <version>4.0.42-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -165,6 +165,7 @@
 							org.wso2.carbon.identity.oauth2.*,
 							org.wso2.carbon.utils,
 							org.wso2.carbon.utils.multitenancy,
+                            org.wso2.carbon.base,
 							javax.net.ssl,
 							feign.slf4j
                         </Import-Package>
