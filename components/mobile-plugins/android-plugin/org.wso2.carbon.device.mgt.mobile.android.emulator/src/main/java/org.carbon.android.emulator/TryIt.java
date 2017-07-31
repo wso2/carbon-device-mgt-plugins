@@ -646,7 +646,7 @@ public class TryIt {
      */
     private void installAgent() {
         String androidAgentLocation = workingDirectory + Constants.APK_LOCATION;
-        System.out.println("Installing agent ...");
+        System.out.println("Installing agent, please wait...");
         ProcessBuilder installAgentProcessBuilder = new ProcessBuilder(adbLocation, "install",
                 androidAgentLocation);
         try {
@@ -738,11 +738,6 @@ public class TryIt {
                     + "Hardware_Accelerated_Execution_Manager" + File.separator + "_haxm.zip";
             getTools(System.getProperty(Constants.HAXM_URL), folderName);
             String haxmInstaller = haxmLocation + File.separator + "HAXM installation";
-//            if (osSuffix.equals(Constants.WINDOWS_OS)) {
-//                haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
-//            } else {
-//                haxmInstaller += Constants.MAC_HAXM_EXTENSION;
-//            }
             setExecutePermission(haxmInstaller);
 
             ProcessBuilder processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
@@ -830,6 +825,7 @@ public class TryIt {
     private void checkCacheImg(String deviceId) {
         File cacheImg = new File(userHome + File.separator + ".android"
                 + File.separator + "avd" + File.separator + deviceId + ".avd" + File.separator + "cache.img");
+        System.out.print("Creating cache image, please wait ");
         while (!cacheImg.exists()) {
             System.out.print(".");
             delay(1000);
