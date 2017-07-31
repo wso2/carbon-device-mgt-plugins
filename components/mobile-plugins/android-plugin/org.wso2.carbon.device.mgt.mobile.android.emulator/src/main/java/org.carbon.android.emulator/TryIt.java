@@ -156,7 +156,7 @@ public class TryIt {
             if (!new File(localPath).delete()) {
                 System.out.println("Delete " + localPath + " and try again");
             }
-            handleException("Downloading " + localPath + " failed.", e);
+            handleException("Download failed for file : " + localPath , e);
         } finally {
             if (in != null)
                 try {
@@ -193,7 +193,7 @@ public class TryIt {
         String response = new Scanner(System.in, StandardCharsets.UTF_8.toString()).next();
         String emulatorLocationPath = response + File.separator + "tools" + File.separator + "emulator";
         if (osSuffix.equals(Constants.WINDOWS_OS)) {
-            emulatorLocationPath += Constants.WINDOWS_EXTENSION_BAT;
+            emulatorLocationPath += Constants.WINDOWS_EXTENSION_EXE;
         }
         if (new File(emulatorLocationPath).exists()) {
             androidSdkHome = response;
@@ -734,19 +734,19 @@ public class TryIt {
             if (!new File(haxmLocation).mkdirs()) {
                 makeDirectoryError(haxmLocation, androidSdkHome);
             }
-            String folderName = "_haxm.zip";
-            getTools(System.getProperty(Constants.HAXM_URL), haxmLocation + File.separator
-                    + folderName);
-            String haxmInstaller = haxmLocation + File.separator + "silent_install";
-            if (osSuffix.equals(Constants.WINDOWS_OS)) {
-                haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
-            } else {
-                haxmInstaller += Constants.MAC_HAXM_EXTENSION;
-            }
+            String folderName = "extras" + File.separator + "intel" + File.separator
+                    + "Hardware_Accelerated_Execution_Manager" + File.separator + "_haxm.zip";
+            getTools(System.getProperty(Constants.HAXM_URL), folderName);
+            String haxmInstaller = haxmLocation + File.separator + "HAXM installation";
+//            if (osSuffix.equals(Constants.WINDOWS_OS)) {
+//                haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
+//            } else {
+//                haxmInstaller += Constants.MAC_HAXM_EXTENSION;
+//            }
             setExecutePermission(haxmInstaller);
 
             ProcessBuilder processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
-                    workingDirectory + File.separator + "haxmSilentRun.log");
+                    androidSdkHome + File.separator + "haxmSilentRun.log");
             processBuilder.directory(new File(haxmLocation));
             processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
