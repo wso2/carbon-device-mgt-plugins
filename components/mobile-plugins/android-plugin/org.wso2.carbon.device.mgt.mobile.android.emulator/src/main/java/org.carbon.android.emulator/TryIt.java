@@ -494,17 +494,29 @@ public class TryIt {
     /**
      * This method gets the Android SDK location if available and sets the SDK path else downloads the SDK.
      */
+    private int count = 0;
+
     private void setAndroidSDK() {
         sdkConfigFile = new File("sdkConfigLocation");
         if (!(sdkConfigFile.exists() && !sdkConfigFile.isDirectory())) {
             //TODO
             Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
             System.out.print("Do you have an Android SDK installed on your computer (y/N) ? : ");
-            String response = read.next().toLowerCase();
+            String response = read.nextLine().toLowerCase();
             if (response.matches("y")) {
                 setSDKPath();
-            } else {
+            } else if (response.matches("n") || response.matches("")) {
                 getAndroidSDK();
+            } else {
+                if (count < 5) {
+                    System.out.println("Please enter a valid parameter .");
+                    count++;
+                    setAndroidSDK();
+                    return;
+                } else {
+                    System.out.println("Terminating process");
+                    System.exit(1);
+                }
             }
         } else {
             Scanner scanner = null;
@@ -524,6 +536,10 @@ public class TryIt {
             adbLocation += Constants.WINDOWS_EXTENSION_EXE;
         }
         setExecutePermission(adbLocation);
+    }
+
+    private void askForSDKLocation() {
+        System.out.println("Please enter a valid parameter .");
     }
 
     /**
