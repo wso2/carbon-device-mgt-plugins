@@ -501,11 +501,11 @@ public class TryIt {
         if (!(sdkConfigFile.exists() && !sdkConfigFile.isDirectory())) {
             //TODO
             Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
-            System.out.print("Do you have an Android SDK installed on your computer (y/N) ? : ");
+            System.out.print("Do you have an Android SDK installed on your computer (y/n) ? : ");
             String response = read.nextLine().toLowerCase();
             if (response.matches("y")) {
                 setSDKPath();
-            } else if (response.matches("n") || response.matches("")) {
+            } else if (response.matches("n") ) {
                 getAndroidSDK();
             } else {
                 if (count < 5) {
