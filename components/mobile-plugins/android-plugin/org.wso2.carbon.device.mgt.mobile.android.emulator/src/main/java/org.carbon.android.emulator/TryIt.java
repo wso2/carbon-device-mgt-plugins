@@ -734,14 +734,26 @@ public class TryIt {
             if (!new File(haxmLocation).mkdirs()) {
                 makeDirectoryError(haxmLocation, androidSdkHome);
             }
+            String haxmInstaller ;
             String folderName = "extras" + File.separator + "intel" + File.separator
                     + "Hardware_Accelerated_Execution_Manager" + File.separator + "_haxm.zip";
             getTools(System.getProperty(Constants.HAXM_URL), folderName);
-            String haxmInstaller = haxmLocation + File.separator + "HAXM installation";
-            setExecutePermission(haxmInstaller);
+            ProcessBuilder processBuilder;
+            if(osSuffix.equals(Constants.MAC_OS) ) {
+                 haxmInstaller = haxmLocation + File.separator + "HAXM installation";
+                setExecutePermission(haxmInstaller);
+                processBuilder = new ProcessBuilder("sudo", haxmInstaller, "-m", "2048", "-log",
+                        androidSdkHome + File.separator + "haxmSilentRun.log");
+            } else {
+                 haxmInstaller = haxmLocation + File.separator + "silent_install";
+                                    haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
+                setExecutePermission(haxmInstaller);
+                processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
+                        androidSdkHome + File.separator + "haxmSilentRun.log");
+            }
 
-            ProcessBuilder processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
-                    androidSdkHome + File.separator + "haxmSilentRun.log");
+            System.out.println("Installing intel HAXM...");
+
             processBuilder.directory(new File(haxmLocation));
             processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
