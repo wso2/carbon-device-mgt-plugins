@@ -156,7 +156,7 @@ public class TryIt {
             if (!new File(localPath).delete()) {
                 System.out.println("Delete " + localPath + " and try again");
             }
-            handleException("Download failed for file : " + localPath , e);
+            handleException("Download failed for file : " + localPath, e);
         } finally {
             if (in != null)
                 try {
@@ -505,7 +505,7 @@ public class TryIt {
             String response = read.nextLine().toLowerCase();
             if (response.matches("y")) {
                 setSDKPath();
-            } else if (response.matches("n") ) {
+            } else if (response.matches("n")) {
                 getAndroidSDK();
             } else {
                 if (count < 5) {
@@ -734,26 +734,20 @@ public class TryIt {
             if (!new File(haxmLocation).mkdirs()) {
                 makeDirectoryError(haxmLocation, androidSdkHome);
             }
-            String haxmInstaller ;
+            String haxmInstaller;
             String folderName = "extras" + File.separator + "intel" + File.separator
                     + "Hardware_Accelerated_Execution_Manager" + File.separator + "_haxm.zip";
             getTools(System.getProperty(Constants.HAXM_URL), folderName);
             ProcessBuilder processBuilder;
-            if(osSuffix.equals(Constants.MAC_OS) ) {
-                 haxmInstaller = haxmLocation + File.separator + "HAXM installation";
-                setExecutePermission(haxmInstaller);
-                processBuilder = new ProcessBuilder("sudo", haxmInstaller, "-m", "2048", "-log",
-                        androidSdkHome + File.separator + "haxmSilentRun.log");
+            if (osSuffix.equals(Constants.MAC_OS)) {
+                haxmInstaller = haxmLocation + File.separator + "silent_install.sh";
             } else {
-                 haxmInstaller = haxmLocation + File.separator + "silent_install";
-                                    haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
-                setExecutePermission(haxmInstaller);
-                processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
-                        androidSdkHome + File.separator + "haxmSilentRun.log");
+                haxmInstaller = haxmLocation + File.separator + "silent_install.bat";
             }
-
-            System.out.println("Installing intel HAXM...");
-
+            setExecutePermission(haxmInstaller);
+            processBuilder = new ProcessBuilder("sudo", haxmInstaller, "-m", "2048", "-log",
+                    androidSdkHome + File.separator + "haxmSilentRun.log");
+            System.out.println("Installing intel HAXM,  Please wait . . . ");
             processBuilder.directory(new File(haxmLocation));
             processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
