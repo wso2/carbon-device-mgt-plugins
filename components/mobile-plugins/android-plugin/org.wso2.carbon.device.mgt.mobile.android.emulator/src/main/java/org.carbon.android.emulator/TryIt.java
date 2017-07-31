@@ -156,7 +156,7 @@ public class TryIt {
             if (!new File(localPath).delete()) {
                 System.out.println("Delete " + localPath + " and try again");
             }
-            handleException("Downloading " + localPath + " failed.", e);
+            handleException("Download failed for file : " + localPath, e);
         } finally {
             if (in != null)
                 try {
@@ -193,7 +193,7 @@ public class TryIt {
         String response = new Scanner(System.in, StandardCharsets.UTF_8.toString()).next();
         String emulatorLocationPath = response + File.separator + "tools" + File.separator + "emulator";
         if (osSuffix.equals(Constants.WINDOWS_OS)) {
-            emulatorLocationPath += Constants.WINDOWS_EXTENSION_BAT;
+            emulatorLocationPath += Constants.WINDOWS_EXTENSION_EXE;
         }
         if (new File(emulatorLocationPath).exists()) {
             androidSdkHome = response;
@@ -255,7 +255,7 @@ public class TryIt {
     private void getTools(String url, String folderName) {
         System.out.println("Downloading " + folderName);
         downloadArtifacts(url, androidSdkHome + File.separator + folderName);
-        System.out.println("Configuring " + folderName);
+        System.out.println("Configuring " + folderName + ", please wait");
         extractFolder(androidSdkHome + File.separator + folderName);
     }
 
@@ -505,7 +505,7 @@ public class TryIt {
             String response = read.nextLine().toLowerCase();
             if (response.matches("y")) {
                 setSDKPath();
-            } else if (response.matches("n") ) {
+            } else if (response.matches("n")) {
                 getAndroidSDK();
             } else {
                 if (count < 5) {
@@ -646,7 +646,7 @@ public class TryIt {
      */
     private void installAgent() {
         String androidAgentLocation = workingDirectory + Constants.APK_LOCATION;
-        System.out.println("Installing agent ...");
+        System.out.println("Installing agent, please wait...");
         ProcessBuilder installAgentProcessBuilder = new ProcessBuilder(adbLocation, "install",
                 androidAgentLocation);
         try {
@@ -734,19 +734,20 @@ public class TryIt {
             if (!new File(haxmLocation).mkdirs()) {
                 makeDirectoryError(haxmLocation, androidSdkHome);
             }
-            String folderName = "_haxm.zip";
-            getTools(System.getProperty(Constants.HAXM_URL), haxmLocation + File.separator
-                    + folderName);
-            String haxmInstaller = haxmLocation + File.separator + "silent_install";
-            if (osSuffix.equals(Constants.WINDOWS_OS)) {
-                haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
+            String haxmInstaller;
+            String folderName = "extras" + File.separator + "intel" + File.separator
+                    + "Hardware_Accelerated_Execution_Manager" + File.separator + "_haxm.zip";
+            getTools(System.getProperty(Constants.HAXM_URL), folderName);
+            ProcessBuilder processBuilder;
+            if (osSuffix.equals(Constants.MAC_OS)) {
+                haxmInstaller = haxmLocation + File.separator + "silent_install.sh";
             } else {
-                haxmInstaller += Constants.MAC_HAXM_EXTENSION;
+                haxmInstaller = haxmLocation + File.separator + "silent_install.bat";
             }
             setExecutePermission(haxmInstaller);
-
-            ProcessBuilder processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
-                    workingDirectory + File.separator + "haxmSilentRun.log");
+            processBuilder = new ProcessBuilder("sudo", haxmInstaller, "-m", "2048", "-log",
+                    androidSdkHome + File.separator + "haxmSilentRun.log");
+            System.out.println("Installing intel HAXM,  Please wait . . . ");
             processBuilder.directory(new File(haxmLocation));
             processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -830,6 +831,7 @@ public class TryIt {
     private void checkCacheImg(String deviceId) {
         File cacheImg = new File(userHome + File.separator + ".android"
                 + File.separator + "avd" + File.separator + deviceId + ".avd" + File.separator + "cache.img");
+        System.out.print("Creating cache image, please wait ");
         while (!cacheImg.exists()) {
             System.out.print(".");
             delay(1000);
