@@ -42,6 +42,7 @@ import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.config.Aut
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.internal.AuthorizationDataHolder;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.util.AuthorizationCacheKey;
 import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -49,15 +50,12 @@ import org.wso2.carbon.user.api.UserStoreException;
 import javax.cache.Cache;
 import javax.cache.CacheConfiguration;
 import javax.cache.Caching;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.*;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.io.InputStream;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -72,17 +70,21 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
 
     private static final String UI_EXECUTE = "ui.execute";
     private static Log log = LogFactory.getLog(DeviceAccessBasedMQTTAuthorizer.class);
-    AuthorizationConfigurationManager MQTTAuthorizationConfiguration;
+    private AuthorizationConfigurationManager MQTTAuthorizationConfiguration;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
+    private static final String DEFAULT_ADMIN_PERMISSION = "permission/admin/device-mgt";
     private static final String CACHE_MANAGER_NAME = "mqttAuthorizationCacheManager";
     private static final String CACHE_NAME = "mqttAuthorizationCache";
     private static DeviceAccessAuthorizationAdminService deviceAccessAuthorizationAdminService;
-
+    private static OAuthRequestInterceptor oAuthRequestInterceptor;
+    private static final String GATEWAY_ERROR_CODE = "<am:code>404</am:code>";
+    private static final String ALL_TENANT_DOMAIN = "+";
 
     public DeviceAccessBasedMQTTAuthorizer() {
+        oAuthRequestInterceptor = new OAuthRequestInterceptor();
         this.MQTTAuthorizationConfiguration = AuthorizationConfigurationManager.getInstance();
         deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger())
-                .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor())
+                .logLevel(Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceAccessAuthorizationAdminService.class,
                         MQTTAuthorizationConfiguration.getDeviceMgtServerUrl() + CDMF_SERVER_BASE_CONTEXT);
@@ -100,6 +102,13 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         try {
             String topics[] = topic.split("/");
             String tenantDomainFromTopic = topics[0];
+            if (ALL_TENANT_DOMAIN.equals(tenantDomainFromTopic)) {
+                if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(authorizationSubject.getTenantDomain())
+                        && isUserAuthorized(authorizationSubject, DEFAULT_ADMIN_PERMISSION, UI_EXECUTE)) {
+                    return true;
+                }
+                return false;
+            }
             if (!tenantDomainFromTopic.equals(authorizationSubject.getTenantDomain())) {
                 return false;
             }
@@ -121,7 +130,12 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                     return false;
                 } catch (FeignException e) {
-                    log.error(e.getMessage(), e);
+                    oAuthRequestInterceptor.resetApiApplicationKey();
+                    if (e.getMessage().contains(GATEWAY_ERROR_CODE) || e.status() == 404 || e.status() == 403) {
+                        log.error("Failed to connect to the device authorization service, Retrying....");
+                    } else {
+                        log.error(e.getMessage(), e);
+                    }
                     return false;
                 }
             }
@@ -164,13 +178,18 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                 }
             } catch (FeignException e) {
-                log.error(e.getMessage(), e);
+                oAuthRequestInterceptor.resetApiApplicationKey();
+                //This is to avoid failure where it tries to call authorization service before the api is published
+                if (e.getMessage().contains(GATEWAY_ERROR_CODE) || e.status() == 404 || e.status() == 403) {
+                    log.error("Failed to connect to the device authorization service, Retrying....");
+                } else {
+                    log.error(e.getMessage(), e);
+                }
             }
+            return false;
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
-
-        return false;
     }
 
     /**
@@ -237,16 +256,21 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         }
     }
 
-    private static Client getSSLClient() {
-        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
-            @Override
-            public boolean verify(String s, SSLSession sslSession) {
-                return true;
-            }
-        });
+    public static Client getSSLClient() {
+        boolean isIgnoreHostnameVerification = Boolean.parseBoolean(System.getProperty("org.wso2.ignoreHostnameVerification"));
+        if(isIgnoreHostnameVerification) {
+            return new Client.Default(getSimpleTrustedSSLSocketFactory(), new HostnameVerifier() {
+                @Override
+                public boolean verify(String s, SSLSession sslSession) {
+                    return true;
+                }
+            });
+        }else {
+            return new Client.Default(getTrustedSSLSocketFactory(), null);
+        }
     }
 
-    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+    private static SSLSocketFactory getSimpleTrustedSSLSocketFactory() {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
@@ -267,6 +291,64 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
+    }
+
+    //FIXME - I know hard-cording values is a bad practice , this code is repeating in
+    // several class, so this hard-coding strings will be removed once this code block is moved into a central location
+    // this should be done after the 3.1.0 release.
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            String keyStorePassword = ServerConfiguration.getInstance().getFirstProperty("Security.KeyStore.Password");
+            String keyStoreLocation = ServerConfiguration.getInstance().getFirstProperty("Security.KeyStore.Location");
+            String trustStorePassword = ServerConfiguration.getInstance().getFirstProperty(
+                    "Security.TrustStore.Password");
+            String trustStoreLocation = ServerConfiguration.getInstance().getFirstProperty(
+                    "Security.TrustStore.Location");
+
+            KeyStore keyStore = loadKeyStore(keyStoreLocation,keyStorePassword,"JKS");
+            KeyStore trustStore = loadTrustStore(trustStoreLocation,trustStorePassword);
+            return initSSLConnection(keyStore,keyStorePassword,trustStore);
+        } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException
+                |CertificateException | IOException | UnrecoverableKeyException e) {
+            log.error("Error while creating the SSL socket factory due to "+e.getMessage(),e);
+            return null;
+        }
+    }
+
+    private static SSLSocketFactory initSSLConnection(KeyStore keyStore,String keyStorePassword,KeyStore trustStore) throws NoSuchAlgorithmException, UnrecoverableKeyException,
+            KeyStoreException, KeyManagementException {
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+        keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
+        TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+        trustManagerFactory.init(trustStore);
+
+        // Create and initialize SSLContext for HTTPS communication
+        SSLContext sslContext = SSLContext.getInstance("SSLv3");
+        sslContext.init(keyManagerFactory.getKeyManagers(), trustManagerFactory.getTrustManagers(), null);
+        SSLContext.setDefault(sslContext);
+        return  sslContext.getSocketFactory();
+    }
+
+    private static KeyStore loadKeyStore(String keyStorePath, String ksPassword, String type)
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        InputStream fileInputStream = null;
+        try {
+            char[] keypassChar = ksPassword.toCharArray();
+            KeyStore keyStore = KeyStore.getInstance(type);
+            fileInputStream = new FileInputStream(keyStorePath);
+            keyStore.load(fileInputStream, keypassChar);
+            return keyStore;
+        } finally {
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
+        }
+    }
+
+    private static KeyStore loadTrustStore(String trustStorePath, String tsPassword)
+            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+
+        return loadKeyStore(trustStorePath,tsPassword,"JKS");
     }
 
 }

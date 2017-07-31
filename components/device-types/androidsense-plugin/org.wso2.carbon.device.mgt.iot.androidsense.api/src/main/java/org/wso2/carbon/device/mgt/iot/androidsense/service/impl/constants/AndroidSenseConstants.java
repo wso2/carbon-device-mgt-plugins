@@ -23,7 +23,6 @@ public class AndroidSenseConstants {
     //Android Sensor names
     public static final String SENSOR_ACCELEROMETER = "accelerometer";
     public static final String SENSOR_BATTERY = "battery";
-    public static final String SENSOR_GPS = "gps";
     public static final String SENSOR_GRAVITY = "gravity";
     public static final String SENSOR_GYROSCOPE = "gyroscope";
     public static final String SENSOR_LIGHT = "light";
@@ -31,7 +30,18 @@ public class AndroidSenseConstants {
     public static final String SENSOR_PRESSURE = "pressure";
     public static final String SENSOR_PROXIMITY = "proximity";
     public static final String SENSOR_ROTATION = "rotation";
-    public static final String SENSOR_WORDCOUNT = "wordcounter";
+
+    //Android Sensor table names
+    public static final String SENSOR_ACCELEROMETER_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_ACCELEROMETER_STATS";
+    public static final String SENSOR_BATTERY_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_BATTERY_STATS";
+    public static final String SENSOR_GRAVITY_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_GRAVITY_STATS";
+    public static final String SENSOR_GYROSCOPE_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_GYROSCOPE_STATS";
+    public static final String SENSOR_LIGHT_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_LIGHT_STATS";
+    public static final String SENSOR_MAGNETIC_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_MAGNETIC_STATS";
+    public static final String SENSOR_PRESSURE_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_PRESSURE_STATS";
+    public static final String SENSOR_PROXIMITY_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_PROXIMITY_STATS";
+    public static final String SENSOR_ROTATION_TABLE = "IOT_PER_DEVICE_STREAM_ANDROID_ROTATION_STATS";
+
     //MQTT Subscribe topic
 
     //mqtt tranport related constants

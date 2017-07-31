@@ -34,6 +34,7 @@ import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
+import org.wso2.carbon.device.mgt.core.operation.mgt.ConfigOperation;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
@@ -96,14 +97,12 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
                     + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
-            Operation commandOp = new CommandOperation();
+            ConfigOperation commandOp = new ConfigOperation();
             commandOp.setCode("buzz");
-            commandOp.setType(Operation.Type.COMMAND);
             commandOp.setEnabled(true);
             commandOp.setPayLoad(actualMessage);
 
             Properties props = new Properties();
-            props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
             props.setProperty(VirtualFireAlarmConstants.CLIENT_JID_PROPERTY_KEY, deviceId + "@" + XmppConfig
                     .getInstance().getServerName());
             props.setProperty(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "CONTROL-REQUEST");
@@ -136,10 +135,10 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     @Produces("application/json")
     public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                              @QueryParam("to") long to) {
-        String fromDate = String.valueOf(from);
-        String toDate = String.valueOf(to);
-        String query = "deviceId:" + deviceId + " AND deviceType:" +
-                VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String fromDate = String.valueOf(from*1000); // converting time to ms
+        String toDate = String.valueOf(to*1000); // converting time to ms
+        String query = "meta_deviceId:" + deviceId + " AND meta_deviceType:" +
+                VirtualFireAlarmConstants.DEVICE_TYPE + " AND meta_time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
@@ -148,7 +147,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SortByField> sortByFields = new ArrayList<>();
-            SortByField sortByField = new SortByField("time", SortType.ASC);
+            SortByField sortByField = new SortByField("meta_time", SortType.ASC);
             sortByFields.add(sortByField);
             List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
@@ -234,15 +233,27 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             throw new DeviceManagementException(msg);
         }
         if (apiApplicationKey == null) {
+            String adminUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
+                    .getRealmConfiguration().getAdminUserName();
+            String tenantAdminDomainName = PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                    .getTenantDomain();
             String applicationUsername =
                     PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
                             .getAdminUserName() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
                             .getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
-            apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
-                    VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
-                    VirtualFireAlarmConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            try {
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantAdminDomainName);
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(adminUsername);
+
+                apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                        VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
+                        VirtualFireAlarmConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId;

@@ -36,7 +36,7 @@
             }
         </style>
         {{#each controlOperations}}
-            <a href="javascript:operationSelect('{{operation}}')">
+            <a {{#unless isDisabled}} href="javascript:operationSelect('{{operation}}')" {{else}} href="javascript:void(0)" class="operation-tile op-disabled" title="{{disabledText}}" data-toggle="tooltip" {{/unless}}>
                 {{#if iconFont}}
                     <i class="fw {{iconFont}}"></i>
                 {{else}}
@@ -51,6 +51,7 @@
 
             <div class="operation" data-operation-code="{{operation}}">
                 <div class="content">
+
                     <div class="row">
                         <div class="col-lg-5 col-md-6 col-centered">
                             <h3>
@@ -65,6 +66,11 @@
                                 {{description}}
                                 <br>
                             </h4>
+
+                            <div id="operation-error-msg" class="alert alert-danger hidden" role="alert">
+                                <i class="icon fw fw-error"></i><span></span>
+                            </div>
+
                             <div id="operation-form">
                                 <form action="{{params.0.uri}}" method="{{params.0.method}}"
                                       style="padding-bottom: 20px;"
@@ -126,7 +132,7 @@
         <div class="row">
             <div class="col-lg-5 col-md-6 col-centered">
                 <h3>
-                    <span class="fw-stack">
+                    <span class="fw-stack center-block">
                         <i class="fw fw-circle-outline fw-stack-2x"></i>
                         <i id="status-icon" class="fw fw-error fw-stack-1x"></i>
                     </span>

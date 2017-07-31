@@ -49,7 +49,6 @@ public class DiscoveryServiceImpl implements DiscoveryService {
 
     public static final String FEDERATED = "Federated";
     private static final String DELIMITER = "@";
-    private static final int DOMAIN_SEGMENT = 1;
     private static Log log = LogFactory.getLog(
             org.wso2.carbon.device.mgt.mobile.windows.api.services.discovery.impl.DiscoveryServiceImpl.class);
 
@@ -67,7 +66,7 @@ public class DiscoveryServiceImpl implements DiscoveryService {
 
         String emailId = discoveryRequest.getEmailId();
         String[] userDomains = emailId.split(DELIMITER);
-        String domain = userDomains[DOMAIN_SEGMENT];
+        String domain = userDomains[(userDomains.length)-1];
         DiscoveryResponse discoveryResponse;
 
         if (!PluginConstants.WindowsVersionProperties.REQUESTED_WIN81_VERSION.equals(discoveryRequest.getVersion())

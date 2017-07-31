@@ -69,9 +69,14 @@ public class HTTPMessageServlet extends HttpServlet {
 		this.tenantId = tenantId;
 		this.exposedTransports = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.EXPOSED_TRANSPORTS);
+        String globalContentValidator = globalProperties.get(HTTPEventAdapterConstants.
+                                                                     ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
 
 		String contentValidatorType = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
+        if (globalContentValidator != null && !globalContentValidator.isEmpty() ) {
+            contentValidatorType = globalContentValidator;
+        }
 		if (contentValidatorType == null || HTTPEventAdapterConstants.DEFAULT.equals(contentValidatorType)) {
 			contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
                     .getDefaultContentValidator();

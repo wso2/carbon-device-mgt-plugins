@@ -51,24 +51,27 @@ public class GlobalThrowableMapper implements ExceptionMapper {
         if (e instanceof JsonParseException) {
             String errorMessage = "Malformed request body.";
             if (log.isDebugEnabled()) {
-                log.error(errorMessage, e);
+                log.debug(errorMessage, e);
             }
             return AndroidDeviceUtils.buildBadRequestException(errorMessage).getResponse();
         }
         if (e instanceof NotFoundException) {
-            return ((NotFoundException) e).getResponse();
+                return ((NotFoundException) e).getResponse();
         }
         if (e instanceof BadRequestException) {
             return ((BadRequestException) e).getResponse();
         }
         if (e instanceof UnexpectedServerErrorException) {
             if (log.isDebugEnabled()) {
-                log.error("Unexpected server error", e);
+                log.debug("Unexpected server error", e);
             }
             return ((UnexpectedServerErrorException) e).getResponse();
         }
         if (e instanceof ConstraintViolationException) {
-            return ((ParameterValidationException) e).getResponse();
+            if (log.isDebugEnabled()) {
+                log.debug("Constraint violation issue.", e);
+                return ((ParameterValidationException) e).getResponse();
+            }
         }
         if (e instanceof IllegalArgumentException) {
             ErrorDTO errorDetail = new ErrorDTO();
@@ -83,7 +86,7 @@ public class GlobalThrowableMapper implements ExceptionMapper {
         }
         if (e instanceof ClientErrorException) {
             if (log.isDebugEnabled()) {
-                log.error("Client error", e);
+                log.debug("Client error", e);
             }
             return ((ClientErrorException) e).getResponse();
         }
@@ -100,7 +103,7 @@ public class GlobalThrowableMapper implements ExceptionMapper {
         }
         if (e instanceof ForbiddenException) {
             if (log.isDebugEnabled()) {
-                log.error("Resource forbidden", e);
+                log.debug("Resource forbidden", e);
             }
             return ((ForbiddenException) e).getResponse();
         }

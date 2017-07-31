@@ -2,10 +2,10 @@
 
 @Plan:description('Process pressure changes.')
 
-@Import('org.wso2.iot.android.pressure:1.0.0')
+@Import('iot.per.device.stream.android.pressure:1.0.0')
 define stream PressureStream (meta_owner string, meta_deviceId string, meta_timestamp long, pressure float);
 
-@Export('org.wso2.iot.android.pressure.stats:1.0.0')
+@Export('iot.per.device.stream.android.pressure.stats:1.0.0')
 define stream PressureStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, pressure float, year int,
 month int, day int, hour int, minute int);
 

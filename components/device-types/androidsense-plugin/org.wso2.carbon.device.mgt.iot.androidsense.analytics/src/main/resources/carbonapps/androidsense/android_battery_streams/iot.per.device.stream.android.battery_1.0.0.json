@@ -1,0 +1,38 @@
+{
+  "name": "iot.per.device.stream.android.battery",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "Intermediate stream to map Android sense stream to battery execution plan",
+  "metaData": [
+    {
+      "name": "owner",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    },
+    {
+      "name": "timestamp",
+      "type": "LONG"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "level",
+      "type": "INT"
+    },
+    {
+      "name": "state",
+      "type": "STRING"
+    },
+    {
+      "name": "status",
+      "type": "INT"
+    },
+    {
+      "name": "temperature",
+      "type": "INT"
+    }
+  ]
+}

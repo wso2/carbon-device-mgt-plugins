@@ -90,9 +90,9 @@ public class MQTTEventAdapterFactory extends OutputEventAdapterFactory {
         // set Quality of Service
         Property qos = new Property(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);
         qos.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS));
-        qos.setRequired(true);
+        qos.setRequired(false);
         qos.setOptions(new String[]{"0", "1", "2"});
-        qos.setDefaultValue("1");
+        qos.setDefaultValue("2");
 
         staticPropertyList.add(brokerUrl);
         staticPropertyList.add(userName);

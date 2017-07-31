@@ -27,43 +27,32 @@
              class="alert alert-danger hidden" role="alert">
             <i class="icon fw fw-error"></i><span></span>
         </div>
-        <div class="wr-input-control">
-            <label class="wr-input-label" for="email-config-host">
-                Http Endpoint
-                                            <span class="helper" title="SMTP Server Host">
-                                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
-                                            </span>
-                <br>
-            </label>
-            <input id="http-endpoint" type="text" class="form-control"
-                   placeholder="[ Required Field ]">
-            <br>
-
-            <label class="wr-input-label" for="email-config-host">
-                Https Endpoint
-                                            <span class="helper" title="SMTP Server Host">
-                                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
-                                            </span>
-                <br>
-            </label>
-            <input id="https-endpoint" type="text" class="form-control"
-                   placeholder="[ Required Field ]">
-            <br>
-            <label class="wr-input-label" for="email-config-host">
-                Mqtt Endpoint
-                                            <span class="helper" title="SMTP Server Host">
-                                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
-                                            </span>
-                <br>
-            </label>
-            <input id="mqtt-endpoint" type="text" class="form-control"
-                   placeholder="[ Required Field ]">
-            <br>
-        </div>
         <div class="wr-input-control wr-btn-grp">
-            <button id="save-general-btn" class="wr-btn" onclick="addConfiguration();">
-                        Save
+            <button id="save-general-btn" class="wr-btn" onclick="artifactUpload();">
+                Deploy Analytics Artifacts
             </button>
+
+        </div>
+    </div>
+</div>
+
+<div id="raspberrypi-statistic-response-template" style="display: none">
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-5 col-md-6 col-centered">
+                <h3>
+                    <span class="fw-stack">
+                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                        <i id="status-icon" class="fw fw-error fw-stack-1x"></i>
+                    </span>
+                    <br>
+                </h3>
+                <h4>
+                    <span id="title"></span>
+                    <br>
+                </h4>
+                <span id="description"></span>
+            </div>
         </div>
     </div>
 </div>

@@ -2,10 +2,10 @@
 
 @Plan:description('Process light changes.')
 
-@Import('org.wso2.iot.android.light:1.0.0')
+@Import('iot.per.device.stream.android.light:1.0.0')
 define stream LightStream (meta_owner string, meta_deviceId string, meta_timestamp long, light float);
 
-@Export('org.wso2.iot.android.light.stats:1.0.0')
+@Export('iot.per.device.stream.android.light.stats:1.0.0')
 define stream LightStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, light float, year int,
 month int, day int, hour int, minute int);
 

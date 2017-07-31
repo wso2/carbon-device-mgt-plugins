@@ -22,12 +22,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.CacheEntry;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.SyncmlMessageFormatException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.SyncmlOperationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
@@ -35,10 +38,20 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDe
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.AuthenticationInfo;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.DeviceUtil;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.ItemTag;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.ReplaceTag;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.SyncmlDocument;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.SyncmlHeader;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.WindowsOperationException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.DeviceInfo;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.OperationHandler;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.OperationReply;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.SyncmlGenerator;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.SyncmlParser;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.SyncmlService;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.WindowsDevice;
-import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
-import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.*;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -143,11 +156,11 @@ public class SyncmlServiceImpl implements SyncmlService {
                 if ((PluginConstants.SyncML.SYNCML_FIRST_MESSAGE_ID == msgId) &&
                     (PluginConstants.SyncML.SYNCML_FIRST_SESSION_ID == sessionId)) {
                     token = syncmlHeader.getCredential().getData();
-                    CacheEntry cacheToken = (CacheEntry) DeviceUtil.getCacheEntry(token);
+                    MobileCacheEntry cacheToken = DeviceUtil.getTokenEntry(token);
 
                     if ((cacheToken.getUsername() != null) && (cacheToken.getUsername().equals(user))) {
 
-                        if (enrollDevice(request)) {
+                        if (enrollDevice(request, cacheToken.getTenantDomain(), cacheToken.getTenanatID())) {
                             deviceInfoOperations = deviceInfo.getDeviceInfo();
                             response = generateReply(syncmlDocument, deviceInfoOperations);
                             return Response.status(Response.Status.OK).entity(response).build();
@@ -163,7 +176,8 @@ public class SyncmlServiceImpl implements SyncmlService {
                     }
                 } else if (PluginConstants.SyncML.SYNCML_SECOND_MESSAGE_ID == msgId &&
                            PluginConstants.SyncML.SYNCML_FIRST_SESSION_ID == sessionId) {
-                    if (enrollDevice(request)) {
+                    PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                    if (enrollDevice(request, carbonCtx.getTenantDomain(), carbonCtx.getTenantId())) {
                         return Response.ok().entity(generateReply(syncmlDocument, null)).build();
                     } else {
                         String msg = "Error occurred in modify enrollment.";
@@ -176,7 +190,7 @@ public class SyncmlServiceImpl implements SyncmlService {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
                             return Response.ok().entity(generateReply(syncmlDocument, pendingOperations)).build();
                         } else {
-                            if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier) != null) {
+                            if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier, false) != null) {
                                 WindowsAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
                                 return Response.ok().entity(generateReply(syncmlDocument, null)).build();
                             } else {
@@ -223,7 +237,7 @@ public class SyncmlServiceImpl implements SyncmlService {
      * @throws WindowsDeviceEnrolmentException
      * @throws WindowsOperationException
      */
-    private boolean enrollDevice(Document request) throws WindowsDeviceEnrolmentException,
+    private boolean enrollDevice(Document request, String tenantDomain, int tenantId) throws WindowsDeviceEnrolmentException,
                                                           WindowsOperationException {
 
         String osVersion;
@@ -256,6 +270,8 @@ public class SyncmlServiceImpl implements SyncmlService {
                 user = syncmlDocument.getHeader().getSource().getLocName();
                 AuthenticationInfo authenticationInfo = new AuthenticationInfo();
                 authenticationInfo.setUsername(user);
+                authenticationInfo.setTenantDomain(tenantDomain);
+                authenticationInfo.setTenantId(tenantId);
                 WindowsAPIUtils.startTenantFlow(authenticationInfo);
 
                 if (log.isDebugEnabled()) {

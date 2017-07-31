@@ -19,8 +19,9 @@
 
 <artifacts>
     <artifact name="raspberrypi" version="1.0.0" type="carbon/application">
-        <dependency artifact="raspberrypi_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="raspberrypi_receiver" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="raspberrypi_execution" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="raspberrypi_temperature_publisher" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="raspberrypi_temperature_store" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="raspberrypi_temperature_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
     </artifact>
 </artifacts>

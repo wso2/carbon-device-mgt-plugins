@@ -10,7 +10,9 @@
             "perm:windows:lock-reset",
             "perm:windows:reboot",
             "perm:windows:location",
-            "perm:windows:disenroll"
+            "perm:windows:disenroll",
+            "perm:windows:manage-configuration",
+            "perm:windows:view-configuration"
         ],
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
