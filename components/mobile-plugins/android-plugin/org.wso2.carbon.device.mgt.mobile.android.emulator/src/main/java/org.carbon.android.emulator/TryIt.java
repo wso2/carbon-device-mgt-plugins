@@ -538,10 +538,6 @@ public class TryIt {
         setExecutePermission(adbLocation);
     }
 
-    private void askForSDKLocation() {
-        System.out.println("Please enter a valid parameter .");
-    }
-
     /**
      * this method prints the exception and terminate the program.
      *
