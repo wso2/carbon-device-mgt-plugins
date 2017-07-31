@@ -255,7 +255,7 @@ public class TryIt {
     private void getTools(String url, String folderName) {
         System.out.println("Downloading " + folderName);
         downloadArtifacts(url, androidSdkHome + File.separator + folderName);
-        System.out.println("Configuring " + folderName);
+        System.out.println("Configuring " + folderName + ", please wait");
         extractFolder(androidSdkHome + File.separator + folderName);
     }
 
