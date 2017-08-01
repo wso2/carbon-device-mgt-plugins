@@ -741,12 +741,16 @@ public class TryIt {
             ProcessBuilder processBuilder;
             if (osSuffix.equals(Constants.MAC_OS)) {
                 haxmInstaller = haxmLocation + File.separator + "silent_install.sh";
+                setExecutePermission(haxmInstaller);
+                processBuilder = new ProcessBuilder("sudo", haxmInstaller, "-m", "2048", "-log",
+                        androidSdkHome + File.separator + "haxmSilentRun.log");
             } else {
                 haxmInstaller = haxmLocation + File.separator + "silent_install.bat";
+                setExecutePermission(haxmInstaller);
+                processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
+                        androidSdkHome + File.separator + "haxmSilentRun.log");
             }
-            setExecutePermission(haxmInstaller);
-            processBuilder = new ProcessBuilder("sudo", haxmInstaller, "-m", "2048", "-log",
-                    androidSdkHome + File.separator + "haxmSilentRun.log");
+
             System.out.println("Installing intel HAXM,  Please wait . . . ");
             processBuilder.directory(new File(haxmLocation));
             processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
