@@ -67,7 +67,11 @@
             <div id="map-error" class="message message-warning">
                 <h4 class="remove-margin">
                     <i class="icon fw fw-warning"></i>
-                    Device location information is not available. Please check whether Geo Location Based Services is Enabled.
+                    {{#if geoServicesEnabled}}
+                    Device location information is not available.
+                    {{else}}
+                    Geo Location Based Services is not enabled.
+                    {{/if}}
                 </h4>
             </div>
             <p class="add-padding-5x"></p>
