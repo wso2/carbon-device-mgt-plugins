@@ -37,6 +37,7 @@ function onRequest(context) {
             viewObject.portalUrl = devicemgtProps['portalURL'];
             viewObject.anchor = encodeURI(JSON.stringify(anchor));
             viewObject.locationHistory = stringify(device.content.locationHistory);
+            viewObject.locationEnabled = (device.content.locationHistory.length !== 0);
             return viewObject;
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
