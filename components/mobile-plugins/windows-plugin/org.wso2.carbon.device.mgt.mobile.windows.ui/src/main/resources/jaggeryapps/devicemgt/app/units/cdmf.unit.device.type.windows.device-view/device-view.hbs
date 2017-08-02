@@ -17,12 +17,12 @@
             data-owner="{{device.owner}}"
             data-status="{{device.status}}">
             {{device.owner}}'s {{device.name}}
-              <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
+            </h1>
+            <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
               Firmware Build Date: {{device.osBuildDate}}
               UDID: {{device.udid}}">
-                <i class="fw fw-info"></i>
-              </a>
-            </h1>
+              <i class="fw fw-info"></i>
+            </a>
             {{#if device.model}}
               <h4>{{device.vendor}} {{device.model}}</h4>
             {{/if}}
