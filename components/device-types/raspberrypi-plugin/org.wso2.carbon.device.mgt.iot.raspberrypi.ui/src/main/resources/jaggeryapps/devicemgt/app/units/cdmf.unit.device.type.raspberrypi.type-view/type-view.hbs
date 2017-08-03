@@ -62,7 +62,7 @@
         <i class="fw fw-download add-margin-1x"></i>Download Agent
     </a>
 
-    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS310/Raspberry+Pi"
+    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Raspberry+Pi"
                                  target="_blank">here</a> for latest instructions and
         troubleshooting.</p>
     <div id="download-device-modal-content" class="hide">
@@ -85,16 +85,16 @@
                                        name="deviceName" size="60" required>
                                 <br/>
                                 <input type="hidden" class="deviceType" name="deviceType"
-                                       value="raspberrypi"/>
+                                       value="raspberrypi" data-device_type="raspberrypi"/>
                                 <input type="hidden" class="sketchType" name="sketchType"
-                                       value="raspberrypi"/>
+                                       value="raspberrypi" data-sketch_type="raspberrypi"/>
                             </div>
                         </div>
                         <div class="buttons" style="padding-bottom: 0px">
                             <a class="btn btn-operations" onclick="downloadAgent()">Download Now</a>
 
                             <a href="#" id="download-device-download-link"
-                               class="btn btn-operations hidden"> Copy Link
+                               class="btn btn-operations"> Copy Link
                             </a>
 
                         </div>
@@ -108,6 +108,15 @@
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
                     <h3>Device Agent will downloading shortly.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="download-device-modal-content-links" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h4 id="download-device-url"></h4>
                 </div>
             </div>
         </div>
