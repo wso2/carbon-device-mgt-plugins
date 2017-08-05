@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>mb-extensions</artifactId>
-        <version>4.0.49-SNAPSHOT</version>
+        <version>4.0.49</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
