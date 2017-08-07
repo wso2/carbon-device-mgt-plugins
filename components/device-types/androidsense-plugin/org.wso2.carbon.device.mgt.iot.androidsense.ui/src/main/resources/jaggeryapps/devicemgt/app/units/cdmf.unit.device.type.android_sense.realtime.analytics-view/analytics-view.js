@@ -20,7 +20,7 @@ function onRequest(context) {
     var log = new Log("stats.js");
     var carbonServer = require("carbon").server;
     var device = context.unit.params.device;
-    // log.error(session);
+
     // graph configuration
     var graphData = {
         Sensors:["accelerometer","magnetic", "gravity", "pressure", "proximity", "gyroscope"],
