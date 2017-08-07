@@ -20,29 +20,43 @@ function onRequest(context) {
     var log = new Log("stats.js");
     var carbonServer = require("carbon").server;
     var device = context.unit.params.device;
+
     // graph configuration
     var graphData = {
         Sensors:["accelerometer","magnetic", "gravity", "pressure", "proximity", "gyroscope"],
         Realtime_Data:['battery','light','rotation']
-
     };
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
     var constants = require("/app/modules/constants.js");
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var websocketEndpoint = devicemgtProps["wssURL"].replace("https", "wss");
     var jwtService = carbonServer.osgiService(
         'org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService');
     var jwtClient = jwtService.getJWTClient();
     var encodedClientKeys = session.get(constants["ENCODED_TENANT_BASED_WEB_SOCKET_CLIENT_CREDENTIALS"]);
     var token = "";
+    var tokenPair = null;
+    var user = userModule.getCarbonUser();
+    var tenantDomain = user.domain;
     if (encodedClientKeys) {
         var tokenUtil = require("/app/modules/oauth/token-handler-utils.js")["utils"];
         var resp = tokenUtil.decode(encodedClientKeys).split(":");
-        var tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username,"default", {});
-        if (tokenPair) {
-            token = tokenPair.accessToken;
+        if (tenantDomain == "carbon.super") {
+            tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username,"default", {});
+            if (tokenPair) {
+                token = tokenPair.accessToken;
+            }
+            websocketEndpoint = websocketEndpoint + "/secured-websocket/org.wso2.iot.android.sense/1.0.0?" +
+                "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
+        } else {
+            tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username + "@" + tenantDomain,"default", {});
+            if (tokenPair) {
+                token = tokenPair.accessToken;
+            }
+            websocketEndpoint = websocketEndpoint + "/secured-websocket/t/"+tenantDomain+"/org.wso2.iot.android.sense/1.0.0?" +
+                "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
         }
-        websocketEndpoint = websocketEndpoint + "/secured-websocket/org.wso2.iot.android.sense/1.0.0?" +
-            "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
+
     }
     return {"device": device, "websocketEndpoint": websocketEndpoint, "graphData":graphData};
 }
