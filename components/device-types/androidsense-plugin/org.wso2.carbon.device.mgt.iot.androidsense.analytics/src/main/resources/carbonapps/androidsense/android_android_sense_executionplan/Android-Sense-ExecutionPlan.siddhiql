@@ -153,5 +153,5 @@ select meta_owner, meta_deviceId, meta_timestamp, data_type as type, data_receiv
 insert into DataStream;
 
 from AndroidSense[meta_type == 'gps']
-select meta_deviceId ,meta_type as meta_deviceType, meta_timestamp as timeStamp, gps_lat as latitude, gps_long as longitude
+select meta_deviceId ,'android_sense' as meta_deviceType, meta_timestamp as timeStamp, gps_lat as latitude, gps_long as longitude
 insert into geoLocationStream;
