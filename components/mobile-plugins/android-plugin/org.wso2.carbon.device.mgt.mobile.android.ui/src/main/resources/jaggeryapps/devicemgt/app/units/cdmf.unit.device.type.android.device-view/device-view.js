@@ -22,6 +22,8 @@ function onRequest(context) {
     var deviceId = request.getParameter("id");
     var deviceViewData = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
+    var carbonServer = require("carbon").server;
+    var constants = require("/app/modules/constants.js")
 
     if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
@@ -182,6 +184,23 @@ function onRequest(context) {
         } else if (response["status"] == "notFound") {
             deviceViewData["deviceFound"] = false;
         }
+
+        var remoteSessionEndpoint = devicemgtProps["remoteSessionWSURL"].replace("https", "wss");
+        var jwtService = carbonServer.osgiService('org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService');
+        var jwtClient = jwtService.getJWTClient();
+        var encodedClientKeys = session.get(constants["ENCODED_TENANT_BASED_WEB_SOCKET_CLIENT_CREDENTIALS"]);
+        var token = "";
+        if (encodedClientKeys) {
+            var tokenUtil = require("/app/modules/oauth/token-handler-utils.js")["utils"];
+            var resp = tokenUtil.decode(encodedClientKeys).split(":");
+            var tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username,"default", {});
+            if (tokenPair) {
+                token = tokenPair.accessToken;
+                }
+        }
+        remoteSessionEndpoint = remoteSessionEndpoint + "/remote/session/clients/" + deviceType + "/" + deviceId +
+        "?websocketToken=" + token
+        deviceViewData["remoteSessionEndpoint"] = remoteSessionEndpoint;
     } else {
         deviceViewData["deviceFound"] = false;
     }

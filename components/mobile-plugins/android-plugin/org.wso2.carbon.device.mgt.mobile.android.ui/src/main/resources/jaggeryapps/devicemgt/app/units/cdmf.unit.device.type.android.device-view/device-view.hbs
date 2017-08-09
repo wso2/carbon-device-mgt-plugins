@@ -1,6 +1,8 @@
 {{unit "cdmf.unit.lib.qrcode"}}
 {{unit "cdmf.unit.device.type.qr-modal"}}
-
+{{#zone "topCss"}}
+    {{css "css/terminal.css"}}
+{{/zone}}
 {{#if deviceFound}}
     {{#if isAuthorized}}
 
@@ -82,6 +84,7 @@
             </li>
             <li><a data-toggle="tab" href="#app">Applications</a></li>
             <li><a data-toggle="tab" href="#policy">Policy Compliance</a></li>
+	    <li><a data-toggle="tab" href="#remote-session">Remote Session</a></li>
         {{/zone}}
 
         {{#zone "device-view-tab-injected-conents"}}
@@ -113,6 +116,86 @@
               <div id="policy-list-container">
               </div>
             </div>
+            <div id="remote-session" class="tab-pane fade" data-remote-session-uri="{{remoteSessionEndpoint}}">
+                <div class="remote-session-container">
+                    <div class="tab-actions">
+                        <div class="action-btn-container">
+                            <div class="action-btn show filter">
+                                <a href="javascript:void(0);" id="btn-connect-device">
+                                    <i class="fw fw-mobile"></i> Connect to Device
+                                </a>
+                                <a href="javascript:void(0);" class="hidden" id="btn-close-remote-session">
+                                    <i class="fw fw-mobile"></i> Close Session
+                                </a>
+                                <div id="loading-remote-session" class="hidden">
+                                    <i class="fw fw-sync fw-spin fw-2x"></i>
+                                    <label id="lbl-remote-session-status"></label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="remote-session-operations" class="hidden">
+                        <div id="remote-session-operations-bar">
+                            <ul class="nav nav-pills">
+                                <li class="active">
+                                    <a href="#1a" data-toggle="tab">
+                                        <span>Shell</span>
+                                    </a>
+                                </li>
+                                <li><a href="#2a" data-toggle="tab">
+                                    <span>Logcat</span>
+                                </a>
+                                </li>
+ 				<li><a href="#3a" data-toggle="tab">
+                                    <span>Screen Share</span>
+                                </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div id="remote-session-operations-center" class="tab-content clearfix">
+                                <div class="tab-pane active" id="1a">
+                                    <div id="loading-terminal" class="hidden">
+                                        <i class="fw fw-loader fw-spin"></i>
+                                        <span>Executing shell command...</span>
+                                    </div>
+                                    <textarea id="shell-command" class="terminal" autocomplete="on"
+                                              placeholder="Write your shell command here and press Enter..."
+                                              required></textarea>
+                                    <textarea id="shell-response" class="terminal" readonly rows="20"></textarea>
+                                </div>
+                                <div class="tab-pane" id="2a">
+                                    <a href="javascript:void(0);" id="btn-refresh-logCat">
+                                        <i class="fw fw-refresh"></i> Refresh Logcat
+                                    </a>
+                                    <div id="loading-logcat" class="hidden">
+                                        <i class="fw fw-loader fw-spin"></i>
+                                        <span>Fetching Logcat....</span>
+                                    </div>
+                                    <textarea id="logcat-response" readonly rows="30"></textarea>
+                                </div>
+ 				<div class="tab-pane" id="3a">
+				    <button  id="btn-start-screen" type="button" class="btn btn-success">
+                                        	Start
+                                    </button>
+                                    <div id="loading-screen" class="hidden">
+                                        <i class="fw fw-loader fw-spin"></i>
+                                        <span>Start Screen Sharing....</span>
+                                    </div>
+                                    <div id="remote-control-pannel" style="overflow: auto" class="hidden">
+					<canvas id="canvas"></canvas>
+				    </div>
+				    <button  id="btn-stop-screen" type="button" class="btn btn-danger hidden">
+                                        	Stop
+                                    </button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
             <div class="panel panel-default visible-xs-block" role="tabpanel"
                  id="policy_compliance_tab">
                 <div class="panel-heading visible-xs collapsed" id="policy_compliance">
@@ -274,5 +357,7 @@
                 type="text/x-handlebars-template"></script>
         <!--suppress HtmlUnknownTarget -->
         {{js "js/device-detail.js"}}
+        {{js "js/remote-session.js"}}
+        {{js "js/jquery.touchSwipe.min.js"}}
     {{/if}}
 {{/zone}}
