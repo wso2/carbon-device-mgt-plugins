@@ -43,21 +43,7 @@ import org.wso2.carbon.mdm.services.android.bean.Vpn;
 import org.wso2.carbon.mdm.services.android.bean.WebClip;
 import org.wso2.carbon.mdm.services.android.bean.Wifi;
 import org.wso2.carbon.mdm.services.android.bean.WipeData;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationInstallationBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationUninstallationBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationUpdateBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.BlacklistApplicationsBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.CameraBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.DeviceLockBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.EncryptionBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.LockCodeBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.NotificationBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.PasswordPolicyBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.UpgradeFirmwareBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.VpnBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.WebClipBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.WifiBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.WipeDataBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementAdminService;
@@ -87,7 +73,49 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
 
     private static final Log log = LogFactory.getLog(DeviceManagementAdminServiceImpl.class);
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+/////////////////////////////////////////////////////////////////////////////////////
+@POST
+@Path("/file-transfer")
+@Override
+public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
+    if (log.isDebugEnabled()) {
+        log.debug("Invoking Android device lock operation");
+    }
 
+    try {
+        if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null) {
+            String errorMessage = "Lock bean is empty.";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
+        FileTransfer file = fileTransferBeanWrapper.getOperation();
+        ProfileOperation operation = new ProfileOperation();
+        operation.setCode(AndroidConstants.OperationCodes.DEVICE_LOCK);
+        operation.setType(Operation.Type.PROFILE);
+        operation.setEnabled(true);
+        operation.setPayLoad(file.toJSON());
+        return AndroidAPIUtils.getOperationResponse(fileTransferBeanWrapper.getDeviceIDs(), operation);
+    } catch (InvalidDeviceException e) {
+        String errorMessage = "Invalid Device Identifiers found.";
+        log.error(errorMessage, e);
+        throw new BadRequestException(
+                new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+    } catch (OperationManagementException e) {
+        String errorMessage = "Issue in retrieving operation management service instance";
+        log.error(errorMessage, e);
+        throw new UnexpectedServerErrorException(
+                new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+    } catch (DeviceManagementException e) {
+        String errorMessage = "Issue in retrieving device management service instance";
+        log.error(errorMessage, e);
+        throw new UnexpectedServerErrorException(
+                new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+    }
+}
+
+
+    ///////////////////////////////////////////////////////////
     @POST
     @Path("/lock-devices")
     @Override

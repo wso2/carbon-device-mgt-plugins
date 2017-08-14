@@ -216,11 +216,85 @@ import java.util.List;
                         description = "Setting a Web Clip on Android Devices",
                         key = "perm:android:set-webclip",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/webclip"}
+                ),
+                @Scope(
+                        name = "File Transfer",
+                        description = "Transferring a file to android devices",
+                        key = "perm:android:file-transfer",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/file-transfer"}
                 )
         }
 )
 public interface DeviceManagementAdminService {
 
+    ///////////////////////
+    @POST
+    @Path("/file-transfer")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            //todo
+            value = "Adding a Screen Lock on Android devices",
+            notes = "Using this API you have the option of hard locking an Android device, where the Administrator " +
+                    "permanently locks the device or screen locking an Android device.",
+            ////
+            response = Activity.class,
+            tags = "Android Device Management Administrative Service",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:file-transfer")
+                    })
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 201,
+                    //todo
+                    message = "Created. \n Successfully scheduled the device lock operation.",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource was last modified. \n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while locking the device.")
+    })
+    Response fileTransfer(
+            @ApiParam(
+                    name = "fileTransfer",
+                    //todo
+                    value = "Provide the ID of the Android device, the message that needs to be sent out when locking the device, " +
+                            "and define true as the value if you need to hard lock the device or define false as the value to " +
+                            "screen lock the device." +
+                            "Multiple device IDs can be added by using comma separated values. ",
+                    required = true) FileTransferBeanWrapper fileTransferBeanWrapper);
+////////////////////////////////////
     @POST
     @Path("/lock-devices")
     @ApiOperation(
