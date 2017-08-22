@@ -29,37 +29,37 @@ import java.io.Serializable;
         description = "This class carries all information related to file transfer operation.")
 public class FileTransfer extends AndroidOperation implements Serializable {
 //todo
-    @ApiModelProperty(name = "file-location", value = "FTP URL of file", required = true)
-    private String location;
+    @ApiModelProperty(name = "fileLocation", value = "FTP URL of file", required = true)
+    private String fileLocation;
 
-    @ApiModelProperty(name = "ftp-username", value = "FTP User name", required = true)
-    private String userName;
+    @ApiModelProperty(name = "ftpUserName", value = "FTP User name", required = true)
+    private String ftpUserName;
 
-    @ApiModelProperty(name = "ftp-password", value = "FTP password", required = true)
-    private String password;
+    @ApiModelProperty(name = "ftpPassword", value = "FTP password", required = true)
+    private String ftpPassword;
 
-    public String getFielLocation() {
-        return location;
+    public String getFileLocation() {
+        return fileLocation;
     }
 
-    public void setFileLocation(String location) {
-        this.location = location;
+    public void setFileLocation(String fileLocation) {
+        this.fileLocation = fileLocation;
     }
 
     public String getFtpUserName() {
-        return userName;
+        return ftpUserName;
     }
 
-    public void setFtpUserName(String userName) {
-        this.userName = userName;
+    public void setFtpUserName(String ftpUserName) {
+        this.ftpUserName = ftpUserName;
     }
 
     public String getFtpPassword() {
-        return password;
+        return ftpPassword;
     }
 
-    public void setFtpPassword(String password) {
-        this.password = password;
+    public void setFtpPassword(String ftpPassword) {
+        this.ftpPassword = ftpPassword;
     }
 
 
