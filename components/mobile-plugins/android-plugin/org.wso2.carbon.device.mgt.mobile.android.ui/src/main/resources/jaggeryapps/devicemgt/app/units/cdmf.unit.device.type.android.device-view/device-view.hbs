@@ -106,6 +106,18 @@
               {{/if}}
             </div>
             <div id="app" class="tab-pane fade">
+                <div class="tab-actions">
+                    <div class="action-btn-container">
+                        <div class="action-btn show filter">
+                            <a href="javascript:void(0);" id="refresh-apps">
+                                <i class="fw fw-refresh"></i> Refresh List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="apps-spinner" class="wr-advance-operations-init hidden">
+                    <i class="fw fw-wso2-logo fw-pulse fw-2x"></i> Loading Application List...
+                </div>
               <div id="applications-list-container" data-public-uri="{{@unit.publicUri}}">
               </div>
             </div>
