@@ -25,19 +25,41 @@ import java.io.Serializable;
 
 
 @ApiModel(value = "FileTransfer",
-        description = "This class carries all information related to device lock operation.")
+        //todo
+        description = "This class carries all information related to file transfer operation.")
 public class FileTransfer extends AndroidOperation implements Serializable {
 //todo
-    @ApiModelProperty(name = "message", value = "Pop up message of the lock operation.", required = false)
-    private String message;
-    @ApiModelProperty(name = "isHardLockEnabled", value = "Hard lock enable status of the Device", required = true)
+    @ApiModelProperty(name = "file-location", value = "FTP URL of file", required = true)
+    private String location;
+
+    @ApiModelProperty(name = "ftp-username", value = "FTP User name", required = true)
+    private String userName;
+
+    @ApiModelProperty(name = "ftp-password", value = "FTP password", required = true)
+    private String password;
 
     public String getFielLocation() {
-        return message;
+        return location;
     }
 
-    public void setFileLocation(String message) {
-        this.message = message;
+    public void setFileLocation(String location) {
+        this.location = location;
+    }
+
+    public String getFtpUserName() {
+        return userName;
+    }
+
+    public void setFtpUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getFtpPassword() {
+        return password;
+    }
+
+    public void setFtpPassword(String password) {
+        this.password = password;
     }
 
 

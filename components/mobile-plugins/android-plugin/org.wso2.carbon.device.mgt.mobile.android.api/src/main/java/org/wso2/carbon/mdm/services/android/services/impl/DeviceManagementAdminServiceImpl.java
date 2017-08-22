@@ -91,7 +91,7 @@ public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
         }
         FileTransfer file = fileTransferBeanWrapper.getOperation();
         ProfileOperation operation = new ProfileOperation();
-        operation.setCode(AndroidConstants.OperationCodes.DEVICE_LOCK);
+        operation.setCode("FILE_TRANSFER");
         operation.setType(Operation.Type.PROFILE);
         operation.setEnabled(true);
         operation.setPayLoad(file.toJSON());
