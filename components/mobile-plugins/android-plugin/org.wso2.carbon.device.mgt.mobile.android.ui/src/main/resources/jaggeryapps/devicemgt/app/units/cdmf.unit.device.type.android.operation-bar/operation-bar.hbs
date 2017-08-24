@@ -102,6 +102,12 @@
                                             {{this.label}}
                                             <br/>
                                         {{/equal}}
+                                        {{#equal this.type "password"}}
+                                            <input type="{{this.type}}" id="{{this.id}}"
+                                                   placeholder="{{this.label}}" class="form-control"
+                                                   data-param-type="form" value=""/>
+                                            <br/>
+                                        {{/equal}}
                                         {{#equal this.type "text"}}
                                             <input type="{{this.type}}" id="{{this.id}}"
                                                    placeholder="{{this.label}}" class="form-control"

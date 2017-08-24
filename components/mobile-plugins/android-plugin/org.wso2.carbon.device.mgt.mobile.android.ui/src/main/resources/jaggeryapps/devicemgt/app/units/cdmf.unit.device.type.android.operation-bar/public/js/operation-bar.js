@@ -239,6 +239,17 @@ var generatePayload = function (operationCode, operationData, deviceList) {
                 }
             };
             break;
+        case "FILE_TRANSFER":
+            operationType = operationTypeConstants["PROFILE"];
+            payload = {
+                "operation": {
+                    "fileLocation": operationData["fileLocation"],
+                    "ftpUserName": operationData["ftpUserName"],
+                    "ftpPassword": operationData["ftpPassword"],
+                    "fileName": operationData["fileName"]
+                }
+            };
+            break;
         case androidOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"]:
             operationType = operationTypeConstants["PROFILE"];
             payload = {

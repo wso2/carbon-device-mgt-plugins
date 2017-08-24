@@ -135,6 +135,37 @@
                 "icon": "fw-block",
                 "permission": "/device-mgt/devices/owning-device/operations/android/enterprise-wipe"
             },
+            "FILE_TRANSFER": {
+                "icon": "fw-block",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "fileLocation",
+                        "optional": false,
+                        "label": "FTP Server Address"
+                    }
+                ,
+                    {
+                        "type": "text",
+                        "id": "ftpUserName",
+                        "optional": false,
+                        "label": "FTP User Name"
+                    },
+                    {
+                        "type": "password",
+                        "id": "ftpPassword",
+                        "optional": false,
+                        "label": "FTP Password"
+                    },
+                    {
+                        "type": "text",
+                        "id": "fileName",
+                        "optional": false,
+                        "label": "File Name"
+                    }
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/file-transfer"
+            },
             "WIPE_DATA": {
                 "icon": "fw-delete",
                 "formParams": [
