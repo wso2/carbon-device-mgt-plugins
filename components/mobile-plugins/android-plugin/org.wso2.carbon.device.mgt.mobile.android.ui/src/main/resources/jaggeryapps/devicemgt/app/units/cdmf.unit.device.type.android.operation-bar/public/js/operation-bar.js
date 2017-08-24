@@ -239,7 +239,7 @@ var generatePayload = function (operationCode, operationData, deviceList) {
                 }
             };
             break;
-        case "FILE_TRANSFER":
+        case androidOperationConstants["FILE_TRANSFER"]:
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
@@ -444,5 +444,6 @@ var androidOperationConstants = {
     "SET_STATUS_BAR_DISABLED": "SET_STATUS_BAR_DISABLED",
     "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
     "SYSTEM_UPDATE_POLICY_CODE": "SYSTEM_UPDATE_POLICY",
-    "KIOSK_APPS_CODE": "KIOSK_APPS"
+    "KIOSK_APPS_CODE": "KIOSK_APPS",
+    "FILE_TRANSFER": "FILE_TRANSFER"
 };
