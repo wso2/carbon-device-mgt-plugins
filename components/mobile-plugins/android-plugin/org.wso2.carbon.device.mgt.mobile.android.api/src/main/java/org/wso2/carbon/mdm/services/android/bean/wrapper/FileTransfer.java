@@ -38,6 +38,18 @@ public class FileTransfer extends AndroidOperation implements Serializable {
     @ApiModelProperty(name = "ftpPassword", value = "FTP password", required = true)
     private String ftpPassword;
 
+    @ApiModelProperty(name = "fileName", value = "File name", required = true)
+    private String fileName;
+
+    public String getFileName(){
+        return fileName;
+    }
+
+    public String setFileName(){
+        this.fileName = fileName;
+    }
+
+
     public String getFileLocation() {
         return fileLocation;
     }
