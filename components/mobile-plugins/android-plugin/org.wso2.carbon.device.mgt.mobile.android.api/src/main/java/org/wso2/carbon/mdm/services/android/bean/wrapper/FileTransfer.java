@@ -45,7 +45,7 @@ public class FileTransfer extends AndroidOperation implements Serializable {
         return fileName;
     }
 
-    public String setFileName(String fileName){
+    public void setFileName(String fileName){
         this.fileName = fileName;
     }
 
