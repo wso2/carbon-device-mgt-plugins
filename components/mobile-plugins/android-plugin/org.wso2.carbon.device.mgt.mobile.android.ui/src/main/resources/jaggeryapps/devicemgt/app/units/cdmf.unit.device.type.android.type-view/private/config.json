@@ -140,7 +140,7 @@
                 "formParams": [
                     {
                         "type": "text",
-                        "id": "fileLocation",
+                        "id": "ftpServerAddress",
                         "optional": false,
                         "label": "FTP Server Address"
                     },

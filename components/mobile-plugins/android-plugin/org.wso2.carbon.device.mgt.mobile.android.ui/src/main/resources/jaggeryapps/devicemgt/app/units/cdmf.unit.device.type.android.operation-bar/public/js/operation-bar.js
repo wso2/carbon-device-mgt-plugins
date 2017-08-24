@@ -243,7 +243,7 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "fileLocation": operationData["fileLocation"],
+                    "ftpServerAddress": operationData["ftpServerAddress"],
                     "ftpUserName": operationData["ftpUserName"],
                     "ftpPassword": operationData["ftpPassword"],
                     "fileName": operationData["fileName"]
