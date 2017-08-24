@@ -19,11 +19,8 @@ package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.wso2.carbon.mdm.services.android.bean.DeviceLock;
 
 import java.util.List;
-
-
 
 /**
  * This class is used to wrap the Notification bean with devices.

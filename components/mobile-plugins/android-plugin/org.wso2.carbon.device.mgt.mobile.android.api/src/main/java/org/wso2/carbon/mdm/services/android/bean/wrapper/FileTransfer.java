@@ -25,12 +25,11 @@ import java.io.Serializable;
 
 
 @ApiModel(value = "FileTransfer",
-        //todo
         description = "This class carries all information related to file transfer operation.")
 public class FileTransfer extends AndroidOperation implements Serializable {
-//todo
-    @ApiModelProperty(name = "fileLocation", value = "FTP URL of file", required = true)
-    private String fileLocation;
+
+    @ApiModelProperty(name = "ftpServerAddress", value = "FTP Server Address", required = true)
+    private String ftpServerAddress;
 
     @ApiModelProperty(name = "ftpUserName", value = "FTP User name", required = true)
     private String ftpUserName;
@@ -41,21 +40,20 @@ public class FileTransfer extends AndroidOperation implements Serializable {
     @ApiModelProperty(name = "fileName", value = "File name", required = true)
     private String fileName;
 
-    public String getFileName(){
+    public String getFileName() {
         return fileName;
     }
 
-    public void setFileName(String fileName){
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
-
-    public String getFileLocation() {
-        return fileLocation;
+    public String getFtpServerAddress() {
+        return ftpServerAddress;
     }
 
-    public void setFileLocation(String fileLocation) {
-        this.fileLocation = fileLocation;
+    public void setFtpServerAddress(String ftpServerAddress) {
+        this.ftpServerAddress = ftpServerAddress;
     }
 
     public String getFtpUserName() {
@@ -73,6 +71,5 @@ public class FileTransfer extends AndroidOperation implements Serializable {
     public void setFtpPassword(String ftpPassword) {
         this.ftpPassword = ftpPassword;
     }
-
-
 }
+
