@@ -73,49 +73,47 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
 
     private static final Log log = LogFactory.getLog(DeviceManagementAdminServiceImpl.class);
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-/////////////////////////////////////////////////////////////////////////////////////
-@POST
-@Path("/file-transfer")
-@Override
-public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
-    if (log.isDebugEnabled()) {
-        log.debug("Invoking Android device lock operation");
-    }
 
-    try {
-        if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null) {
-            String errorMessage = "Lock bean is empty.";
-            log.error(errorMessage);
+    @POST
+    @Path("/file-transfer")
+    @Override
+    public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking Android file transfer operation");
+        }
+
+        try {
+            if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null) {
+                String errorMessage = "Lock bean is empty.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+            FileTransfer file = fileTransferBeanWrapper.getOperation();
+            ProfileOperation operation = new ProfileOperation();
+            operation.setCode("FILE_TRANSFER");
+            operation.setType(Operation.Type.PROFILE);
+            operation.setEnabled(true);
+            operation.setPayLoad(file.toJSON());
+            return AndroidAPIUtils.getOperationResponse(fileTransferBeanWrapper.getDeviceIDs(), operation);
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
             throw new BadRequestException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        } catch (OperationManagementException e) {
+            String errorMessage = "Issue in retrieving operation management service instance";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        } catch (DeviceManagementException e) {
+            String errorMessage = "Issue in retrieving device management service instance";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
         }
-        FileTransfer file = fileTransferBeanWrapper.getOperation();
-        ProfileOperation operation = new ProfileOperation();
-        operation.setCode("FILE_TRANSFER");
-        operation.setType(Operation.Type.PROFILE);
-        operation.setEnabled(true);
-        operation.setPayLoad(file.toJSON());
-        return AndroidAPIUtils.getOperationResponse(fileTransferBeanWrapper.getDeviceIDs(), operation);
-    } catch (InvalidDeviceException e) {
-        String errorMessage = "Invalid Device Identifiers found.";
-        log.error(errorMessage, e);
-        throw new BadRequestException(
-                new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-    } catch (OperationManagementException e) {
-        String errorMessage = "Issue in retrieving operation management service instance";
-        log.error(errorMessage, e);
-        throw new UnexpectedServerErrorException(
-                new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-    } catch (DeviceManagementException e) {
-        String errorMessage = "Issue in retrieving device management service instance";
-        log.error(errorMessage, e);
-        throw new UnexpectedServerErrorException(
-                new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
     }
-}
 
-
-    ///////////////////////////////////////////////////////////
     @POST
     @Path("/lock-devices")
     @Override

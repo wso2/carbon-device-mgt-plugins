@@ -72,4 +72,3 @@ public class FileTransfer extends AndroidOperation implements Serializable {
         this.ftpPassword = ftpPassword;
     }
 }
-

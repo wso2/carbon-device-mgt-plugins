@@ -31,6 +31,7 @@ public class FileTransferBeanWrapper{
 
     @ApiModelProperty(name = "deviceIDs", value = "Device id list of the operation to be executed.", required = true)
     private List<String> deviceIDs;
+
     @ApiModelProperty(name = "operation", value = "Information of the Device lock operation.", required = true)
     private FileTransfer operation;
 

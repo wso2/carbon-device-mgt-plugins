@@ -227,7 +227,6 @@ import java.util.List;
 )
 public interface DeviceManagementAdminService {
 
-    ///////////////////////
     @POST
     @Path("/file-transfer")
     @ApiOperation(
@@ -237,7 +236,6 @@ public interface DeviceManagementAdminService {
             value = "Adding a Screen Lock on Android devices",
             notes = "Using this API you have the option of hard locking an Android device, where the Administrator " +
                     "permanently locks the device or screen locking an Android device.",
-            ////
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
             extensions = {
@@ -295,7 +293,6 @@ public interface DeviceManagementAdminService {
                             "Multiple device IDs can be added by using comma separated values. ",
                     required = true) FileTransferBeanWrapper fileTransferBeanWrapper);
 
-    ////////////////////////////////////
     @POST
     @Path("/lock-devices")
     @ApiOperation(
