@@ -338,13 +338,13 @@
             <Description>Unlock the device</Description>
         </Feature>
     </Features>
-    <TaskConfiguration> //Name needs to be decided <!--DeviceMonitoring-->
+    <TaskConfiguration>
         <Enable>true</Enable>
-        <Frequency>60000</Frequency> //Name needs to be decided <!--Period-->
+        <Frequency>60000</Frequency>
         <Operations>
             <Operation>
                 <Name>DEVICE_INFO</Name>
-                <RecurrentTimes>1</RecurrentTimes> //Name needs to be decided <!--PeriodFactor-->
+                <RecurrentTimes>1</RecurrentTimes>
             </Operation>
             <Operation>
                 <Name>APPLICATION_LIST</Name>
