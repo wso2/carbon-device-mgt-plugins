@@ -6,6 +6,7 @@
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
         "scopes" : [
+            "perm:android:file-transfer",
             "perm:android:enroll",
             "perm:android:wipe",
             "perm:android:ring",
@@ -136,7 +137,7 @@
                 "permission": "/device-mgt/devices/owning-device/operations/android/enterprise-wipe"
             },
             "FILE_TRANSFER": {
-                "icon": "fw-block",
+                "icon": "fw-save",
                 "formParams": [
                     {
                         "type": "text",

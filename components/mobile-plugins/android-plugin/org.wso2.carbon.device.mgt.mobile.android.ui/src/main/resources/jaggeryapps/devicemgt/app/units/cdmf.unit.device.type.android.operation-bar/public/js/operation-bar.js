@@ -53,7 +53,7 @@ function submitForm(formId) {
         } else if (input.data("param-type") == "form") {
             var prefix = (uriencodedFormStr == "") ? "" : "&";
             uriencodedFormStr += prefix + input.attr("id") + "=" + input.val();
-            if (input.attr("type") == "text") {
+            if (input.attr("type") == "text" || input.attr("type") == "password") {
                 payload[input.attr("id")] = input.val();
             } else if (input.attr("type") == "checkbox") {
                 payload[input.attr("id")] = input.is(":checked");
@@ -177,6 +177,17 @@ function validatePayload(operationCode, payload) {
         case "NOTIFICATION":
             if (!payload.messageText) {
                 returnVal = "Message Body Can't be empty !";
+            }
+            break;
+        case "FILE_TRANSFER":
+            if (!payload.ftpServerAddress) {
+                returnVal = "Please enter FTP server address";
+            }else if(!payload.ftpUserName){
+                returnVal = "Please enter FTP user name";
+            }else if(!payload.ftpPassword){
+                returnVal = "Please enter FTP password";
+            }else if(!payload.fileName){
+                returnVal = "Please enter the name of the file you want to transfer";
             }
             break;
         default:
