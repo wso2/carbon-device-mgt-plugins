@@ -46,10 +46,11 @@ public class MQTTEventAdapterConstants {
     public static final String ADAPTER_CONF_CLEAN_SESSION = "cleanSession";
     public static final String ADAPTER_CONF_CLEAN_SESSION_HINT = "cleanSession.hint";
     public static final String ADAPTER_CONF_KEEP_ALIVE = "keepAlive";
-    public static final int ADAPTER_CONF_DEFAULT_KEEP_ALIVE = 60000;
+    public static final int ADAPTER_CONF_DEFAULT_KEEP_ALIVE = 20000;
 
     public static final int INITIAL_RECONNECTION_DURATION = 4000;
     public static final int RECONNECTION_PROGRESS_FACTOR = 2;
+    public static final int MAXIMUM_RECONNECTION_DURATION = 60000;
 
     public static final String EMPTY_STRING = "";
     public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
@@ -60,6 +61,7 @@ public class MQTTEventAdapterConstants {
     public static final String CLIENT_SECRET = "clientSecret";
     public static final String CLIENT_NAME = "client_name";
     public static final String DEFAULT = "default";
+    public static final String EMPTY = "";
     public static final String MQTT_CONTENT_VALIDATION_DEFAULT_PARAMETERS = "";
     public static final String TOPIC = "topic";
     public static final String PAYLOAD = "payload";

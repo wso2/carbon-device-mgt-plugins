@@ -19,8 +19,6 @@
 function onRequest(context) {
     var viewModel = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
-	var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
-	viewModel["permissions"] = userModule.getUIPermissions();
     var isCloud = devicemgtProps["isCloud"];
     viewModel["isVirtual"] = request.getParameter("type") == 'virtual';
     viewModel["isCloud"] = isCloud;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -19,88 +19,87 @@
 var ws;
 var typeId = 3;
 var batteryId = 5;
-var gps_latId = 6;
-var gps_longId = 7;
-var accelerometer_xId = 8;
-var accelerometer_yId = 9;
-var accelerometer_zId = 10;
-var magnetic_xId = 11;
-var magnetic_yId = 12;
-var magnetic_zId = 13;
-var gyroscope_xId = 14;
-var gyroscope_yId = 15;
-var gyroscope_zId = 16;
-var lightId = 17;
-var pressureId = 18;
-var proximityId = 19;
-var gravity_xId = 20;
-var gravity_yId = 21;
-var gravity_zId = 22;
-var rotation_xId = 23;
-var rotation_yId = 24;
-var rotation_zId = 25;
-var wordId = 26;
-var word_sessionIdId = 27;
-var word_statusId = 28;
 
-var battery;
+var accelerometer_xId = 11;
+var accelerometer_yId = 12;
+var accelerometer_zId = 13;
+
+var magnetic_xId = 16;
+var magnetic_yId = 17;
+var magnetic_zId = 18;
+
+var gyroscope_xId = 19;
+var gyroscope_yId = 20;
+var gyroscope_zId = 21;
+
+var lightId = 22;
+
+var pressureId = 23;
+
+var proximityId = 24;
+
+var gravity_xId = 25;
+var gravity_yId = 26;
+var gravity_zId = 27;
+
+var rotation_xId = 28;
+var rotation_yId = 29;
+var rotation_zId = 30;
+
 var batteryData = [];
 
-var light;
 var lightData = [];
 
-var pressure;
 var pressureData = [];
 
-var proximity;
 var proximityData = [];
 
-var accelerometer;
 var accelerometer_xData = [];
 var accelerometer_yData = [];
 var accelerometer_zData = [];
 
-var magnetic;
 var magnetic_xData = [];
 var magnetic_yData = [];
 var magnetic_zData = [];
 
-var gyroscope;
 var gyroscope_xData = [];
 var gyroscope_yData = [];
 var gyroscope_zData = [];
 
-var gravity;
 var gravity_xData = [];
 var gravity_yData = [];
 var gravity_zData = [];
 
-var rotation;
 var rotation_xData = [];
 var rotation_yData = [];
 var rotation_zData = [];
 
-var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
+var graphMap = {};
+var graphSettingsMap = {};
+
+var palette = new Rickshaw.Color.Palette({scheme: "munin"});
+
+var elemTop;
 
 $(window).load(function () {
 
-	battery = lineGraph("battery", batteryData);
-	light = lineGraph("light", lightData);
-	pressure = lineGraph("pressure", pressureData);
-	proximity = lineGraph("proximity", proximityData);
-	accelerometer = threeDlineGraph("accelerometer", accelerometer_xData, accelerometer_yData, accelerometer_zData);
-	magnetic = threeDlineGraph("magnetic", magnetic_xData, magnetic_yData, magnetic_zData);
-	gyroscope = threeDlineGraph("gyroscope", gyroscope_xData, gyroscope_yData, gyroscope_zData);
-	gravity = threeDlineGraph("gravity", gravity_xData, gravity_yData, gravity_zData);
-	rotation = threeDlineGraph("rotation", rotation_xData, rotation_yData, rotation_zData);
+	graphMap["battery"]=lineGraph("battery", batteryData);
+	graphMap["light"]=lineGraph("light", lightData);
+	graphMap["pressure"]=lineGraph("pressure", pressureData);
+	graphMap["proximity"]=lineGraph("proximity", proximityData);
+	graphMap["accelerometer"]=threeDlineGraph("accelerometer", accelerometer_xData, accelerometer_yData, accelerometer_zData);
+	graphMap["magnetic"]=threeDlineGraph("magnetic", magnetic_xData, magnetic_yData, magnetic_zData);
+	graphMap["gyroscope"]=threeDlineGraph("gyroscope", gyroscope_xData, gyroscope_yData, gyroscope_zData);
+	graphMap["gravity"]=threeDlineGraph("gravity", gravity_xData, gravity_yData, gravity_zData);
+	graphMap["rotation"]=threeDlineGraph("rotation", rotation_xData, rotation_yData, rotation_zData);
 
-	var websocketUrl = $("#div-chart").data("websocketurl");
+	var websocketUrl = $("#stat-section").data("websocketurl");
 	connect(websocketUrl)
 });
 
-$(window).unload(function () {
+window.onbeforeunload = function() {
 	disconnect();
-});
+};
 
 function threeDlineGraph(type, xChartData, yChartData, zChartData) {
 	var tNow = new Date().getTime() / 1000;
@@ -119,11 +118,14 @@ function threeDlineGraph(type, xChartData, yChartData, zChartData) {
 		});
 	}
 
+	var $elem = $("#chart-" + type);
+
 	var graph = new Rickshaw.Graph({
-		element: document.getElementById("chart-" + type),
-		width: $("#div-chart").width() - 50,
+		element: $elem[0],
+		width: $elem.width() - 100,
 		height: 300,
 		renderer: "line",
+		interpolation: "linear",
 		padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
 		xScale: d3.time.scale(),
 		series: [
@@ -133,13 +135,19 @@ function threeDlineGraph(type, xChartData, yChartData, zChartData) {
 		]
 	});
 
-	graph.render();
-
 	var xAxis = new Rickshaw.Graph.Axis.Time({
 		graph: graph
 	});
 
 	xAxis.render();
+
+	new Rickshaw.Graph.Axis.Y({
+		graph: graph,
+		orientation: 'left',
+		height: 300,
+		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+		element: document.getElementById("y-axis-"+type)
+	});
 
 	new Rickshaw.Graph.Legend({
 		graph: graph,
@@ -149,6 +157,8 @@ function threeDlineGraph(type, xChartData, yChartData, zChartData) {
 	var detail = new Rickshaw.Graph.HoverDetail({
 		graph: graph
 	});
+
+	graph.render();
 
 	return graph;
 }
@@ -162,11 +172,14 @@ function lineGraph(type, chartData) {
 		});
 	}
 
+	var $elem = $("#chart-" + type);
+
 	var graph = new Rickshaw.Graph({
-		element: document.getElementById("chart-" + type),
-		width: $("#div-chart").width() - 50,
+		element: $elem[0],
+		width: $elem.width() - 100,
 		height: 300,
 		renderer: "line",
+		interpolation: "linear",
 		padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
 		xScale: d3.time.scale(),
 		series: [{
@@ -175,8 +188,6 @@ function lineGraph(type, chartData) {
 			'name': type
 		}]
 	});
-
-	graph.render();
 
 	var xAxis = new Rickshaw.Graph.Axis.Time({
 		graph: graph
@@ -189,7 +200,7 @@ function lineGraph(type, chartData) {
 		orientation: 'left',
 		height: 300,
 		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-		element: document.getElementById('y_axis')
+		element: document.getElementById('y-axis-'+type)
 	});
 
 	new Rickshaw.Graph.Legend({
@@ -206,6 +217,8 @@ function lineGraph(type, chartData) {
 		}
 	});
 
+	graph.render();
+
 	return graph;
 }
 
@@ -221,58 +234,59 @@ function connect(target) {
 	if (ws) {
 		ws.onmessage = function (event) {
 			var dataPoint = JSON.parse(event.data);
+
 			if (dataPoint) {
 				var time = parseInt(dataPoint[4]) / 1000;
 				switch (dataPoint[typeId]) {
 					case "battery":
-						graphUpdate(batteryData, time, dataPoint[batteryId], battery);
+						graphUpdate(batteryData, time, dataPoint[batteryId], graphMap["battery"]);
 						break;
 
 					case "light":
-						graphUpdate(lightData, time, dataPoint[lightId], light);
+						graphUpdate(lightData, time, dataPoint[lightId], graphMap["light"]);
 						break;
 
 					case "pressure":
-						graphUpdate(pressureData, time, dataPoint[pressureId], pressure);
+						graphUpdate(pressureData, time, dataPoint[pressureId], graphMap["pressure"]);
 						break;
 
 					case "proximity":
-						graphUpdate(proximityData, time, dataPoint[proximityId], proximity);
+						graphUpdate(proximityData, time, dataPoint[proximityId], graphMap["proximity"]);
 						break;
 
 					case "accelerometer":
 						dataUpdate(accelerometer_xData, time, dataPoint[accelerometer_xId]);
 						dataUpdate(accelerometer_yData, time, dataPoint[accelerometer_yId]);
 						dataUpdate(accelerometer_zData, time, dataPoint[accelerometer_zId]);
-						accelerometer.update();
+						graphMap["accelerometer"].update();
 						break;
 
 					case "magnetic":
 						dataUpdate(magnetic_xData, time, dataPoint[magnetic_xId]);
 						dataUpdate(magnetic_yData, time, dataPoint[magnetic_yId]);
 						dataUpdate(magnetic_zData, time, dataPoint[magnetic_zId]);
-						magnetic.update();
+						graphMap["magnetic"].update();
 						break;
 
 					case "gyroscope":
 						dataUpdate(gyroscope_xData, time, dataPoint[gyroscope_xId]);
 						dataUpdate(gyroscope_yData, time, dataPoint[gyroscope_yId]);
 						dataUpdate(gyroscope_zData, time, dataPoint[gyroscope_zId]);
-						gyroscope.update();
+						graphMap["gyroscope"].update();
 						break;
 
 					case "rotation":
 						dataUpdate(magnetic_xData, time, dataPoint[rotation_xId]);
 						dataUpdate(magnetic_yData, time, dataPoint[rotation_yId]);
 						dataUpdate(magnetic_zData, time, dataPoint[rotation_zId]);
-						rotation.update();
+						graphMap["rotation"].update();
 						break;
 
 					case "gravity":
 						dataUpdate(gravity_xData, time, dataPoint[gravity_xId]);
 						dataUpdate(gravity_yData, time, dataPoint[gravity_yId]);
 						dataUpdate(gravity_zData, time, dataPoint[gravity_zId]);
-						gravity.update();
+						graphMap["gravity"].update();
 						break;
 				}
 			}
@@ -297,7 +311,6 @@ function dataUpdate(chartData, xValue, yValue) {
 	chartData.shift();
 }
 
-
 function disconnect() {
 	if (ws != null) {
 		ws.close();
@@ -305,6 +318,56 @@ function disconnect() {
 	}
 }
 
-function initMap() {
+function maximizeGraph(graph, width,height){
+	graphSettingsMap[graph.element.id] = {'width': graph.width, 'height': graph.height};
+	graph.configure({
+		width: width*2,
+		height: height*2
 
+	});
+	graph.update();
+}
+
+function minimizeGraph(graph){
+	var graphSettings = graphSettingsMap[graph.element.id];
+	graph.configure({
+		width: graphSettings.width,
+		height: graphSettings.height
+	});
+	graph.update();
+}
+
+//maximize minimize functionality
+$(".fw-expand").click(function(e) {
+	var innerGraph= graphMap[e.target.nextElementSibling.innerHTML];
+	var width = $(".chartWrapper").width();
+	var height = $(".chartWrapper").height();
+
+	if($(this).hasClass("default-view")){
+		elemTop = $('#'+innerGraph.element.id).parents('.graph')[0].offsetTop;
+		$(this).removeClass("default-view");
+		$(this).removeClass("fw-expand");
+		$(this).addClass("fw-contract");
+		maximizeGraph(innerGraph,width,height);
+		$(this).parent().parent().addClass("max");
+		$(this).closest(".graph").siblings().addClass("max_hide");
+		$(this).closest(".graph").parent().siblings().addClass("max_hide");
+	}else{
+		$(this).addClass("default-view");
+		$(this).addClass("fw-expand");
+		$(this).removeClass("fw-contract");
+		minimizeGraph(innerGraph);
+		$(this).parent().parent().removeClass("max");
+		$(this).closest(".graph").siblings().removeClass("max_hide");
+		$(this).closest(".graph").parent().siblings().removeClass("max_hide");
+		focusToArea()
+	}
+});
+
+//graph focusing function
+function focusToArea(){
+	var container = $("body");
+	container.animate({
+		scrollTop: elemTop
+	});
 }

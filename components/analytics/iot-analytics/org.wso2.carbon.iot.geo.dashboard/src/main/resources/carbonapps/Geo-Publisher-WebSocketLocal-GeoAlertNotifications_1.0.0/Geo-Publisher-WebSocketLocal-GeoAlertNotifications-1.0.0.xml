@@ -2,7 +2,7 @@
 <eventPublisher
   name="Geo-Publisher-WebSocketLocal-GeoAlertNotifications"
   statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
-    <from streamName="org.wso2.geo.AlertsNotifications" version="1.0.0"/>
+    <from streamName="iot.per.device.stream.geo.AlertNotifications" version="1.0.0"/>
     <mapping customMapping="enable" type="json">
         <inline>{
             "messageType" : "Alert",

@@ -166,7 +166,20 @@
 	<PolicyMonitoring enabled="true"/>
     <InitialOperationConfig>
         <Operations>
+            <Operation>
+                <Name>DEVICE_INFO</Name>
+                <RecurrentTimes>1</RecurrentTimes>
+            </Operation>
+            <Operation>
+                <Name>DEVICE_LOCATION</Name>
+                <RecurrentTimes>1</RecurrentTimes>
+            </Operation>
         </Operations>
     </InitialOperationConfig>
-
+    <DeviceStatusTaskConfig>
+        <RequireStatusMonitoring>true</RequireStatusMonitoring>
+        <Frequency>300</Frequency>
+        <IdleTimeToMarkInactive>900</IdleTimeToMarkInactive>
+        <IdleTimeToMarkUnreachable>600</IdleTimeToMarkUnreachable>
+    </DeviceStatusTaskConfig>
 </DeviceTypeConfiguration>

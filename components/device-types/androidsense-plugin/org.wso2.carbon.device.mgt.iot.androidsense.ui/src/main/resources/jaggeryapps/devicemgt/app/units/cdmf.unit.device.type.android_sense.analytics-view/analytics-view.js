@@ -17,9 +17,26 @@
  */
 
 function onRequest(context) {
-    var user = context.user;
-    var deviceId = request.getParameter("deviceId");
 
-    //Redirects to the portal app as we do not use the old analytics view.
-    response.sendRedirect(context.app.conf["portalURL"] + "/portal/dashboards/android-iot/sensors?owner=" + user.username + "&deviceId=" + deviceId);
+    var log = new Log("analytics-view.js");
+    var user = context.user;
+    var graphData={};
+    var graphType = request.getParameter("graphType");
+    var graph =request.getParameter("sensor");
+    graphData[graphType]=[graph];
+    var deviceId = request.getParameter("deviceId");
+    var deviceType = context.uriParams.deviceType;
+    var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
+    var device = deviceModule.viewDevice(deviceType, deviceId);
+    if (device && device.status != "error") {
+        return {
+            "device": device.content,
+            "backendApiUrl":  "/android_sense/stats/" + deviceId + "/sensors/",
+            "graphData":graphData
+        };
+    } else {
+        response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
+        exit();
+    }
+
 }

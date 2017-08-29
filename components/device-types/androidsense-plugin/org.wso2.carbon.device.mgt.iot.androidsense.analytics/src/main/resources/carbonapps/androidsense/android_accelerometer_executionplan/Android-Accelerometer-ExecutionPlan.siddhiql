@@ -2,11 +2,11 @@
 
 @Plan:description('Process accelerometer changes.')
 
-@Import('org.wso2.iot.android.accelerometer:1.0.0')
+@Import('iot.per.device.stream.android.accelerometer:1.0.0')
 define stream AccelerometerStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value
 float);
 
-@Export('org.wso2.iot.android.accelerometer.stats:1.0.0')
+@Export('iot.per.device.stream.android.accelerometer.stats:1.0.0')
 define stream AccelerometerStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of AccelerometerStream)

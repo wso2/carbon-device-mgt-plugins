@@ -20,6 +20,12 @@ function onRequest(context) {
     var log = new Log("stats.js");
     var carbonServer = require("carbon").server;
     var device = context.unit.params.device;
+    // graph configuration
+    var graphData = {
+        Sensors:["accelerometer","magnetic", "gravity", "pressure", "proximity", "gyroscope"],
+        Realtime_Data:['battery','light','rotation']
+
+    };
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
     var constants = require("/app/modules/constants.js");
     var websocketEndpoint = devicemgtProps["wssURL"].replace("https", "wss");
@@ -36,7 +42,7 @@ function onRequest(context) {
             token = tokenPair.accessToken;
         }
         websocketEndpoint = websocketEndpoint + "/secured-websocket/org.wso2.iot.android.sense/1.0.0?" +
-            + "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
+            "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
     }
-    return {"device": device, "websocketEndpoint": websocketEndpoint};
+    return {"device": device, "websocketEndpoint": websocketEndpoint, "graphData":graphData};
 }

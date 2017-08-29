@@ -23,14 +23,14 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions-feature</artifactId>
-        <version>3.0.34-SNAPSHOT</version>
+        <version>4.0.40-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.adapter.feature</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.34-SNAPSHOT</version>
+    <version>4.0.40-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Adapters Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the adapter bundles required for IoT Server</description>
@@ -54,16 +54,20 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.input.adapter.http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.mqtt</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.xmpp</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.input.adapter.thrift</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.analytics-common</groupId>
+			<artifactId>org.wso2.carbon.event.input.adapter.wso2event</artifactId>
+		</dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
@@ -155,7 +159,7 @@
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
                                 </properties>
                             </adviceFile>
                             <bundles>
@@ -169,17 +173,21 @@
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.extension:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.http:${carbon.devicemgt.plugins.version}
-                                </bundleDef>
-                                <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.mqtt:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
+								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.thrift:${carbon.devicemgt.plugins.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.analytics-common:org.wso2.carbon.event.input.adapter.wso2event:${carbon.analytics.common.version}
+								</bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.xmpp:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.output.adapter.websocket:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
+
                                 <bundleDef>
                                     org.eclipse.paho:org.eclipse.paho.client.mqttv3:${eclipse.paho.version}
                                 </bundleDef>
@@ -208,17 +216,6 @@
 									org.wso2.carbon.identity.carbon.auth.jwt:org.wso2.carbon.identity.authenticator.signedjwt:${identity.carbon.auth.jwt.version}
 								</bundleDef>
                             </bundles>
-                            <importFeatures>
-                                <importFeatureDef>
-                                    org.wso2.carbon.event.output.adapter.server:${carbon.analytics.common.version}
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.event.input.adapter.server:${carbon.analytics.common.version}
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.identity.jwt.client.extension:${carbon.devicemgt.version}
-                                </importFeatureDef>
-                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>

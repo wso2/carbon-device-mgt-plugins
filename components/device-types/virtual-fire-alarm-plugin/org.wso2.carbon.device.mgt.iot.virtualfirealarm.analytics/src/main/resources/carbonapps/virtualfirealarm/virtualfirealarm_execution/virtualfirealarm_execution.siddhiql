@@ -6,10 +6,10 @@
 
 /* define streams/tables and write queries here ... */
 
-@Import('org.wso2.iot.virtualfirealarm:1.0.0')
+@Import('iot.per.device.stream.virtualfirealarm:1.0.0')
 define stream virtualfirealarm (meta_owner string, meta_deviceId string, meta_time long, temperature float);
 
-@Export('org.wso2.iot.devices.temperature:1.0.0')
+@Export('iot.per.device.stream.virtualfirealarm.temperature:1.0.0')
 define stream temperature (meta_owner string, meta_deviceType string, meta_deviceId string, meta_time long, temperature float);
 
 from virtualfirealarm

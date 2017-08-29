@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 		<artifactId>arduino-plugin-feature</artifactId>
-		<version>3.0.34-SNAPSHOT</version>
+		<version>4.0.40-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -90,28 +90,6 @@
                             </artifactItems>
                         </configuration>
                     </execution>
-					<execution>
-						<id>unpack-analytics</id>
-						<phase>package</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.analytics</artifactId>
-									<version>${project.version}</version>
-									<type>zip</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>
-										${project.build.directory}/maven-shared-archive-resources/carbonapps
-									</outputDirectory>
-									<includes>**/*</includes>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -134,11 +112,6 @@
 									<propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
 								</properties>
 							</adviceFile>
-							<includedFeatures>
-								<includedFeatureDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.analytics.feature:${carbon.devicemgt.plugins.version}
-								</includedFeatureDef>
-							</includedFeatures>
 						</configuration>
 					</execution>
 				</executions>
