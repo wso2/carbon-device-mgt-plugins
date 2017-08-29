@@ -23,7 +23,7 @@
     <parent>
         <artifactId>arduino-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.63-SNAPSHOT</version>
+        <version>4.0.63</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
