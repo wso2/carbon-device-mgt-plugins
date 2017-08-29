@@ -156,7 +156,7 @@ public class TryIt {
             if (!new File(localPath).delete()) {
                 System.out.println("Delete " + localPath + " and try again");
             }
-            handleException("Downloading " + localPath + " failed.", e);
+            handleException("Download failed for file : " + localPath, e);
         } finally {
             if (in != null)
                 try {
@@ -193,7 +193,7 @@ public class TryIt {
         String response = new Scanner(System.in, StandardCharsets.UTF_8.toString()).next();
         String emulatorLocationPath = response + File.separator + "tools" + File.separator + "emulator";
         if (osSuffix.equals(Constants.WINDOWS_OS)) {
-            emulatorLocationPath += Constants.WINDOWS_EXTENSION_BAT;
+            emulatorLocationPath += Constants.WINDOWS_EXTENSION_EXE;
         }
         if (new File(emulatorLocationPath).exists()) {
             androidSdkHome = response;
@@ -255,7 +255,7 @@ public class TryIt {
     private void getTools(String url, String folderName) {
         System.out.println("Downloading " + folderName);
         downloadArtifacts(url, androidSdkHome + File.separator + folderName);
-        System.out.println("Configuring " + folderName);
+        System.out.println("Configuring " + folderName + ", please wait");
         extractFolder(androidSdkHome + File.separator + folderName);
     }
 
@@ -269,7 +269,7 @@ public class TryIt {
         checkForSystemImages();
         if (!new File(wso2AvdLocation).isDirectory()) {
             Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
-            System.out.print("Do you want to create WSO2_AVD with default configs (Y/n)?: ");
+            System.out.print("Do you want to create WSO2_AVD with default configs (y/n)?: ");
             if (read.next().toLowerCase().matches("y")) {
                 createAVD();
                 return;
@@ -494,17 +494,29 @@ public class TryIt {
     /**
      * This method gets the Android SDK location if available and sets the SDK path else downloads the SDK.
      */
+    private int count = 0;
+
     private void setAndroidSDK() {
         sdkConfigFile = new File("sdkConfigLocation");
         if (!(sdkConfigFile.exists() && !sdkConfigFile.isDirectory())) {
             //TODO
             Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
-            System.out.print("Do you have an Android SDK installed on your computer (y/N) ? : ");
-            String response = read.next().toLowerCase();
+            System.out.print("Do you have an Android SDK installed on your computer (y/n) ? : ");
+            String response = read.nextLine().toLowerCase();
             if (response.matches("y")) {
                 setSDKPath();
-            } else {
+            } else if (response.matches("n")) {
                 getAndroidSDK();
+            } else {
+                if (count < 5) {
+                    System.out.println("Please enter a valid parameter .");
+                    count++;
+                    setAndroidSDK();
+                    return;
+                } else {
+                    System.out.println("Terminating process");
+                    System.exit(1);
+                }
             }
         } else {
             Scanner scanner = null;
@@ -634,7 +646,7 @@ public class TryIt {
      */
     private void installAgent() {
         String androidAgentLocation = workingDirectory + Constants.APK_LOCATION;
-        System.out.println("Installing agent ...");
+        System.out.println("Installing agent, please wait...");
         ProcessBuilder installAgentProcessBuilder = new ProcessBuilder(adbLocation, "install",
                 androidAgentLocation);
         try {
@@ -722,19 +734,24 @@ public class TryIt {
             if (!new File(haxmLocation).mkdirs()) {
                 makeDirectoryError(haxmLocation, androidSdkHome);
             }
-            String folderName = "_haxm.zip";
-            getTools(System.getProperty(Constants.HAXM_URL), haxmLocation + File.separator
-                    + folderName);
-            String haxmInstaller = haxmLocation + File.separator + "silent_install";
-            if (osSuffix.equals(Constants.WINDOWS_OS)) {
-                haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
+            String haxmInstaller;
+            String folderName = "extras" + File.separator + "intel" + File.separator
+                    + "Hardware_Accelerated_Execution_Manager" + File.separator + "_haxm.zip";
+            getTools(System.getProperty(Constants.HAXM_URL), folderName);
+            ProcessBuilder processBuilder;
+            if (osSuffix.equals(Constants.MAC_OS)) {
+                haxmInstaller = haxmLocation + File.separator + "silent_install.sh";
+                setExecutePermission(haxmInstaller);
+                processBuilder = new ProcessBuilder("sudo", haxmInstaller, "-m", "2048", "-log",
+                        androidSdkHome + File.separator + "haxmSilentRun.log");
             } else {
-                haxmInstaller += Constants.MAC_HAXM_EXTENSION;
+                haxmInstaller = haxmLocation + File.separator + "silent_install.bat";
+                setExecutePermission(haxmInstaller);
+                processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
+                        androidSdkHome + File.separator + "haxmSilentRun.log");
             }
-            setExecutePermission(haxmInstaller);
 
-            ProcessBuilder processBuilder = new ProcessBuilder(haxmInstaller, "-m", "2048", "-log",
-                    workingDirectory + File.separator + "haxmSilentRun.log");
+            System.out.println("Installing intel HAXM,  Please wait . . . ");
             processBuilder.directory(new File(haxmLocation));
             processBuilder.redirectInput(ProcessBuilder.Redirect.INHERIT);
             processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
@@ -818,6 +835,7 @@ public class TryIt {
     private void checkCacheImg(String deviceId) {
         File cacheImg = new File(userHome + File.separator + ".android"
                 + File.separator + "avd" + File.separator + deviceId + ".avd" + File.separator + "cache.img");
+        System.out.print("Creating cache image, please wait ");
         while (!cacheImg.exists()) {
             System.out.print(".");
             delay(1000);

@@ -199,8 +199,11 @@ public class VirtualHardwareManager {
         try {
             sequence = MidiSystem.getSequence(audioSrc);
             sequencer = MidiSystem.getSequencer();
-            sequencer.open();
-            sequencer.setSequence(sequence);
+            if(sequencer != null) {
+                sequencer.open();
+                sequencer.setSequence(sequence);
+                sequencer.setLoopCount(Clip.LOOP_CONTINUOUSLY);
+            }
         } catch (InvalidMidiDataException e) {
             log.error("AudioReader: Error whilst setting MIDI Audio reader sequence");
         } catch (IOException e) {
@@ -208,8 +211,6 @@ public class VirtualHardwareManager {
         } catch (MidiUnavailableException e) {
             log.error("AudioReader: Error whilst openning MIDI Audio reader sequencer");
         }
-
-        sequencer.setLoopCount(Clip.LOOP_CONTINUOUSLY);
     }
 
 }
