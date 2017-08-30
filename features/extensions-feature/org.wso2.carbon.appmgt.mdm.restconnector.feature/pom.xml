@@ -20,13 +20,13 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions-feature</artifactId>
-        <version>4.0.65-SNAPSHOT</version>
+        <version>4.0.65</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>org.wso2.carbon.appmgt.mdm.restconnector.feature</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.65-SNAPSHOT</version>
+    <version>4.0.65</version>
     <name>WSO2 Carbon - App management MDM REST Connector</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for APP management MDM REST connection
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.appmgt.mdm.restconnector</artifactId>
-            <version>4.0.65-SNAPSHOT</version>
+            <version>4.0.65</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.ws.commons.axiom</groupId>
