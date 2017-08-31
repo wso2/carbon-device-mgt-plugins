@@ -100,7 +100,9 @@
                   <div id="map-error" class="message message-warning">
                       <h4 class="remove-margin">
                           <i class="icon fw fw-warning"></i>
-                          Device location information is not available.
+                          The device location information is not available right now! Please refresh the page in a few minutes.
+                          The location details will not be available if the device’s “Location Services setting” is disabled
+                          or if WSO2 IoT Server has not received the device’s location information from the device.
                       </h4>
                   </div>
                   <p class="add-padding-5x"></p>
@@ -109,6 +111,18 @@
               {{/if}}
             </div>
             <div id="app" class="tab-pane fade">
+                <div class="tab-actions">
+                    <div class="action-btn-container">
+                        <div class="action-btn show filter">
+                            <a href="javascript:void(0);" id="refresh-apps">
+                                <i class="fw fw-refresh"></i> Refresh List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="apps-spinner" class="wr-advance-operations-init hidden">
+                    <i class="fw fw-wso2-logo fw-pulse fw-2x"></i> Loading Application List...
+                </div>
               <div id="applications-list-container" data-public-uri="{{@unit.publicUri}}">
               </div>
             </div>

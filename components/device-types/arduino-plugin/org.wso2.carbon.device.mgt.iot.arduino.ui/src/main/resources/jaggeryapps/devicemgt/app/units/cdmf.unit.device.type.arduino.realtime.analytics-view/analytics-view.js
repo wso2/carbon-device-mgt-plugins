@@ -28,6 +28,7 @@ function onRequest(context) {
     var jwtClient = jwtService.getJWTClient();
     var encodedClientKeys = session.get(constants["ENCODED_TENANT_BASED_WEB_SOCKET_CLIENT_CREDENTIALS"]);
     var token = "";
+    var user = session.get(constants.USER_SESSION_KEY);
     if (encodedClientKeys) {
         var tokenUtil = require("/app/modules/oauth/token-handler-utils.js")["utils"];
         var resp = tokenUtil.decode(encodedClientKeys).split(":");

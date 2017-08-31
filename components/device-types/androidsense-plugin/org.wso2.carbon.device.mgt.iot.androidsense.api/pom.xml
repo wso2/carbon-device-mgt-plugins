@@ -3,7 +3,7 @@
     <parent>
         <artifactId>androidsense-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.54-SNAPSHOT</version>
+        <version>4.0.66-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -127,11 +127,6 @@
                     <artifactId>org.wso2.carbon.registry.api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.analytics</groupId>

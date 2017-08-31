@@ -1,5 +1,5 @@
 {
-  "name": "org.wso2.iot.virtualfirealarm",
+  "name": "iot.per.device.stream.virtualfirealarm",
   "version": "1.0.0",
   "nickName": "virtual_firealarm",
   "description": "Temperature data received from the virtual_firealarm",
