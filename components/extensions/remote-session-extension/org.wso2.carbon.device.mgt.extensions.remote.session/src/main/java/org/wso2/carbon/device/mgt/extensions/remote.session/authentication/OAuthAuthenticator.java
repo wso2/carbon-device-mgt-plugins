@@ -20,6 +20,9 @@ import org.wso2.carbon.device.mgt.extensions.remote.session.authentication.oauth
 import java.util.List;
 import java.util.Map;
 
+/**
+ * {@link OAuthAuthenticator} for validate tokens to web socket api
+ */
 public class OAuthAuthenticator {
     OAuthTokenValidator oAuthTokenValidator;
 

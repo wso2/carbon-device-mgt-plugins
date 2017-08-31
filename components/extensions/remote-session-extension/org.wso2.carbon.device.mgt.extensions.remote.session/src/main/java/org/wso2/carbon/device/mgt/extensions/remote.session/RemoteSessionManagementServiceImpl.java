@@ -33,13 +33,16 @@ import org.wso2.carbon.device.mgt.core.operation.mgt.ConfigOperation;
 import org.wso2.carbon.device.mgt.extensions.remote.session.authentication.AuthenticationInfo;
 import org.wso2.carbon.device.mgt.extensions.remote.session.authentication.OAuthAuthenticator;
 import org.wso2.carbon.device.mgt.extensions.remote.session.constants.RemoteSessionConstants;
-import org.wso2.carbon.device.mgt.extensions.remote.session.dto.RemoteSession;
+import org.wso2.carbon.device.mgt.extensions.remote.session.dto.ClientSession;
+import org.wso2.carbon.device.mgt.extensions.remote.session.dto.DeviceSession;
+import org.wso2.carbon.device.mgt.extensions.remote.session.dto.common.RemoteSession;
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionInvalidException;
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
 import org.wso2.carbon.device.mgt.extensions.remote.session.internal.RemoteSessionManagementDataHolder;
 
 import javax.websocket.CloseReason;
 import javax.websocket.Session;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -69,6 +72,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
         List<String> sessionQueryParamList = new LinkedList<>();
         sessionQueryParamList.add(session.getQueryString());
         sessionQueryParam.put(RemoteSessionConstants.QUERY_STRING, sessionQueryParamList);
+
         // Validate the token
         OAuthAuthenticator oAuthAuthenticator = RemoteSessionManagementDataHolder.getInstance().getOauthAuthenticator();
         AuthenticationInfo authenticationInfo = oAuthAuthenticator.isAuthenticated(sessionQueryParam);
@@ -84,12 +88,19 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                     DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
                     deviceIdentifier.setId(deviceId);
                     deviceIdentifier.setType(deviceType);
+                    // Check authorization for user
                     boolean userAuthorized = RemoteSessionManagementDataHolder.getInstance()
                             .getDeviceAccessAuthorizationService()
                             .isUserAuthorized(deviceIdentifier, authenticationInfo.getUsername());
                     if (userAuthorized) {
                         log.info("Operation ID: " + operationId);
 
+                        // set common settings for session
+                        session.setMaxBinaryMessageBufferSize(MAX_BUFFER_SIZE);
+                        session.setMaxTextMessageBufferSize(MAX_BUFFER_SIZE);
+                        session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
+
+                        // if session initiated using operatiod id means request came from device
                         if (operationId != null) {
                             Session pendingSession = RemoteSessionManagementDataHolder.getInstance()
                                     .getDeviceRequestMap().get((authenticationInfo.getTenantDomain() + "/" + deviceType
@@ -101,11 +112,10 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                                 if (clientRemote != null) {
 
                                     if (clientRemote.getOperationId().equals(operationId)) {
-                                        RemoteSession deviceRemote = new RemoteSession(authenticationInfo.getTenantDomain
-                                                (), deviceType, deviceId, operationId, RemoteSessionConstants
-                                                .CONNECTION_MODES.DEVICE_MODE);
-                                        deviceRemote.setPeerSession(pendingSession);
-                                        clientRemote.setPeerSession(session);
+                                        RemoteSession deviceRemote = new DeviceSession(session, authenticationInfo
+                                                .getTenantDomain(), deviceType, deviceId, operationId);
+                                        deviceRemote.setPeerSession(clientRemote);
+                                        clientRemote.setPeerSession(deviceRemote);
                                         RemoteSessionManagementDataHolder.getInstance().getSessionMap().put(session
                                                 .getId(), deviceRemote);
                                         RemoteSessionManagementDataHolder.getInstance().getDeviceRequestMap().remove(
@@ -115,9 +125,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                                         message.put("code", RemoteSessionConstants.REMOTE_CONNECT);
                                         message.put("operation_response", "connected");
                                         deviceRemote.sendMessageToPeer(message.toString());
-                                        // set buffer sizes
-                                        session.setMaxBinaryMessageBufferSize(MAX_BUFFER_SIZE);
-                                        session.setMaxTextMessageBufferSize(MAX_BUFFER_SIZE);
+
                                     } else {
                                         throw new RemoteSessionManagementException("Device and Operation information does" +
                                                 " not matched with client information for operation id: " + operationId +
@@ -136,6 +144,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                                         "id: " + operationId + " device Type : " + deviceType + " , " + "deviceId : " +
                                         deviceId);
                             }
+
                         } else {
                             // Create new remote control operation to start the session
                             Session pendingSession = RemoteSessionManagementDataHolder.getInstance().getDeviceRequestMap().get(
@@ -148,27 +157,29 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                                         session);
 
                                 if (lastSession == null) {
+
+                                    // Create operation if session initiated by client
                                     Operation operation = new ConfigOperation();
                                     operation.setCode(RemoteSessionConstants.REMOTE_CONNECT);
                                     operation.setEnabled(true);
+                                    operation.setControl(Operation.Control.NO_REPEAT);
                                     JSONObject payload = new JSONObject();
                                     payload.put("serverUrl", RemoteSessionManagementDataHolder.getInstance().getServerUrl());
                                     operation.setPayLoad(payload.toString());
                                     String date = new SimpleDateFormat(DATE_FORMAT_NOW).format(new Date());
                                     operation.setCreatedTimeStamp(date);
+
                                     List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
                                     deviceIdentifiers.add(new DeviceIdentifier(deviceId, deviceType));
                                     Activity activity = RemoteSessionManagementDataHolder.getInstance()
                                             .getDeviceManagementProviderService().addOperation(deviceType, operation,
                                                     deviceIdentifiers);
                                     log.info("Activity id: " + activity.getActivityId());
-                                    RemoteSession clientRemote = new RemoteSession(authenticationInfo.getTenantDomain(),
-                                            deviceType, deviceId, activity.getActivityId().replace(DeviceManagementConstants
-                                            .OperationAttributes.ACTIVITY, ""), RemoteSessionConstants
-                                            .CONNECTION_MODES.CLIENT_MODE);
+
+                                    RemoteSession clientRemote = new ClientSession(session, authenticationInfo
+                                            .getTenantDomain(), deviceType, deviceId, activity.getActivityId().replace(DeviceManagementConstants
+                                            .OperationAttributes.ACTIVITY, ""));
                                     RemoteSessionManagementDataHolder.getInstance().getSessionMap().put(session.getId(), clientRemote);
-                                    session.setMaxBinaryMessageBufferSize(MAX_BUFFER_SIZE);
-                                    session.setMaxTextMessageBufferSize(MAX_BUFFER_SIZE);
                                 }
                             }
                         }
@@ -209,7 +220,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
      * Implements the behaviour of sending message to peer connection
      *
      * @param session Web socket RemoteSession
-     * @param message Message needs to send to peer connection
+     * @param message String message needs to send to peer connection
      * @throws RemoteSessionInvalidException    throws when session cannot be made due to invalid data
      * @throws RemoteSessionManagementException throws when session has error with accessing device resources
      */
@@ -219,7 +230,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
         JSONObject jsonObject = new JSONObject(message);
         RemoteSession remoteSession = RemoteSessionManagementDataHolder.getInstance().getSessionMap().get(session.getId());
         if (remoteSession != null) {
-            if (remoteSession.getConnection_mode().equals(RemoteSessionConstants.CONNECTION_MODES.CLIENT_MODE)) {
+            if (remoteSession instanceof ClientSession) {
                 jsonObject.put("id", remoteSession.getOperationId());
             }
             remoteSession.sendMessageToPeer(jsonObject.toString());
@@ -230,6 +241,14 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
     }
 
 
+    /**
+     * Implements the behaviour of sending message to peer connection
+     *
+     * @param session Web socket RemoteSession
+     * @param message Byte message needs to send to peer connection
+     * @throws RemoteSessionInvalidException    throws when session cannot be made due to invalid data
+     * @throws RemoteSessionManagementException throws when session has error with accessing device resources
+     */
     @Override
     public void sendMessageToPeer(Session session, byte[] message) throws RemoteSessionInvalidException,
             RemoteSessionManagementException {
@@ -249,14 +268,17 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
      * @param session Web socket RemoteSession
      */
     @Override
-    public void endSession(Session session) {
+    public void endSession(Session session) throws IOException {
 
         RemoteSession remoteSession = RemoteSessionManagementDataHolder.getInstance().getSessionMap().remove(session.getId());
         if (remoteSession != null) {
             String operationId = remoteSession.getOperationId();
-            Session peerSession = remoteSession.getPeerSession();
+            Session peerSession = remoteSession.getPeerSession().getMySession();
             if (peerSession != null) {
                 RemoteSessionManagementDataHolder.getInstance().getSessionMap().remove(peerSession.getId());
+                if (peerSession.isOpen()) {
+                    peerSession.close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Remote session closed"));
+                }
             }
             if (operationId != null) {
                 Session lastSession = RemoteSessionManagementDataHolder.getInstance().getDeviceRequestMap().get(

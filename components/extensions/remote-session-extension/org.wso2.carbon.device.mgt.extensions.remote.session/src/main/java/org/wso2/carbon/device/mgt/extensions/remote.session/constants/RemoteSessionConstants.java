@@ -24,24 +24,18 @@ package org.wso2.carbon.device.mgt.extensions.remote.session.constants;
 public class RemoteSessionConstants {
 
     public static final String SCOPE_IDENTIFIER = "scopes";
-    public static final String MAXIMUM_TOTAL_HTTP_CONNECTION = "maximumTotalHttpConnection";
-    public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";
     public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenValidationUrl";
     public static final String TOKEN_VALIDATION_CONTEX = "/services/OAuth2TokenValidationService";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
-    public static final String DEVICE_ID = "deviceId";
-    public static final String DEVICE_TYPE = "deviceType";
     public static final String REMOTE_CONNECT = "REMOTE_CONNECT";
+    public static final String THROTTLE_OUT = "THROTTLE_OUT";
     public static final String QUERY_STRING = "queryString";
-    public static final String OPERATION_CODE = "operation_code";
-    public static final String REMOTE_SESSION_DEVICE_ENDPOINT_CONTEXT = "/remote/session/devices";
+    public static final String MAXIMUM_TOTAL_HTTP_CONNECTION = "maximumTotalHttpConnection";
+    public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";
+    public static final String DEFAULT_MAXIMUM_HTTP_CONNECTION_PER_HOST = "2";
+    public static final String DEFAULT_MAXIMUM_TOTAL_HTTP_CONNECTIONS = "100";
 
-    // Constants for remote session Connection modes
-
-    public enum CONNECTION_MODES {
-        CLIENT_MODE, DEVICE_MODE
-    }
 
     private RemoteSessionConstants() {
     }

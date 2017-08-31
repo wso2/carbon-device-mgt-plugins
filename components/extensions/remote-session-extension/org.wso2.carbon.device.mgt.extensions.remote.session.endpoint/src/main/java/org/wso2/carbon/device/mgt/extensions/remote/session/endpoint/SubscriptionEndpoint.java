@@ -108,9 +108,6 @@ public class SubscriptionEndpoint {
         }
         try {
             ServiceHolder.getInstance().getRemoteSessionManagementService().endSession(session);
-            if (session.isOpen()) {
-                session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Unexpected Error Occurred"));
-            }
         } catch (IOException ex) {
             if (log.isDebugEnabled()) {
                 log.error("Failed to disconnect the client.", ex);

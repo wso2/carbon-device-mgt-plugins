@@ -43,8 +43,6 @@ import java.io.IOException;
 public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
 
     private static final Log log = LogFactory.getLog(DeviceSessionSubscriptionEndpoint.class);
-    private RemoteSessionConstants.CONNECTION_MODES connectionMode = RemoteSessionConstants.CONNECTION_MODES.DEVICE_MODE;
-
     /**
      * Web socket onOpen - When client sends a message
      *

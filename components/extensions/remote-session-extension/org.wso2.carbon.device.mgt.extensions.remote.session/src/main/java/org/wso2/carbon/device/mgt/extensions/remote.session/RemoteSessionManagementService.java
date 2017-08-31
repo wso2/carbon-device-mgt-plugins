@@ -21,6 +21,7 @@ import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSess
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
 
 import javax.websocket.Session;
+import java.io.IOException;
 
 /**
  * Class @{@link RemoteSessionManagementService} use for managing remote sessions
@@ -40,7 +41,7 @@ public interface RemoteSessionManagementService {
             RemoteSessionInvalidException, RemoteSessionManagementException;
 
     /**
-     * Initialize session based on web socket request .this method use by the device to connect
+     * Initialize session based on web socket request . This method use by the device to connect
      *
      * @param session     Web socket RemoteSession
      * @param deviceType  Device Type
@@ -79,6 +80,6 @@ public interface RemoteSessionManagementService {
      *
      * @param session Web socket RemoteSession
      */
-    public void endSession(Session session);
+    public void endSession(Session session) throws IOException;
 
 }

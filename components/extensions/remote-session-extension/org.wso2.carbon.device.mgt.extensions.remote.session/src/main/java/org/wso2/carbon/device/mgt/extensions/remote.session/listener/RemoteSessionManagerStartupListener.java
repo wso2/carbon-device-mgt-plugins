@@ -23,7 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.device.mgt.core.config.DeviceConfigurationManager;
-
+import org.wso2.carbon.device.mgt.core.config.keymanager.KeyManagerConfigurations;
+import org.wso2.carbon.device.mgt.core.config.remote.session.RemoteSessionConfiguration;
 import org.wso2.carbon.device.mgt.extensions.remote.session.authentication.OAuthAuthenticator;
 import org.wso2.carbon.device.mgt.extensions.remote.session.constants.RemoteSessionConstants;
 import org.wso2.carbon.device.mgt.extensions.remote.session.internal.RemoteSessionManagementDataHolder;
@@ -33,8 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Startup listener is been used to make sure the reciever gets activated after the server start up to avoid
+ * Startup listener is been used to make sure the receiver gets activated after the server start up to avoid
  * Bundle not loading issues.
+ * This will configure the values for remote session management
  */
 public class RemoteSessionManagerStartupListener implements ServerStartupObserver {
 
@@ -50,18 +52,41 @@ public class RemoteSessionManagerStartupListener implements ServerStartupObserve
         PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
                 MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, true);
         try {
+            RemoteSessionConfiguration rsConfig = DeviceConfigurationManager.getInstance().getDeviceManagementConfig
+                    ().getRemoteSessionConfiguration();
+            KeyManagerConfigurations kmConfig = DeviceConfigurationManager.getInstance().getDeviceManagementConfig()
+                    .getKeyManagerConfigurations();
 
-            RemoteSessionManagementDataHolder.getInstance().setEnabled(DeviceConfigurationManager.getInstance()
-                    .getDeviceManagementConfig().getRemoteSessionConfiguration().getIsEnabled());
-            RemoteSessionManagementDataHolder.getInstance().setServerUrl(DeviceConfigurationManager.getInstance()
-                    .getDeviceManagementConfig().getRemoteSessionConfiguration().getRemoteSessionServerUrl());
+            RemoteSessionManagementDataHolder.getInstance().setEnabled(rsConfig.isEnabled());
+            RemoteSessionManagementDataHolder.getInstance().setServerUrl(rsConfig.getRemoteSessionServerUrl());
             Map<String, String> configProperties = new HashMap<>();
-            configProperties.put(RemoteSessionConstants.TOKEN_VALIDATION_ENDPOINT_URL, "https://localhost:9443");
-            configProperties.put(RemoteSessionConstants.USERNAME,"admin");
-            configProperties.put(RemoteSessionConstants.PASSWORD,"admin");
-            configProperties.put(RemoteSessionConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST,"2");
-            configProperties.put(RemoteSessionConstants.MAXIMUM_TOTAL_HTTP_CONNECTION,"100");
-            OAuthAuthenticator oAuthAuthenticator= new OAuthAuthenticator();
+
+            // Set max idle timeout in milliseconds
+            RemoteSessionManagementDataHolder.getInstance().setMaxIdleTimeout(rsConfig.getSessionIdleTimeOut()*60000);
+
+            // Set max messages per second.
+            RemoteSessionManagementDataHolder.getInstance().setMessagesPerSession(rsConfig.getMaxMessagesPerSession());
+            // Token validation related configuration
+            configProperties.put(RemoteSessionConstants.TOKEN_VALIDATION_ENDPOINT_URL, kmConfig.getServerUrl());
+            configProperties.put(RemoteSessionConstants.USERNAME, kmConfig.getAdminUsername());
+            configProperties.put(RemoteSessionConstants.PASSWORD, kmConfig.getAdminPassword());
+            if (rsConfig.getMaxHTTPConnectionPerHost() > 0) {
+
+                configProperties.put(RemoteSessionConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST,
+                        String.valueOf(rsConfig.getMaxHTTPConnectionPerHost()));
+            } else {
+                configProperties.put(RemoteSessionConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST, RemoteSessionConstants
+                        .DEFAULT_MAXIMUM_HTTP_CONNECTION_PER_HOST);
+            }
+            if (rsConfig.getMaxTotalHTTPConnections() > 0) {
+                configProperties.put(RemoteSessionConstants.MAXIMUM_TOTAL_HTTP_CONNECTION, String.valueOf(rsConfig
+                        .getMaxTotalHTTPConnections()));
+            } else {
+                configProperties.put(RemoteSessionConstants.MAXIMUM_TOTAL_HTTP_CONNECTION, RemoteSessionConstants
+                        .DEFAULT_MAXIMUM_TOTAL_HTTP_CONNECTIONS);
+            }
+
+            OAuthAuthenticator oAuthAuthenticator = new OAuthAuthenticator();
             oAuthAuthenticator.init(configProperties);
             RemoteSessionManagementDataHolder.getInstance().setOauthAuthenticator(oAuthAuthenticator);
 

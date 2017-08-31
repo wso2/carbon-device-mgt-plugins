@@ -23,9 +23,10 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>remote-session-extension</artifactId>
-        <version>4.0.35-SNAPSHOT</version>
+        <version>4.0.54-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.extensions.remote.session.endpoint</artifactId>

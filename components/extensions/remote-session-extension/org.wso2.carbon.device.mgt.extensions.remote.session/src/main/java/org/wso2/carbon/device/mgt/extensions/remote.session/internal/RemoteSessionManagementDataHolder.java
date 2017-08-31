@@ -19,10 +19,9 @@
 package org.wso2.carbon.device.mgt.extensions.remote.session.internal;
 
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
-import org.wso2.carbon.device.mgt.core.config.DeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.extensions.remote.session.authentication.OAuthAuthenticator;
-import org.wso2.carbon.device.mgt.extensions.remote.session.dto.RemoteSession;
+import org.wso2.carbon.device.mgt.extensions.remote.session.dto.common.RemoteSession;
 
 import javax.websocket.Session;
 import java.util.Map;
@@ -35,6 +34,8 @@ public class RemoteSessionManagementDataHolder {
     private DeviceAccessAuthorizationService deviceAccessAuthorizationService;
     private boolean isEnabled;
     private String serverUrl;
+    private long maxIdleTimeout;
+    private int messagesPerSession;
     private OAuthAuthenticator oAuthAuthenticator;
     private Map<String, Session> deviceRequestMap = new ConcurrentHashMap<String, Session>();
     private Map<String, RemoteSession> sessionMap = new ConcurrentHashMap<String, RemoteSession>();
@@ -97,5 +98,21 @@ public class RemoteSessionManagementDataHolder {
 
     public void setServerUrl(String serverUrl) {
         this.serverUrl = serverUrl;
+    }
+
+    public int getMessagesPerSession() {
+        return messagesPerSession;
+    }
+
+    public void setMessagesPerSession(int messagesPerSession) {
+        this.messagesPerSession = messagesPerSession;
+    }
+
+    public long getMaxIdleTimeout() {
+        return maxIdleTimeout;
+    }
+
+    public void setMaxIdleTimeout(long maxIdleTimeout) {
+        this.maxIdleTimeout = maxIdleTimeout;
     }
 }
