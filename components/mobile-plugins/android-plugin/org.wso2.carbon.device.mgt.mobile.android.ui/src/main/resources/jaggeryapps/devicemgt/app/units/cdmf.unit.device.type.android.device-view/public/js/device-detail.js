@@ -302,8 +302,8 @@ var InitiateViewOption = null;
 
                             var viewModel = {};
                             viewModel["applications"] = data;
-                            viewModel["deviceType"] = deviceType;
                             viewModel["deviceId"] = deviceId;
+                            viewModel["deviceType"] = deviceType;
                             viewModel["appContext"] = context;
                             var content = template(viewModel);
                             $("#applications-list-container").html(content);
@@ -354,6 +354,7 @@ var InitiateViewOption = null;
                                             var viewModel = {};
                                             viewModel["policy"] = activePolicy;
                                             viewModel["deviceType"] = deviceType;
+					    					viewModel["deviceId"] = deviceId;
                                             data = JSON.parse(data);
                                             var content;
                                             if (data["complianceData"]) {
