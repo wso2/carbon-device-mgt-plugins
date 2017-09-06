@@ -19,20 +19,21 @@ package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.wso2.carbon.mdm.services.android.bean.FileTransfer;
 
 import java.util.List;
 
 /**
- * This class is used to wrap the Notification bean with devices.
+ * This class is used to wrap the File Transfer bean with devices.
  */
 @ApiModel(value = "FileTransferBeanWrapper",
         description = "FileTransfer related Information.")
-public class FileTransferBeanWrapper{
+public class FileTransferBeanWrapper {
 
     @ApiModelProperty(name = "deviceIDs", value = "Device id list of the operation to be executed.", required = true)
     private List<String> deviceIDs;
 
-    @ApiModelProperty(name = "operation", value = "Information of the Device lock operation.", required = true)
+    @ApiModelProperty(name = "operation", value = "Information of the File Transfer Operation.", required = true)
     private FileTransfer operation;
 
     public List<String> getDeviceIDs() {

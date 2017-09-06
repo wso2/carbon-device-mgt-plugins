@@ -233,9 +233,8 @@ public interface DeviceManagementAdminService {
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
             //todo
-            value = "Adding a Screen Lock on Android devices",
-            notes = "Using this API you have the option of hard locking an Android device, where the Administrator " +
-                    "permanently locks the device or screen locking an Android device.",
+            value = "Transferring file to the device.",
+            notes = "Using this API you have the option to transfer a file from FTP server to an Android device.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
             extensions = {
@@ -248,7 +247,7 @@ public interface DeviceManagementAdminService {
             @ApiResponse(
                     code = 201,
                     //todo
-                    message = "Created. \n Successfully scheduled the device lock operation.",
+                    message = "File transferred.",
                     response = Activity.class,
                     responseHeaders = {
                             @ResponseHeader(
@@ -286,11 +285,7 @@ public interface DeviceManagementAdminService {
     Response fileTransfer(
             @ApiParam(
                     name = "fileTransfer",
-                    //todo
-                    value = "Provide the ID of the Android device, the message that needs to be sent out when locking the device, " +
-                            "and define true as the value if you need to hard lock the device or define false as the value to " +
-                            "screen lock the device." +
-                            "Multiple device IDs can be added by using comma separated values. ",
+                    value ="Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
                     required = true) FileTransferBeanWrapper fileTransferBeanWrapper);
 
     @POST

@@ -15,7 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.mdm.services.android.bean.wrapper;
+package org.wso2.carbon.mdm.services.android.bean;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,41 +28,23 @@ import java.io.Serializable;
         description = "This class carries all information related to file transfer operation.")
 public class FileTransfer extends AndroidOperation implements Serializable {
 
-    @ApiModelProperty(name = "ftpServerAddress", value = "FTP Server Address", required = true)
-    private String ftpServerAddress;
-
-    @ApiModelProperty(name = "ftpUserName", value = "FTP User name", required = true)
-    private String ftpUserName;
+    @ApiModelProperty(name = "fileURL", value = "File URL", required = true)
+    private String fileURL;
 
     @ApiModelProperty(name = "ftpPassword", value = "FTP password", required = true)
     private String ftpPassword;
 
-    @ApiModelProperty(name = "fileName", value = "File name", required = true)
-    private String fileName;
+    @ApiModelProperty(name = "savingDirectory", value = "savingDirectory", required = true)
+    private String savingDirectory;
 
-    public String getFileName() {
-        return fileName;
+    public String getFileURL() {
+        return fileURL;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFileURL(String fileURL) {
+        this.fileURL = fileURL;
     }
 
-    public String getFtpServerAddress() {
-        return ftpServerAddress;
-    }
-
-    public void setFtpServerAddress(String ftpServerAddress) {
-        this.ftpServerAddress = ftpServerAddress;
-    }
-
-    public String getFtpUserName() {
-        return ftpUserName;
-    }
-
-    public void setFtpUserName(String ftpUserName) {
-        this.ftpUserName = ftpUserName;
-    }
 
     public String getFtpPassword() {
         return ftpPassword;
@@ -70,5 +52,13 @@ public class FileTransfer extends AndroidOperation implements Serializable {
 
     public void setFtpPassword(String ftpPassword) {
         this.ftpPassword = ftpPassword;
+    }
+
+    public String getSavingDirectory() {
+        return savingDirectory;
+    }
+
+    public void setSavingDirectory(String savingDirectory) {
+        this.savingDirectory = savingDirectory;
     }
 }

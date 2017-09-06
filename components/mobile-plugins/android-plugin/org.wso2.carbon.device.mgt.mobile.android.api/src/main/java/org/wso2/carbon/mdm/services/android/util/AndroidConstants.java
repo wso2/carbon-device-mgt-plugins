@@ -74,6 +74,7 @@ public final class AndroidConstants {
         }
 
         public static final String DEVICE_LOCK = "DEVICE_LOCK";
+        public static final String FILE_TRANSFER = "FILE_TRANSFER";
         public static final String DEVICE_UNLOCK = "DEVICE_UNLOCK";
         public static final String DEVICE_LOCATION = "DEVICE_LOCATION";
         public static final String WIFI = "WIFI";

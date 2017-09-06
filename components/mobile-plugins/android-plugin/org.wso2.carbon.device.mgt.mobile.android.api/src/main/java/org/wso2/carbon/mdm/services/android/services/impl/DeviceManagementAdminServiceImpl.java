@@ -50,7 +50,7 @@ import org.wso2.carbon.mdm.services.android.bean.wrapper.BlacklistApplicationsBe
 import org.wso2.carbon.mdm.services.android.bean.wrapper.CameraBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.DeviceLockBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EncryptionBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.FileTransfer;
+import org.wso2.carbon.mdm.services.android.bean.FileTransfer;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.FileTransferBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.LockCodeBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.NotificationBeanWrapper;
@@ -107,7 +107,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             }
             FileTransfer file = fileTransferBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
-            operation.setCode("FILE_TRANSFER");
+            operation.setCode(AndroidConstants.OperationCodes.FILE_TRANSFER);
             operation.setType(Operation.Type.PROFILE);
             operation.setEnabled(true);
             operation.setPayLoad(file.toJSON());

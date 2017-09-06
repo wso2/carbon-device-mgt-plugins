@@ -141,15 +141,9 @@
                 "formParams": [
                     {
                         "type": "text",
-                        "id": "ftpServerAddress",
+                        "id": "fileURL",
                         "optional": false,
-                        "label": "FTP Server Address"
-                    },
-                    {
-                        "type": "text",
-                        "id": "ftpUserName",
-                        "optional": false,
-                        "label": "FTP User Name"
+                        "label": "URL of the file to be sent"
                     },
                     {
                         "type": "password",
@@ -159,9 +153,9 @@
                     },
                     {
                         "type": "text",
-                        "id": "fileName",
+                        "id": "savingDirectory",
                         "optional": false,
-                        "label": "File Name"
+                        "label": "Location in device to save file"
                     }
                 ],
                 "permission": "/device-mgt/devices/owning-device/operations/android/file-transfer"

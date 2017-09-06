@@ -180,14 +180,12 @@ function validatePayload(operationCode, payload) {
             }
             break;
         case "FILE_TRANSFER":
-            if (!payload.ftpServerAddress) {
-                returnVal = "Please enter FTP server address";
-            }else if(!payload.ftpUserName){
-                returnVal = "Please enter FTP user name";
+            if (!payload.fileURL) {
+                returnVal = "Please enter the URL of the file in server";
             }else if(!payload.ftpPassword){
                 returnVal = "Please enter FTP password";
-            }else if(!payload.fileName){
-                returnVal = "Please enter the name of the file you want to transfer";
+            }else if(!payload.savingDirectory){
+                returnVal = "Please enter the location in device where you wan to save the file";
             }
             break;
         default:
@@ -254,10 +252,9 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             operationType = operationTypeConstants["PROFILE"];
             payload = {
                 "operation": {
-                    "ftpServerAddress": operationData["ftpServerAddress"],
-                    "ftpUserName": operationData["ftpUserName"],
+                    "fileURL": operationData["fileURL"],
                     "ftpPassword": operationData["ftpPassword"],
-                    "fileName": operationData["fileName"]
+                    "savingDirectory": operationData["savingDirectory"]
                 }
             };
             break;
