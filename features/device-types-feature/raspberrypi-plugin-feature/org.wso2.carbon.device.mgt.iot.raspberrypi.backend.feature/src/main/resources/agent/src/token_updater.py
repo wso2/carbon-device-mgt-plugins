@@ -48,6 +48,6 @@ class RefreshToken():
         params = urllib.urlencode({"grant_type": "refresh_token", "refresh_token": refreshToken,
                                    "scope": "Enroll device"})
         data = self.post("/token", params, applicationKey)
-        response = json.loads(data)
+        response = json.loads(data.content)
         self.updateFile(response)
         return response
