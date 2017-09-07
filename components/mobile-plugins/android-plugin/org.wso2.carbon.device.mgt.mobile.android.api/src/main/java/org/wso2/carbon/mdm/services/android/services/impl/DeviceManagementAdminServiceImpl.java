@@ -95,12 +95,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @Override
     public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
         if (log.isDebugEnabled()) {
-            log.debug("Invoking Android file transfer operation");
+            log.debug("Invoking Android file transfer operation for " + fileTransferBeanWrapper.getDeviceIDs());
         }
 
         try {
             if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null) {
-                String errorMessage = "Lock bean is empty.";
+                String errorMessage = "The payload of the file transfer operation is incorrect.";
                 log.error(errorMessage);
                 throw new BadRequestException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
@@ -113,17 +113,17 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setPayLoad(file.toJSON());
             return AndroidAPIUtils.getOperationResponse(fileTransferBeanWrapper.getDeviceIDs(), operation);
         } catch (InvalidDeviceException e) {
-            String errorMessage = "Invalid Device Identifiers found.";
+            String errorMessage = "Invalid Device Identifiers ( " + fileTransferBeanWrapper.getDeviceIDs() + " ) found.";
             log.error(errorMessage, e);
             throw new BadRequestException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
-            String errorMessage = "Issue in retrieving operation management service instance";
+            String errorMessage = "Issue in retrieving operation management service instance for file transfer operation";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
         } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
+            String errorMessage = "Issue in retrieving device management service instance for file transfer operation";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());

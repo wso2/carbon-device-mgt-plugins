@@ -232,7 +232,6 @@ public interface DeviceManagementAdminService {
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
-            //todo
             value = "Transferring file to the device.",
             notes = "Using this API you have the option to transfer a file from FTP server to an Android device.",
             response = Activity.class,

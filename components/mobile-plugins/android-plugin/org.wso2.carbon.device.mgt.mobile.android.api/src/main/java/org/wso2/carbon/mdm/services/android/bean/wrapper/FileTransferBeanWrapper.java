@@ -30,7 +30,7 @@ import java.util.List;
         description = "FileTransfer related Information.")
 public class FileTransferBeanWrapper {
 
-    @ApiModelProperty(name = "deviceIDs", value = "Device id list of the operation to be executed.", required = true)
+    @ApiModelProperty(name = "deviceIDs", value = "Device id list to which the operation to be executed.", required = true)
     private List<String> deviceIDs;
 
     @ApiModelProperty(name = "operation", value = "Information of the File Transfer Operation.", required = true)
