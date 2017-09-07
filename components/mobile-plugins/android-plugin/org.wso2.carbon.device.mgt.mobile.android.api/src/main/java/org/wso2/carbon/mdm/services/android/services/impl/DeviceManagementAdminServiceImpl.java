@@ -35,6 +35,7 @@ import org.wso2.carbon.mdm.services.android.bean.Camera;
 import org.wso2.carbon.mdm.services.android.bean.DeviceEncryption;
 import org.wso2.carbon.mdm.services.android.bean.DeviceLock;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.bean.FileTransfer;
 import org.wso2.carbon.mdm.services.android.bean.LockCode;
 import org.wso2.carbon.mdm.services.android.bean.Notification;
 import org.wso2.carbon.mdm.services.android.bean.PasscodePolicy;
@@ -50,7 +51,6 @@ import org.wso2.carbon.mdm.services.android.bean.wrapper.BlacklistApplicationsBe
 import org.wso2.carbon.mdm.services.android.bean.wrapper.CameraBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.DeviceLockBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EncryptionBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.FileTransfer;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.FileTransferBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.LockCodeBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.NotificationBeanWrapper;
