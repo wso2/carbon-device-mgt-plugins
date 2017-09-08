@@ -66,13 +66,13 @@ FOR EACH ROW
 /
 
 -- -----------------------------------------------------
--- Sequence `WINDOWS_ENROLLMENT_TOKEN_ID_INC_SEQ`
+-- Sequence `WIN_ENR_TOKEN_ID_INC_SEQ`
 -- -----------------------------------------------------
 CREATE SEQUENCE WIN_ENR_TOKEN_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE
 /
 
 -- -----------------------------------------------------
--- Trigger `WINDOWS_ENROLLMENT_TOKEN_ID_INC_TRIG`
+-- Trigger `WIN_ENR_TOKEN_ID_INC_TRIG`
 -- -----------------------------------------------------
 CREATE OR REPLACE TRIGGER WIN_ENR_TOKEN_ID_INC_TRIG
 BEFORE INSERT
