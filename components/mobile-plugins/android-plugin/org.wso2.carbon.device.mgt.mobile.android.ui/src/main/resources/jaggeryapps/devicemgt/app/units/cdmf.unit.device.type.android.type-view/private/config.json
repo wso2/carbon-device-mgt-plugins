@@ -140,10 +140,18 @@
                 "icon": "fw-save",
                 "formParams": [
                     {
+                        "type": "bi-radio",
+                        "name": "selection",
+                        "id": "upload",
+                        "optional": false,
+                        "yesValue": "Upload by the Device",
+                        "noValue": "Upload to the Device"
+                    },
+                    {
                         "type": "text",
                         "id": "fileURL",
                         "optional": false,
-                        "label": "FTP URL of the file to be sent"
+                        "label": "FTP URL of the folder to upload file"
                     },
                     {
                         "type": "password",
@@ -153,9 +161,9 @@
                     },
                     {
                         "type": "text",
-                        "id": "savingDirectory",
+                        "id": "fileLocation",
                         "optional": false,
-                        "label": "Location in device to save file"
+                        "label": "File location in the device"
                     }
                 ],
                 "permission": "/device-mgt/devices/owning-device/operations/android/file-transfer"

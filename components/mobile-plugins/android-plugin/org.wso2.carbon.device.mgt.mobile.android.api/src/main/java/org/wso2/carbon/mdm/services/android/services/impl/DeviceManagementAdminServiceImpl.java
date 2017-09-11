@@ -107,7 +107,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             }
             FileTransfer file = fileTransferBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
-            operation.setCode(AndroidConstants.OperationCodes.FILE_TRANSFER);
+            if (fileTransferBeanWrapper.isUpload()) {
+                operation.setCode(AndroidConstants.OperationCodes.FILE_DOWNLOAD);
+            } else {
+                operation.setCode(AndroidConstants.OperationCodes.FILE_UPLOAD);
+            }
             operation.setType(Operation.Type.PROFILE);
             operation.setEnabled(true);
             operation.setPayLoad(file.toJSON());
@@ -153,10 +157,10 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setPayLoad(lock.toJSON());
             return AndroidAPIUtils.getOperationResponse(deviceLockBeanWrapper.getDeviceIDs(), operation);
         } catch (InvalidDeviceException e) {
-                String errorMessage = "Invalid Device Identifiers found.";
-                log.error(errorMessage, e);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             log.error(errorMessage, e);
@@ -568,7 +572,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
 
         try {
             if (applicationInstallationBeanWrapper == null || applicationInstallationBeanWrapper.getOperation() ==
-                                                              null) {
+                    null) {
                 String errorMessage = "The payload of the application installing operation is incorrect";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -585,7 +589,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(applicationInstallation.toJSON());
             return AndroidAPIUtils.getOperationResponse(applicationInstallationBeanWrapper.getDeviceIDs(),
-                                                        operation);
+                    operation);
         } catch (JSONException e) {
             String errorMessage = "Invalid payload for the operation.";
             log.error(errorMessage);
@@ -1065,7 +1069,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         try {
             URL url = new URL(apkUrl);
             URLConnection conn = url.openConnection();
-            if(((HttpURLConnection) conn).getResponseCode() != HttpURLConnection.HTTP_OK) {
+            if (((HttpURLConnection) conn).getResponseCode() != HttpURLConnection.HTTP_OK) {
                 String errorMessage = "URL is not pointed to a downloadable file.";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -1087,8 +1091,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     private static void validateApplicationType(String type) {
         if (type != null) {
             if (!"enterprise".equalsIgnoreCase(type)
-                && !"public".equalsIgnoreCase(type)
-                && !"webapp".equalsIgnoreCase(type)) {
+                    && !"public".equalsIgnoreCase(type)
+                    && !"webapp".equalsIgnoreCase(type)) {
                 String errorMessage = "Invalid application type.";
                 log.error(errorMessage);
                 throw new BadRequestException(

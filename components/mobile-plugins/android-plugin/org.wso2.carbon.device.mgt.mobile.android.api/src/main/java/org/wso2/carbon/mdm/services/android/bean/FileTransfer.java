@@ -23,7 +23,9 @@ import org.wso2.carbon.mdm.services.android.bean.AndroidOperation;
 
 import java.io.Serializable;
 
-
+/**
+ * This class represents the information of file transfer operation payload.
+ */
 @ApiModel(value = "FileTransfer",
         description = "This class carries all information related to file transfer operation.")
 public class FileTransfer extends AndroidOperation implements Serializable {
@@ -34,8 +36,8 @@ public class FileTransfer extends AndroidOperation implements Serializable {
     @ApiModelProperty(name = "ftpPassword", value = "FTP password", required = true)
     private String ftpPassword;
 
-    @ApiModelProperty(name = "savingDirectory", value = "savingDirectory", required = true)
-    private String savingDirectory;
+    @ApiModelProperty(name = "fileLocation", value = "fileLocation", required = true)
+    private String fileLocation;
 
     public String getFileURL() {
         return fileURL;
@@ -54,11 +56,11 @@ public class FileTransfer extends AndroidOperation implements Serializable {
         this.ftpPassword = ftpPassword;
     }
 
-    public String getSavingDirectory() {
-        return savingDirectory;
+    public String getFileLocation() {
+        return fileLocation;
     }
 
-    public void setSavingDirectory(String savingDirectory) {
-        this.savingDirectory = savingDirectory;
+    public void setFileLocation(String fileLocation) {
+        this.fileLocation = fileLocation;
     }
 }

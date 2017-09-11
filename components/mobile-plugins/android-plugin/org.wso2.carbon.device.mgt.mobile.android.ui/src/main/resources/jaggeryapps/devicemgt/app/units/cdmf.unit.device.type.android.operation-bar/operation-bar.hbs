@@ -71,6 +71,10 @@
                                 <i class="icon fw fw-error"></i><span></span>
                             </div>
 
+                            <div id="operation-warn-msg" class="info alert-info hidden" role="alert">
+                                <i class="icon fw fw-info"></i><span></span>
+                            </div>
+
                             <div id="operation-form">
                                 <form action="{{params.0.uri}}" method="{{params.0.method}}"
                                       style="padding-bottom: 20px;"
@@ -94,6 +98,24 @@
                                         <br/>
                                     {{/each}}
                                     {{#each uiParams}}
+                                        {{#equal this.type "bi-radio"}}
+                                            <input type="radio" id="{{this.id}}"
+                                                   name="{{this.name}}"
+                                                   value="{{this.yesValue}}"
+                                                   checked="checked"
+                                                   class="radio"
+                                                   onclick="changeLabel('yes')"
+                                                   data-param-type="form"/>
+                                            {{this.yesValue}}
+                                            <input type="radio" id="{{this.id}}"
+                                                   name="{{this.name}}"
+                                                   value="{{this.noValue}}"
+                                                   class="radio"
+                                                   onclick="changeLabel('no')"
+                                                   data-param-type="form"/>
+                                            {{this.noValue}}
+                                            <br/> <br/>
+                                        {{/equal}}
                                         {{#equal this.type "checkbox"}}
                                             <input type="{{this.type}}" id="{{this.id}}"
                                                    class="checkbox"

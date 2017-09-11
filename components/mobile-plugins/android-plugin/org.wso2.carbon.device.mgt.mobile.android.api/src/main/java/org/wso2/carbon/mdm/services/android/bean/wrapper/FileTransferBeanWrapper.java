@@ -30,8 +30,11 @@ import java.util.List;
         description = "FileTransfer related Information.")
 public class FileTransferBeanWrapper {
 
-    @ApiModelProperty(name = "deviceIDs", value = "Device id list to which the operation to be executed.", required = true)
+    @ApiModelProperty(name = "deviceIDs", value = "Device id list of the operation to be executed.", required = true)
     private List<String> deviceIDs;
+
+    @ApiModelProperty(name = "upload", value = "This is an inbound file transfer or out bound file transfer respective to the device.", required = true)
+    private boolean upload;
 
     @ApiModelProperty(name = "operation", value = "Information of the File Transfer Operation.", required = true)
     private FileTransfer operation;
@@ -52,4 +55,11 @@ public class FileTransferBeanWrapper {
         this.operation = operation;
     }
 
+    public boolean isUpload() {
+        return upload;
+    }
+
+    public void setUpload(boolean upload) {
+        this.upload = upload;
+    }
 }

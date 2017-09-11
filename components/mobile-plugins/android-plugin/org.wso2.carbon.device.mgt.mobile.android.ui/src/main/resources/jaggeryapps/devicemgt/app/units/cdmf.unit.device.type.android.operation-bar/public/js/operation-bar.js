@@ -32,6 +32,20 @@ var resetLoader = function () {
     $('#lbl-execution').addClass("hidden");
 };
 
+function changeLabel(type) {
+    $(".modal #operation-error-msg").addClass("hidden");
+    if (type == "no") {
+        $(".modal #operation-warn-msg span").text("File will be saved in default location if not specified.");
+        $(".modal #operation-warn-msg").removeClass("hidden");
+        document.getElementById('fileURL').placeholder = "FTP URL of the file";
+        document.getElementById('fileLocation').placeholder = "Location to save file in device";
+    } else {
+        $(".modal #operation-warn-msg").addClass("hidden");
+        document.getElementById('fileURL').placeholder = "FTP URL of the folder to upload file";
+        document.getElementById('fileLocation').placeholder = "File location in the device";
+    }
+}
+
 function submitForm(formId) {
     $("#btnSend").addClass("hidden");
     $("#lbl-execution").removeClass("hidden");
@@ -56,6 +70,8 @@ function submitForm(formId) {
             if (input.attr("type") == "text" || input.attr("type") == "password") {
                 payload[input.attr("id")] = input.val();
             } else if (input.attr("type") == "checkbox") {
+                payload[input.attr("id")] = input.is(":checked");
+            } else if (input.attr("type") == "radio") {
                 payload[input.attr("id")] = input.is(":checked");
             }
         }
@@ -180,12 +196,15 @@ function validatePayload(operationCode, payload) {
             }
             break;
         case "FILE_TRANSFER":
-            if (!payload.fileURL) {
-                returnVal = "Please enter the URL of the file in server";
-            }else if(!payload.ftpPassword){
+            if (payload.upload && !payload.fileURL) {
+                returnVal = "Please enter the FTP URL of the file";
+            } else if (!payload.upload && !payload.fileURL) {
+                returnVal = "Please enter the FTP URL of the folder to upload file";
+            }
+            else if (!payload.ftpPassword) {
                 returnVal = "Please enter FTP password";
-            }else if(!payload.savingDirectory){
-                returnVal = "Please enter the location in device where you wan to save the file";
+            } else if (!payload.upload && !payload.fileLocation) {
+                returnVal = "Please specify the file location in device";
             }
             break;
         default:
@@ -254,8 +273,9 @@ var generatePayload = function (operationCode, operationData, deviceList) {
                 "operation": {
                     "fileURL": operationData["fileURL"],
                     "ftpPassword": operationData["ftpPassword"],
-                    "savingDirectory": operationData["savingDirectory"]
-                }
+                    "fileLocation": operationData["fileLocation"]
+                },
+                "upload": operationData["upload"]
             };
             break;
         case androidOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"]:
