@@ -742,9 +742,12 @@ var androidOperationModule = function () {
 
                 // only for app whitelisting and black listing
                 if (operationCode == "APP-RESTRICTION" && key == "restrictedApplications") {
+                    //remove elements before adding
+                    $('[data-add-form-container="#restricted-applications-grid"]').empty();
+
                     var i;
                     for (i = 0; i < uiPayload.restrictedApplications.length; ++i) {
-                        $("#restrictedapplication-list").append('<tr>' +
+                        $('[data-add-form-container="#restricted-applications-grid"]').append('<tr>' +
                             '<th>'+ (i+1) +'</th> <th>' + uiPayload.restrictedApplications[i].appName +
                             '</th> <th>' + uiPayload.restrictedApplications[i].packageName + '</th></tr>');
                     }
