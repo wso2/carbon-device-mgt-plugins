@@ -1,0 +1,18 @@
+@Plan:name('Android-Gyroscope-ExecutionPlan')
+
+@Plan:description('Process gyroscope changes.')
+
+@Import('iot.per.device.stream.android.gyroscope:1.0.0')
+define stream GyroscopeStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float);
+
+@Export('iot.per.device.stream.android.gyroscope.stats:1.0.0')
+define stream GyroscopeStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value
+float, year int, month int, day int, hour int, minute int);
+
+partition with (meta_deviceId of GyroscopeStream)
+begin
+    from GyroscopeStream
+    select meta_owner, meta_deviceId, meta_timestamp, axis, value, time:extract (meta_timestamp, 'year') as year,
+    time:extract(meta_timestamp, 'month') as month, time:extract(meta_timestamp, 'day') as day, time:extract(meta_timestamp, 'hour') as hour, time:extract(meta_timestamp, 'minute') as minute
+    insert into GyroscopeStatsStream;
+end;

@@ -18,13 +18,17 @@
 
 package org.wso2.carbon.mdm.services.android.util;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.api.AnalyticsDataAPI;
+import org.wso2.carbon.analytics.api.AnalyticsDataAPIUtil;
 import org.wso2.carbon.analytics.dataservice.commons.AnalyticsDataResponse;
 import org.wso2.carbon.analytics.dataservice.commons.SearchResultEntry;
-import org.wso2.carbon.analytics.dataservice.core.AnalyticsDataServiceUtils;
 import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.CarbonContext;
@@ -34,6 +38,7 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
@@ -42,6 +47,7 @@ import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagement
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
 import org.wso2.carbon.device.mgt.core.app.mgt.ApplicationManagementProviderService;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
@@ -50,7 +56,7 @@ import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
-import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.ws.rs.core.MediaType;
@@ -100,7 +106,7 @@ public class AndroidAPIUtils {
 //        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
 //        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
 //        if (gcmService == null) {
-//            String msg = "GCM service has not initialized.";
+//            String msg = "FCM service has not initialized.";
 //            log.error(msg);
 //            throw new IllegalStateException(msg);
 //        }
@@ -118,22 +124,26 @@ public class AndroidAPIUtils {
     }
 
     public static Response getOperationResponse(List<String> deviceIDs, Operation operation)
-            throws DeviceManagementException, OperationManagementException {
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
         if (deviceIDs == null || deviceIDs.size() == 0) {
             String errorMessage = "Device identifier list is empty";
             log.error(errorMessage);
             throw new BadRequestException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
-        AndroidDeviceUtils deviceUtils = new AndroidDeviceUtils();
-        DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs);
-
-        List<DeviceIdentifier> validDeviceIds = deviceIDHolder.getValidDeviceIDList();
+        DeviceIdentifier deviceIdentifier;
+        List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+        for (String deviceId : deviceIDs) {
+            deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
+            deviceIdentifiers.add(deviceIdentifier);
+        }
         Activity activity = getDeviceManagementService().addOperation(
-                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, validDeviceIds);
+                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, deviceIdentifiers);
 //        if (activity != null) {
 //            GCMService gcmService = getGCMService();
-//            if (gcmService.isGCMEnabled()) {
+//            if (gcmService.isFCMEnabled()) {
 //                List<DeviceIdentifier> deviceIDList = deviceIDHolder.getValidDeviceIDList();
 //                List<Device> devices = new ArrayList<Device>(deviceIDList.size());
 //                for (DeviceIdentifier deviceIdentifier : deviceIDList) {
@@ -142,11 +152,6 @@ public class AndroidAPIUtils {
 //                getGCMService().sendNotification(operation.getCode(), devices);
 //            }
 //        }
-        if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
-            throw new BadRequestException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(deviceUtils.
-                            convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build());
-        }
         return Response.status(Response.Status.CREATED).entity(activity).build();
     }
 
@@ -222,7 +227,7 @@ public class AndroidAPIUtils {
         List<SearchResultEntry> resultEntries = analyticsDataAPI.search(tenantId, tableName, query, 0, eventCount);
         List<String> recordIds = getRecordIds(resultEntries);
         AnalyticsDataResponse response = analyticsDataAPI.get(tenantId, tableName, 1, null, recordIds);
-        Map<String, DeviceState> deviceStateses = createDeviceStatusData(AnalyticsDataServiceUtils.listRecords(
+        Map<String, DeviceState> deviceStateses = createDeviceStatusData(AnalyticsDataAPIUtil.listRecords(
                 analyticsDataAPI, response));
         return getSortedDeviceStateData(deviceStateses, resultEntries);
     }
@@ -271,7 +276,8 @@ public class AndroidAPIUtils {
             if (log.isDebugEnabled()) {
                 log.info("Received compliance status from MONITOR operation ID: " + operation.getId());
             }
-            getPolicyManagerService().checkPolicyCompliance(deviceIdentifier, operation.getPayLoad());
+            getPolicyManagerService().checkPolicyCompliance(deviceIdentifier,
+                                                            getComplianceFeatures(operation.getPayLoad()));
         } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
                 OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
@@ -283,6 +289,9 @@ public class AndroidAPIUtils {
                 OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
 
             try {
+                if (log.isDebugEnabled()){
+                    log.debug("Operation response: " + operation.getOperationResponse());
+                }
                 Device device = new Gson().fromJson(operation.getOperationResponse(), Device.class);
                 org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo = convertDeviceToInfo(device);
                 updateDeviceInfo(deviceIdentifier, deviceInfo);
@@ -401,8 +410,6 @@ public class AndroidAPIUtils {
                 }
             } else {
                 if (prop.getName().equalsIgnoreCase("CPU_INFO")) {
-                    deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "User")));
-
                     deviceInfo.getDeviceDetailsMap().put("cpuUser",
                             getProperty(prop.getValue(), "User"));
                     deviceInfo.getDeviceDetailsMap().put("cpuSystem",
@@ -464,6 +471,8 @@ public class AndroidAPIUtils {
                             getProperty(prop.getValue(), "PASSCODE_ENABLED"));
                     deviceInfo.getDeviceDetailsMap().put("operator",
                             getProperty(prop.getValue(), "OPERATOR"));
+		    deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
+                            getProperty(prop.getValue(), "PHONE_NUMBER"));
                 }
             }
         }
@@ -478,14 +487,42 @@ public class AndroidAPIUtils {
         for (JsonElement element : jsonArray) {
             //  if (((JsonObject) element).entrySet().iterator().next().getValue().getAsString().equalsIgnoreCase(needed));
             for (Map.Entry<String, JsonElement> ob : ((JsonObject) element).entrySet()) {
-                if (exist) {
-                    return ob.getValue().getAsString().replace("%", "");
-                }
-                if (ob.getValue().getAsString().equalsIgnoreCase(needed)) {
-                    exist = true;
+                JsonElement val = ob.getValue();
+                if (val != null && !val.isJsonNull()) {
+                    if (exist) {
+                        return val.getAsString().replace("%", "");
+                    }
+                    if (val.getAsString().equalsIgnoreCase(needed)) {
+                        exist = true;
+                    }
                 }
             }
         }
         return "";
+    }
+
+    private static List<ComplianceFeature> getComplianceFeatures(Object compliancePayload) throws PolicyComplianceException {
+        String compliancePayloadString = new Gson().toJson(compliancePayload);
+        if (compliancePayload == null) {
+            return null;
+        }
+        // Parsing json string to get compliance features.
+        JsonElement jsonElement;
+        if (compliancePayloadString instanceof String) {
+            jsonElement = new JsonParser().parse(compliancePayloadString);
+        } else {
+            throw new PolicyComplianceException("Invalid policy compliance payload");
+        }
+
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        Gson gson = new Gson();
+        ComplianceFeature complianceFeature;
+        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>(jsonArray.size());
+
+        for (JsonElement element : jsonArray) {
+            complianceFeature = gson.fromJson(element, ComplianceFeature.class);
+            complianceFeatures.add(complianceFeature);
+        }
+        return complianceFeatures;
     }
 }

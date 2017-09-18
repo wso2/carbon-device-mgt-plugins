@@ -21,6 +21,7 @@ package org.wso2.carbon.mdm.services.android.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Max;
 import java.io.Serializable;
 
 /**
@@ -34,18 +35,24 @@ public class PasscodePolicy extends AndroidOperation implements Serializable {
 			+ " his/her device passcode incorrectly. EMM will take different courses of action based on the"
 			+ " OS when  the failed attempts exceed the maximum failed attempts.  Android devices will be "
 			+ "automatically reset to the original factory settings", required = true)
+
+    @Max(10)
 	private int maxFailedAttempts;
 	@ApiModelProperty(name = "minLength", value = "The minimum number of alphanumerical values that the "
 			+ "end-user can enter as his/her passcode", required = true)
+	@Max(15)
 	private int minLength;
 	@ApiModelProperty(name = "pinHistory", value = "The end-user will not be allowed to reuse a passcode that"
 			+ " he/she previously entered until he/she exceeds the set pin history length", required = true)
+	@Max(50)
 	private int pinHistory;
 	@ApiModelProperty(name = "minComplexChars", value = "The minimum number of special characters that the "
 			+ "end-user will have to enter in his/her passcode", required = true)
+	@Max(5)
 	private int minComplexChars;
 	@ApiModelProperty(name = "maxPINAgeInDays", value = "The number of days after which the device owner has"
 			+ " to change his/her passcode", required = true)
+	@Max(730)
 	private int maxPINAgeInDays;
 	@ApiModelProperty(name = "requireAlphanumeric", value = "Whether or not it is mandatory for the end-user"
 			+ " to have a mix of digits and characters in his/her passcode", required = true)

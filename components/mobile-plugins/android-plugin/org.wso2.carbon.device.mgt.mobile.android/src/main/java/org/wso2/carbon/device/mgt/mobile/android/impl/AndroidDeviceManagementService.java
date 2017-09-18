@@ -18,17 +18,25 @@
 
 package org.wso2.carbon.device.mgt.mobile.android.impl;
 
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.DeviceManager;
+import org.wso2.carbon.device.mgt.common.OperationMonitoringTaskConfig;
 import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
-import org.wso2.carbon.device.mgt.common.app.mgt.Application;
-import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.InitialOperationConfig;
+import org.wso2.carbon.device.mgt.common.DeviceStatusTaskPluginConfig;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
-import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.device.mgt.common.policy.mgt.PolicyMonitoringManager;
+import org.wso2.carbon.device.mgt.common.pull.notification.PullNotificationSubscriber;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginConstants;
+import org.wso2.carbon.device.mgt.mobile.android.internal.AndroidDeviceManagementDataHolder;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,9 +44,14 @@ import java.util.List;
  */
 public class AndroidDeviceManagementService implements DeviceManagementService {
 
+    private static final Log log = LogFactory.getLog(AndroidDeviceManagementService.class);
     private DeviceManager deviceManager;
     public static final String DEVICE_TYPE_ANDROID = "android";
     private static final String SUPER_TENANT_DOMAIN = "carbon.super";
+    private static final String NOTIFIER_PROPERTY = "notifierType";
+    private static final String FCM_API_KEY = "fcmAPIKey";
+    private static final String FCM_SENDER_ID = "fcmSenderId";
+    private PolicyMonitoringManager policyMonitoringManager;
 
     @Override
     public String getType() {
@@ -46,8 +59,14 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     }
 
     @Override
+    public OperationMonitoringTaskConfig getOperationMonitoringConfig() {
+        return null;
+    }
+
+    @Override
     public void init() throws DeviceManagementException {
         this.deviceManager = new AndroidDeviceManager();
+        this.policyMonitoringManager = new AndroidPolicyMonitoringManager();
     }
 
     @Override
@@ -67,7 +86,58 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
 
     @Override
     public PushNotificationConfig getPushNotificationConfig() {
+        try {
+            DeviceManagementService deviceManagementService = AndroidDeviceManagementDataHolder.getInstance().
+                    getAndroidDeviceManagementService();
+            if (deviceManagementService != null && deviceManagementService.getDeviceManager() != null) {
+                PlatformConfiguration androidConfig = deviceManagementService.getDeviceManager().getConfiguration();
+                if (androidConfig != null) {
+                    List<ConfigurationEntry> configuration = androidConfig.getConfiguration();
+                    String notifierValue = this.getConfigProperty(configuration, NOTIFIER_PROPERTY);
+                    if (notifierValue != null && !notifierValue.isEmpty()) {
+                        int notifierType = Integer.parseInt(notifierValue);
+                        if (notifierType == 2) {
+                            HashMap<String, String> config = new HashMap<>();
+                            config.put(FCM_API_KEY, this.getConfigProperty(configuration, FCM_API_KEY));
+                            config.put(FCM_SENDER_ID, this.getConfigProperty(configuration, FCM_SENDER_ID));
+                            return new PushNotificationConfig(AndroidPluginConstants.NotifierType.FCM, false,
+                                    config);
+                        }
+                    }
+                }
+            }
+        } catch (DeviceManagementException e) {
+            log.error("Unable to get the Android platform configuration from registry.");
+        }
         return null;
     }
 
+    @Override
+    public PolicyMonitoringManager getPolicyMonitoringManager() {
+        return policyMonitoringManager;
+    }
+
+    @Override
+    public InitialOperationConfig getInitialOperationConfig() {
+        return null;
+    }
+
+    @Override
+    public PullNotificationSubscriber getPullNotificationSubscriber() {
+        return null;
+    }
+
+    @Override
+    public DeviceStatusTaskPluginConfig getDeviceStatusTaskPluginConfig() {
+        return null;
+    }
+
+    private String getConfigProperty(List<ConfigurationEntry> configs, String propertyName) {
+        for (ConfigurationEntry entry : configs) {
+            if (propertyName.equals(entry.getName())) {
+                return entry.getValue().toString();
+            }
+        }
+        return null;
+    }
 }

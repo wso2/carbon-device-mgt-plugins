@@ -22,7 +22,7 @@
     <parent>
         <artifactId>android-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>4.0.81-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -59,14 +59,19 @@
                             org.osgi.framework,
                             org.osgi.service.component,
                             org.apache.commons.logging,
+                            javax.xml,
                             javax.xml.bind.*,
                             javax.sql,
+                            javax.xml.parsers; version=0.0.0,
+                            org.w3c.dom,
+                            javax.naming,
                             org.wso2.carbon.context,
+                            org.wso2.carbon.utils.*,
                             org.wso2.carbon.device.mgt.common.*,
-                            org.wso2.carbon.device.mgt.mobile.*,
                             org.wso2.carbon.ndatasource.core,
                             org.wso2.carbon.policy.mgt.common.*,
                             org.wso2.carbon.registry.core,
+                            org.wso2.carbon.registry.core.session,
                             org.wso2.carbon.registry.core.service,
                             org.wso2.carbon.registry.api,
                             org.wso2.carbon.device.mgt.extensions.license.mgt.registry,
@@ -97,10 +102,6 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.mobile</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>

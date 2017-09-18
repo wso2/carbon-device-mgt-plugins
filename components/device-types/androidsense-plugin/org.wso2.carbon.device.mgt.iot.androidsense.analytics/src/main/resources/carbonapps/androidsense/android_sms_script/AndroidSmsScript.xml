@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Analytics>
+    <Editable>true</Editable>
+    <Name>AndroidSmsScript</Name>
+    <Script>        CREATE TEMPORARY TABLE AndroidSmsData USING CarbonAnalytics OPTIONS(tableName "IOT_PER_DEVICE_STREAM_ANDROID_SMS_STATS", incrementalParams "IOT_PER_DEVICE_STREAM_ANDROID_SMS_STATS, DAY");
+    
+        CREATE TEMPORARY TABLE Android_Sms_Stat_Per_Day USING CarbonAnalytics
+        OPTIONS (tableName "Android_Sms_Stat_Per_Day",
+        schema "owner STRING, deviceId STRING, type STRING, count LONG -i, year INT -i, month INT -i, day INT -i, timestamp STRING",
+        primaryKeys "year, month, day, deviceId, owner, type",
+        mergeSchema "false");
+
+        INSERT INTO TABLE Android_Sms_Stat_Per_Day
+        SELECT meta_owner as owner, meta_deviceId as deviceId, type, count(*) as count, year, month, day, getDateStartingTime(year, month, day) as timestamp
+        FROM AndroidSmsData
+        GROUP BY year, month, day, meta_deviceId, meta_owner, type ORDER BY timestamp DESC;
+                     
+        INCREMENTAL_TABLE_COMMIT IOT_PER_DEVICE_STREAM_ANDROID_SMS_STATS;
+    </Script>
+    <CronExpression>0 0/5 * * * ?</CronExpression>
+</Analytics>

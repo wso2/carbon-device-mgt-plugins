@@ -21,6 +21,8 @@ package org.wso2.carbon.mdm.services.android.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -32,13 +34,17 @@ public class ApplicationUpdate extends AndroidOperation implements Serializable 
 
     @ApiModelProperty(name = "appIdentifier", value = "The package name of the application " +
             "to be update.", required = true)
+    @Size(min = 2, max = 45)
+    @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String appIdentifier;
     @ApiModelProperty(name = "type", value = "The type of the application. The following types of applications " +
             "are supported: enterprise, public and webapp.", required = true)
+    @Size(min = 2, max = 12)
+    @Pattern(regexp = "^[A-Za-z]*$")
     private String type;
     @ApiModelProperty(name = "url", value = "The URL of the application.", required = true)
     private String url;
-    @ApiModelProperty(name = "schedule", value = "Application update schedule.", required = true)
+    @ApiModelProperty(name = "schedule", value = "Application update schedule.", required = false)
     private String schedule;
 
     public String getAppIdentifier() {

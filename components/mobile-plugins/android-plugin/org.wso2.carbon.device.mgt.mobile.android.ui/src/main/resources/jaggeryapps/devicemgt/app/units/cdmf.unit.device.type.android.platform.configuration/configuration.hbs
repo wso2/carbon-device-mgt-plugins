@@ -1,0 +1,82 @@
+{{!
+  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+
+  WSO2 Inc. licenses this file to you under the Apache License,
+  Version 2.0 (the "License"); you may not use this file except
+  in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+}}
+<!-- android -->
+<div class="panel panel-default">
+    <div id="android-config-body" class="panel-collapse panel-body" role="tabpanel">
+        <div id="android-config-error-msg" class="alert alert-danger hidden" role="alert">
+            <i class="icon fw fw-error"></i><span></span>
+        </div>
+        <h4>
+            Communication Protocol Configuration
+            <hr>
+        </h4>
+        <div class="wr-input-control">
+            <label class="wr-input-label" for="android-config-notifier">
+                Type of Communication
+                <span class="helper" title="Communication method of android agent to contact IoT Server">
+                    <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                </span>
+            </label>
+            <select id="android-config-notifier" class="form-control" data-default="0">
+                <option value="1">Local Polling</option>
+                <option value="2">Firebase Cloud Messaging ( FCM )</option>
+            </select>
+        </div>
+
+        <div id="local-inputs">
+            <div class="wr-input-control">
+                <label class="wr-input-label" for="android-config-notifier-frequency">
+                    Polling Interval*
+                    <span class="helper" title="Time interval after which Android agent will contact IoT Server each time to fetch data">
+                        <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                    </span>
+                    <br>
+                    ( Should be in seconds )
+                </label>
+                <input id="android-config-notifier-frequency" type="text" class="form-control" >
+            </div>
+        </div>
+
+        <div id="fcm-inputs">
+            <div class="wr-input-control">
+                <label class="wr-input-label" for="android-config-fcm-api-key">
+                    API Key*
+                                                <span class="helper" title="FCM API Key">
+                                                    <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                                                </span>
+                </label>
+                <input id="android-config-fcm-api-key" type="text" class="form-control" >
+            </div>
+        </div>
+        <h4>
+            End User License Agreement ( EULA )
+            <hr>
+        </h4>
+
+        <div class="wr-input-control">
+            <textarea id="android-eula" type="text" class="form-control"></textarea>
+        </div>
+        <div class="wr-input-control wr-btn-grp">
+            <button id="save-android-btn" class="wr-btn">Save</button>
+        </div>
+    </div>
+</div>
+<!-- /android -->
+{{#zone "bottomJs"}}
+    {{js "js/platform-configuration.js"}}
+{{/zone}}

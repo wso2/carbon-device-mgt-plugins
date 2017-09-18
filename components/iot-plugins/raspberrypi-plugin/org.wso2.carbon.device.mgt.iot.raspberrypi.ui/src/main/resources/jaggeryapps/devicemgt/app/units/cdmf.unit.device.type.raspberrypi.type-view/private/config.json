@@ -1,7 +1,0 @@
-{
-  "deviceType": {
-    "label": "Raspberry Pi",
-    "category": "iot",
-    "downloadAgentUri": "raspberrypi/device/download"
-  }
-}

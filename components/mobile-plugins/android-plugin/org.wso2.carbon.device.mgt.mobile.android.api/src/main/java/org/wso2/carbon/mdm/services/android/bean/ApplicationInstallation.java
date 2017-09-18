@@ -21,6 +21,8 @@ package org.wso2.carbon.mdm.services.android.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -31,13 +33,20 @@ import java.io.Serializable;
 public class ApplicationInstallation extends AndroidOperation implements Serializable {
 
 	@ApiModelProperty(name = "appIdentifier", value = "Application Identifier", required = true)
+	@Size(min = 2, max = 45)
+	@Pattern(regexp = "^[A-Za-z0-9]*$")
 	private String appIdentifier;
 
 	@ApiModelProperty(name = "type", value = "Application type(Enterprise/Web/public)", required = true)
+	@Size(min = 2, max = 12)
+	@Pattern(regexp = "^[A-Za-z]*$")
 	private String type;
 
 	@ApiModelProperty(name = "url", value = "Application URL", required = true)
 	private String url;
+
+    @ApiModelProperty(name = "schedule", value = "Schedule of the App installation.")
+    private String schedule;
 
 	public String getAppIdentifier() {
 		return appIdentifier;
@@ -62,4 +71,14 @@ public class ApplicationInstallation extends AndroidOperation implements Seriali
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+    @SuppressWarnings("unused")
+    public String getSchedule() {
+        return schedule;
+    }
+
+    @SuppressWarnings("unused")
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
 }

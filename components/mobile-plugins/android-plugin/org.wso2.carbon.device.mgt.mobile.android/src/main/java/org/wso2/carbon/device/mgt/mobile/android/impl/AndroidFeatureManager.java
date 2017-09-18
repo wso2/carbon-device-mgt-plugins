@@ -24,11 +24,11 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.mobile.android.impl.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileFeature;
-import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.MobileFeatureDAO;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dto.MobileFeature;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.MobileDeviceManagementUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -455,6 +455,18 @@ public class AndroidFeatureManager implements FeatureManager {
         feature.setCode("REMOVE_DEVICE_OWNER");
         feature.setName("Remove device owner");
         feature.setDescription("remove device owner");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("LOGCAT");
+        feature.setName("Fetch Logcat");
+        feature.setDescription("Fetch device logcat");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DEVICE_UNLOCK");
+        feature.setName("Device Unlock");
+        feature.setDescription("Unlock the device");
         supportedFeatures.add(feature);
 
         return supportedFeatures;

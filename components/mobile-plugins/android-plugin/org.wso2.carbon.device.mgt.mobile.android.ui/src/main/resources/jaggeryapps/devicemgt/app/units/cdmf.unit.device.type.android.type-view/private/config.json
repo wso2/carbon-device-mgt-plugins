@@ -1,6 +1,152 @@
 {
-  "deviceType": {
-    "label": "Android",
-    "category" : "mobile"
-  }
+    "deviceType": {
+        "label": "Android",
+        "virtualLabel": "virtual Android",
+        "category": "hybrid",
+        "analyticsEnabled": "false",
+        "groupingEnabled": "false",
+        "scopes" : [
+            "perm:android:enroll",
+            "perm:android:wipe",
+            "perm:android:ring",
+            "perm:android:lock-devices",
+            "perm:android:configure-vpn",
+            "perm:android:configure-wifi",
+            "perm:android:enroll",
+            "perm:android:uninstall-application",
+            "perm:android:manage-configuration",
+            "perm:android:location",
+            "perm:android:install-application",
+            "perm:android:mute",
+            "perm:android:change-lock-code",
+            "perm:android:blacklist-applications",
+            "perm:android:set-password-policy",
+            "perm:android:encrypt-storage",
+            "perm:android:clear-password",
+            "perm:android:enterprise-wipe",
+            "perm:android:info",
+            "perm:android:view-configuration",
+            "perm:android:upgrade-firmware",
+            "perm:android:set-webclip",
+            "perm:android:send-notification",
+            "perm:android:disenroll",
+            "perm:android:update-application",
+            "perm:android:unlock-devices",
+            "perm:android:control-camera",
+            "perm:android:reboot",
+            "perm:android:logcat"
+        ],
+        "features": {
+            "DEVICE_RING": {
+                "icon": "fw-dial-up",
+                "permission": "/device-mgt/devices/owning-device/operations/android/ring"
+            },
+            "DEVICE_LOCK": {
+                "icon": "fw-lock",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "lock-message",
+                        "optional": true,
+                        "label": "Message to be sent to the device"
+                    },{
+                        "type": "checkbox",
+                        "id": "hard-lock",
+                        "optional": true,
+                        "label": "Hard lock enabled"
+                    }
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/lock"
+            },
+            "DEVICE_LOCATION": {
+                "icon": "fw-map-location",
+                "permission": "/device-mgt/devices/owning-device/operations/android/location"
+            },
+            "CLEAR_PASSWORD": {
+                "icon": "fw-clear",
+                "permission": "/device-mgt/devices/owning-device/operations/android/clear-password"
+            },
+            "DEVICE_REBOOT": {
+                "icon": "fw-refresh",
+                "filter" : {"property" : "ownership", "value" : "COPE", "text": "This feature is only available in COPE/COSU"},
+                "permission": "/device-mgt/devices/owning-device/operations/android/reboot"
+            },
+            "UPGRADE_FIRMWARE": {
+                "icon": "fw-hardware",
+                "filter" : {"property" : "ownership", "value" : "COPE", "text": "This feature is only available in COPE/COSU"},
+                "formParams": [
+                    {
+                        "type": "checkbox",
+                        "id": "immediate",
+                        "optional": true,
+                        "label": "Instant Upgrade",
+                        "helper": "Once enabled, device firmware upgrade process will start instantly."
+                    },
+                    {
+                        "type": "text",
+                        "id": "schedule",
+                        "optional": false,
+                        "label": "Enter the date and time to schedule firmware upgrade."
+                    },
+                    {
+                        "type": "text",
+                        "id": "server",
+                        "optional": true,
+                        "label": "Enter firmware upgrade server URL (ie. http://abc.com or http://abc.com/ota)"
+                    }
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/upgrade"
+            },
+            "DEVICE_MUTE": {
+                "icon": "fw-mute",
+                "permission": "/device-mgt/devices/owning-device/operations/android/mute"
+            },
+            "NOTIFICATION": {
+                "icon": "fw-message",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "messageTitle",
+                        "optional": false,
+                        "label": "Title Here..."
+                    },
+                    {
+                        "type": "text",
+                        "id": "messageText",
+                        "optional": false,
+                        "label": "Message Here..."
+                    }
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/send-notification"
+            },
+            "CHANGE_LOCK_CODE": {
+                "icon": "fw-security",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "lockCode",
+                        "optional": false,
+                        "label": "Lock Code"
+                    }
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/change-lock-code"
+            },
+            "ENTERPRISE_WIPE": {
+                "icon": "fw-block",
+                "permission": "/device-mgt/devices/owning-device/operations/android/enterprise-wipe"
+            },
+            "WIPE_DATA": {
+                "icon": "fw-delete",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "pin",
+                        "optional": false,
+                        "label": "Enter PIN code* of the device."
+                    }
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/wipe"
+            }
+        }
+    }
 }

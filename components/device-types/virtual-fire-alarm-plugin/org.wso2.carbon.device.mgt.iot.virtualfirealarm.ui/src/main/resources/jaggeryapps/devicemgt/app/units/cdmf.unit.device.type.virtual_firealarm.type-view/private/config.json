@@ -1,0 +1,31 @@
+{
+  "deviceType": {
+    "label": "Virtual Firealarm",
+    "category": "virtual",
+    "downloadAgentUri": "virtual_firealarm/device/download",
+    "scopes" : [
+      "perm:firealarm:enroll"
+    ],
+    "features": {
+      "buzz": {
+        "icon" : "fw-dial-up",
+        "formParams": [
+          {
+            "type": "radio",
+            "id": "buz_on",
+            "label": "Buzzer On",
+            "name": "state",
+            "value":"ON"
+          },
+          {
+            "type": "radio",
+            "id": "buz_off",
+            "label": "Buzzer Off",
+            "name": "state",
+            "value":"OFF"
+          }
+        ]
+      }
+    }
+  }
+}

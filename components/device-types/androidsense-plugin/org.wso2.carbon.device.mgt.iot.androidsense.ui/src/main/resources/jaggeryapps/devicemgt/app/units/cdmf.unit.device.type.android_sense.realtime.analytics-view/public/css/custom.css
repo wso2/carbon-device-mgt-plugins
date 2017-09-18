@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.no-gutters > .col,
+.no-gutters > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.details-view-toggle-button {
+    display: inline-block;
+}
+
+.custom_x_axis {
+    position: static;
+}
+
+.rickshaw_legend {
+    color: #000000;
+    background: #FFFFFF;
+    padding: 1px 2px;
+}
+
+.sensor_graph{
+    border:0.5px solid #cecece;
+    margin-bottom: 30px;
+    padding: 20px;
+}
+
+.sensor_graph > h3 {
+    text-transform: capitalize;
+    margin-top: 5px;
+}
+
+.chartWrapper {
+    padding-top: 20px;
+}
+
+.col-md-6 {
+    transition: all 400ms ease;
+    opacity: 1;
+}
+
+.max{
+    width: 100%;
+}
+
+.max_hide{
+    display: none;
+}

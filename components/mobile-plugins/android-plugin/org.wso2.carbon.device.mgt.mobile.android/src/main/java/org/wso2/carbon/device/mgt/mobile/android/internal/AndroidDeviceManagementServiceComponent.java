@@ -25,11 +25,8 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.AndroidDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.android.impl.AndroidPolicyMonitoringService;
-import org.wso2.carbon.device.mgt.mobile.android.impl.gcm.GCMService;
-import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
+import org.wso2.carbon.device.mgt.mobile.android.impl.fcm.FCMService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -53,7 +50,7 @@ public class AndroidDeviceManagementServiceComponent {
 
     private static final Log log = LogFactory.getLog(AndroidDeviceManagementServiceComponent.class);
     private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration gcmServiceRegRef;
+    private ServiceRegistration fcmServiceRegRef;
 
     protected void activate(ComponentContext ctx) {
 
@@ -64,24 +61,24 @@ public class AndroidDeviceManagementServiceComponent {
             BundleContext bundleContext = ctx.getBundleContext();
 
             DeviceManagementService androidDeviceManagementService = new AndroidDeviceManagementService();
-            GCMService gcmService = new GCMService();
+            FCMService fcmService = new FCMService();
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                                                  androidDeviceManagementService, null);
+//            androidServiceRegRef =
+//                    bundleContext.registerService(DeviceManagementService.class.getName(),
+//                                                  androidDeviceManagementService, null);
 
-            gcmServiceRegRef =
-                    bundleContext.registerService(GCMService.class.getName(), gcmService, null);
+            fcmServiceRegRef =
+                    bundleContext.registerService(FCMService.class.getName(), fcmService, null);
 
 
             // Policy management service
 
-            bundleContext.registerService(PolicyMonitoringService.class,
-                                          new AndroidPolicyMonitoringService(), null);
+//            bundleContext.registerService(PolicyMonitoringManager.class,
+//                                          new AndroidPolicyMonitoringManager(), null);
 
             AndroidDeviceManagementDataHolder.getInstance().setAndroidDeviceManagementService(
                     androidDeviceManagementService);
-            AndroidDeviceManagementDataHolder.getInstance().setGCMService(gcmService);
+            AndroidDeviceManagementDataHolder.getInstance().setFCMService(fcmService);
 
             if (log.isDebugEnabled()) {
                 log.debug("Android Mobile Device Management Service Component has been successfully activated");
@@ -99,8 +96,8 @@ public class AndroidDeviceManagementServiceComponent {
             if (androidServiceRegRef != null) {
                 androidServiceRegRef.unregister();
             }
-            if (gcmServiceRegRef != null) {
-                gcmServiceRegRef.unregister();
+            if (fcmServiceRegRef != null) {
+                fcmServiceRegRef.unregister();
             }
             if (log.isDebugEnabled()) {
                 log.debug(

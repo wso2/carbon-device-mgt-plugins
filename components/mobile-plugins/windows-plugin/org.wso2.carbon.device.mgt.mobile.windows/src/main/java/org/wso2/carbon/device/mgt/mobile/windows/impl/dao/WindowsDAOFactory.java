@@ -21,13 +21,13 @@ package org.wso2.carbon.device.mgt.mobile.windows.impl.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceDAO;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
+import org.wso2.carbon.device.mgt.mobile.windows.exception.WindowsDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.impl.WindowsDeviceDAOImpl;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.impl.WindowsFeatureDAOImpl;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -39,7 +39,18 @@ public class WindowsDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<>();
 
     public WindowsDAOFactory() {
-        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+//        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+        String dataSourceName = "jdbc/MobileWindowsDM_DS";
+        initDAO(dataSourceName);
+    }
+
+    public void initDAO(String datasourceName) {
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(datasourceName);
+        } catch (NamingException e) {
+
+        }
     }
 
     @Override

@@ -21,6 +21,8 @@ package org.wso2.carbon.mdm.services.android.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -31,47 +33,30 @@ import java.io.Serializable;
 public class ApplicationUninstallation extends AndroidOperation implements Serializable {
 
     @ApiModelProperty(name = "appIdentifier", value = "The package name of the application to be uninstalled.", required = true)
-	private String appIdentifier;
+    @Size(min = 2, max = 45)
+    @Pattern(regexp = "^[A-Za-z0-9]*$")
+    private String appIdentifier;
 
     @ApiModelProperty(name = "type", value = "The type of the application. The following types of applications " +
-        "are supported: enterprise, public and webapp.", required = true)
-	private String type;
+            "are supported: enterprise, public and webapp.", required = true)
+    @Size(min = 2, max = 12)
+    @Pattern(regexp = "^[A-Za-z]*$")
+    private String type;
 
-    @ApiModelProperty(name = "url", value = "The URL of the application.", required = true)
-	private String url;
+    public String getAppIdentifier() {
+        return appIdentifier;
+    }
 
-    @ApiModelProperty(name = "name", value = "The name of the application.", required = true)
-	private String name;
+    public void setAppIdentifier(String appIdentifier) {
+        this.appIdentifier = appIdentifier;
+    }
 
-	public String getAppIdentifier() {
-		return appIdentifier;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setAppIdentifier(String appIdentifier) {
-		this.appIdentifier = appIdentifier;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 }

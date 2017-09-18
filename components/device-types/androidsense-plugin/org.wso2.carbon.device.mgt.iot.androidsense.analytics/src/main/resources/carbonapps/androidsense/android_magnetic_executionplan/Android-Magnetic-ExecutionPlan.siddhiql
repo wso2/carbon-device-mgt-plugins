@@ -1,0 +1,17 @@
+@Plan:name('Android-Magnetic-ExecutionPlan')
+
+@Plan:description('Process magnetic field changes.')
+
+@Import('iot.per.device.stream.android.magnetic:1.0.0')
+define stream MagneticStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float);
+
+@Export('iot.per.device.stream.android.magnetic.stats:1.0.0')
+define stream MagneticStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float, year int, month int, day int, hour int, minute int);
+
+partition with (meta_deviceId of MagneticStream)
+begin
+    from MagneticStream
+    select meta_owner, meta_deviceId, meta_timestamp, axis, value, time:extract
+    (meta_timestamp, 'year') as year, time:extract(meta_timestamp, 'month') as month, time:extract(meta_timestamp, 'day') as day, time:extract(meta_timestamp, 'hour') as hour, time:extract(meta_timestamp, 'minute') as minute
+    insert into MagneticStatsStream;
+end;

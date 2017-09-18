@@ -18,11 +18,9 @@
   -->
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-       xsi:schemaLocation="
-         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-         http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
-
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+         http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
     <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
             <ref bean="deviceManagementService"/>
@@ -35,11 +33,18 @@
             <ref bean="jsonProvider"/>
             <ref bean="errorHandler"/>
             <ref bean="swaggerWriter"/>
+            <ref bean="GlobalExceptionMapper"/>
         </jaxrs:providers>
+        <jaxrs:properties>
+            <!-- This is added to catch interceptor level exceptions in GlobalThrowableMapper. -->
+            <entry key="map.cxf.interceptor.fault" value="true" />
+        </jaxrs:properties>
     </jaxrs:server>
 
     <bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
     <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
+    <bean id="GlobalExceptionMapper" class="org.wso2.carbon.mdm.services.android.exception.GlobalThrowableMapper"/>
+    <bean id="ValidationInterceptor" class="org.wso2.carbon.mdm.services.android.common.ValidationInterceptor"/>
 
     <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
         <property name="resourcePackage" value="org.wso2.carbon.mdm.services.android.services"/>
@@ -60,5 +65,10 @@
     <bean id="deviceTypeConfigurationService" class="org.wso2.carbon.mdm.services.android.services.impl.DeviceTypeConfigurationServiceImpl"/>
     <bean id="jsonProvider" class="org.wso2.carbon.mdm.services.android.common.GsonMessageBodyHandler"/>
     <bean id="errorHandler" class="org.wso2.carbon.mdm.services.android.common.ErrorHandler"/>
+    <cxf:bus>
+        <cxf:inInterceptors>
+            <ref bean="ValidationInterceptor"/>
+        </cxf:inInterceptors>
+    </cxf:bus>
 </beans>
 

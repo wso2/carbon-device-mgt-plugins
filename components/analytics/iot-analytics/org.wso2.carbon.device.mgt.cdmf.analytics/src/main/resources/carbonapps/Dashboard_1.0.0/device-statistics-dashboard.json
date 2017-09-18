@@ -1,0 +1,345 @@
+{
+    "id": "device-statistics-dashboard",
+    "title": "Device Statistics Dashboard",
+    "description": "",
+    "permissions": {
+        "viewers": ["admin"],
+        "editors": ["admin"],
+        "owners": ["admin"]
+    },
+    "pages": [{
+        "id": "landing",
+        "title": "Home",
+        "layout": {
+            "content": {
+                "loggedIn": {
+                    "blocks": [{
+                        "id": "59136679b5befc4259658063536dc4b1",
+                        "x": 0,
+                        "y": 8,
+                        "width": 12,
+                        "height": 4,
+                        "banner": false
+                    }, {
+                        "id": "ab37f5c74cbc3c1eb81093d62d9c2437",
+                        "x": 0,
+                        "y": 5,
+                        "width": 3,
+                        "height": 3,
+                        "banner": false
+                    }, {
+                        "id": "22b93f2d54462048bf4bc8bd3e076b02",
+                        "x": 0,
+                        "y": 0,
+                        "width": 3,
+                        "height": 5,
+                        "banner": false
+                    }, {
+                        "id": "547d9c6efe10dbbcfd17961cb074a16d",
+                        "x": 3,
+                        "y": 0,
+                        "width": 9,
+                        "height": 8,
+                        "banner": false
+                    }]
+                }
+            },
+            "fluidLayout": false
+        },
+        "isanon": false,
+        "content": {
+            "default": {
+                "22b93f2d54462048bf4bc8bd3e076b02": [{
+                    "id": "overview-0",
+                    "content": {
+                        "id": "overview",
+                        "title": "Overview",
+                        "type": "gadget",
+                        "thumbnail": "fs://gadget/overview/img/thumbnail.png",
+                        "data": {
+                            "url": "fs://gadget/overview/index.xml"
+                        },
+                        "notify": {
+                            "publisher": {
+                                "type": "filter",
+                                "description": "This notifies selected filter"
+                            }
+                        },
+                        "listen": {
+                            "subscriber": {
+                                "type": "filter",
+                                "description": "Used to listen to any filters"
+                            }
+                        },
+                        "styles": {
+                            "title": "Overview",
+                            "borders": true
+                        },
+                        "options": {},
+                        "locale_titles": {}
+                    }
+                }],
+                "ab37f5c74cbc3c1eb81093d62d9c2437": [{
+                    "id": "unsecured-devices-0",
+                    "content": {
+                        "id": "unsecured-devices",
+                        "title": "Unsecured Devices",
+                        "type": "gadget",
+                        "thumbnail": "fs://gadget/unsecured-devices/img/thumbnail.png",
+                        "data": {
+                            "url": "fs://gadget/unsecured-devices/index.xml"
+                        },
+                        "notify": {
+                            "publisher": {
+                                "type": "filter",
+                                "description": "This notifies selected filter"
+                            }
+                        },
+                        "listen": {
+                            "subscriber": {
+                                "type": "filter",
+                                "description": "Used to listen to any filters"
+                            }
+                        },
+                        "styles": {
+                            "title": "Unsecured Devices",
+                            "borders": true
+                        },
+                        "options": {},
+                        "locale_titles": {}
+                    }
+                }],
+                "547d9c6efe10dbbcfd17961cb074a16d": [{
+                    "id": "non-compliant-features-0",
+                    "content": {
+                        "id": "non-compliant-features",
+                        "title": "Non-compliant Features",
+                        "type": "gadget",
+                        "thumbnail": "fs://gadget/non-compliant-features/img/thumbnail.png",
+                        "data": {
+                            "url": "fs://gadget/non-compliant-features/index.xml"
+                        },
+                        "notify": {
+                            "publisher": {
+                                "type": "filter",
+                                "description": "This notifies selected filter"
+                            }
+                        },
+                        "listen": {
+                            "subscriber": {
+                                "type": "filter",
+                                "description": "Used to listen to any filters"
+                            }
+                        },
+                        "styles": {
+                            "title": "Non-compliant Features",
+                            "borders": true
+                        },
+                        "options": {},
+                        "locale_titles": {}
+                    }
+                }],
+                "59136679b5befc4259658063536dc4b1": [{
+                    "id": "device-grouping-0",
+                    "content": {
+                        "id": "device-grouping",
+                        "title": "Device Grouping",
+                        "type": "gadget",
+                        "thumbnail": "fs://gadget/device-grouping/img/thumbnail.png",
+                        "data": {
+                            "url": "fs://gadget/device-grouping/index.xml"
+                        },
+                        "notify": {
+                            "publisher": {
+                                "type": "filter",
+                                "description": "This notifies selected filter"
+                            }
+                        },
+                        "listen": {
+                            "subscriber": {
+                                "type": "filter",
+                                "description": "Used to listen to any filters"
+                            }
+                        },
+                        "styles": {
+                            "title": "Device Grouping",
+                            "borders": true
+                        },
+                        "options": {},
+                        "locale_titles": {}
+                    }
+                }]
+            },
+            "anon": {}
+        }
+    }, {
+        "id": "devices",
+        "title": "devices",
+        "layout": {
+            "content": {
+                "loggedIn": {
+                    "blocks": [{
+                        "id": "758d1bffefffbf99937aeff387cfd126",
+                        "x": 0,
+                        "y": 7,
+                        "width": 12,
+                        "height": 8,
+                        "banner": false
+                    }, {
+                        "id": "3cd2556977ef1bc25e881547aa3f59e2",
+                        "x": 0,
+                        "y": 3,
+                        "width": 12,
+                        "height": 4,
+                        "banner": false
+                    }, {
+                        "id": "ff72c9cb3f177ea5113be0bca12a15f6",
+                        "x": 0,
+                        "y": 0,
+                        "width": 12,
+                        "height": 3,
+                        "banner": false
+                    }]
+                }
+            },
+            "fluidLayout": false
+        },
+        "isanon": false,
+        "content": {
+            "default": {
+                "ff72c9cb3f177ea5113be0bca12a15f6": [{
+                    "id": "filtered-by-0",
+                    "content": {
+                        "id": "filtered-by",
+                        "title": "Devices are Filtered by",
+                        "type": "gadget",
+                        "thumbnail": "fs://gadget/filtered-by/img/thumbnail.png",
+                        "data": {
+                            "url": "fs://gadget/filtered-by/index.xml"
+                        },
+                        "notify": {
+                            "publisher": {
+                                "type": "filter",
+                                "description": "This notifies selected filter"
+                            }
+                        },
+                        "listen": {
+                            "subscriber": {
+                                "type": "filter",
+                                "description": "Used to listen to any filters",
+                                "on": [{
+                                    "from": "device-grouping-0",
+                                    "event": "publisher"
+                                }]
+                            }
+                        },
+                        "styles": {
+                            "no_heading": false,
+                            "hide_gadget": false,
+                            "titlePosition": "left",
+                            "title": "Device Counting"
+                        },
+                        "options": {},
+                        "locale_titles": {
+                            "en-US": "Device Counting"
+                        },
+                        "settings": {
+                            "priority": "5"
+                        }
+                    }
+                }],
+                "3cd2556977ef1bc25e881547aa3f59e2": [{
+                    "id": "device-grouping-0",
+                    "content": {
+                        "id": "device-grouping",
+                        "title": "Device Grouping",
+                        "type": "gadget",
+                        "thumbnail": "fs://gadget/device-grouping/img/thumbnail.png",
+                        "data": {
+                            "url": "fs://gadget/device-grouping/index.xml"
+                        },
+                        "notify": {
+                            "publisher": {
+                                "type": "filter",
+                                "description": "This notifies selected filter"
+                            }
+                        },
+                        "listen": {
+                            "subscriber": {
+                                "type": "filter",
+                                "description": "Used to listen to any filters"
+                            }
+                        },
+                        "styles": {
+                            "title": "Device Grouping",
+                            "borders": true
+                        },
+                        "options": {},
+                        "locale_titles": {}
+                    }
+                }],
+                "758d1bffefffbf99937aeff387cfd126": [{
+                    "id": "devices-table-0",
+                    "content": {
+                        "id": "devices-table",
+                        "title": "Device Listing",
+                        "type": "gadget",
+                        "thumbnail": "fs://gadget/devices-table/img/thumbnail.png",
+                        "data": {
+                            "url": "fs://gadget/devices-table/index.xml"
+                        },
+                        "listen": {
+                            "subscriber": {
+                                "type": "filter",
+                                "description": "Used to listen to any filters",
+                                "on": [{
+                                    "from": "device-grouping-0",
+                                    "event": "publisher"
+                                }]
+                            }
+                        },
+                        "styles": {
+                            "no_heading": false,
+                            "hide_gadget": false,
+                            "titlePosition": "left",
+                            "title": "Device Listing"
+                        },
+                        "options": {},
+                        "locale_titles": {
+                            "en-US": "Device Listing"
+                        },
+                        "settings": {}
+                    }
+                }]
+            },
+            "anon": {}
+        }
+    }],
+    "identityServerUrl": "",
+    "accessTokenUrl": "",
+    "apiKey": "",
+    "apiSecret": "",
+    "theme": "",
+    "isUserCustom": false,
+    "isEditorEnable": true,
+    "banner": {
+        "globalBannerExists": false,
+        "customBannerExists": false
+    },
+    "landing": "landing",
+    "isanon": false,
+    "menu": [{
+        "id": "landing",
+        "isanon": false,
+        "ishidden": false,
+        "title": "Home",
+        "subordinates": []
+    }, {
+        "id": "devices",
+        "isanon": false,
+        "ishidden": false,
+        "title": "devices",
+        "subordinates": []
+    }],
+    "hideAllMenuItems": false
+}

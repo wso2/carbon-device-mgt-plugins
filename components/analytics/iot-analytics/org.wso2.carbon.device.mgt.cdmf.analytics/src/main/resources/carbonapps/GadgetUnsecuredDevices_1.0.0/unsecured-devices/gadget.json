@@ -1,0 +1,21 @@
+{
+  "id": "unsecured-devices",
+  "title": "Unsecured Devices",
+  "type": "gadget",
+  "thumbnail": "gadget/unsecured-devices/img/thumbnail.png",
+  "data": {
+    "url": "gadget/unsecured-devices/index.xml"
+  },
+  "notify": {
+    "publisher": {
+      "type": "filter",
+      "description": "This notifies selected filter"
+    }
+  },
+  "listen": {
+    "subscriber": {
+      "type": "filter",
+      "description": "Used to listen to any filters"
+    }
+  }
+}

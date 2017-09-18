@@ -1,0 +1,11 @@
+{
+  "deviceType": {
+    "label": "Arduino",
+    "category": "iot",
+    "downloadAgentUri": "arduino/device/download",
+    "category": "iot",
+    "scopes": [
+      "perm:arduino:enroll"
+    ]
+  }
+}

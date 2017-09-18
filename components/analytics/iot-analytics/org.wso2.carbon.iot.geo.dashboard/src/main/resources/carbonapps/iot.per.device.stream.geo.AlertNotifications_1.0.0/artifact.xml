@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?><artifact name="iot.per.device.stream.geo.AlertNotifications" version="1.0.0" type="event/stream" serverRole="GeoDashboard">
+    <file>iot.per.device.stream.geo.AlertNotifications-1.0.0.json</file>
+</artifact>

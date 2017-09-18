@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
+import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceTypeConfigurationService;
@@ -32,6 +33,7 @@ import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,15 +52,15 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
     public Response getConfiguration(
             @HeaderParam("If-Modified-Since") String ifModifiedSince) {
         String msg;
-        PlatformConfiguration PlatformConfiguration;
+        PlatformConfiguration platformConfiguration;
         List<ConfigurationEntry> configs;
         try {
-            PlatformConfiguration = AndroidAPIUtils.getDeviceManagementService().
+            platformConfiguration = AndroidAPIUtils.getDeviceManagementService().
                     getConfiguration(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-            if (PlatformConfiguration != null) {
-                configs = PlatformConfiguration.getConfiguration();
+            if (platformConfiguration != null) {
+                configs = platformConfiguration.getConfiguration();
             } else {
-                PlatformConfiguration = new PlatformConfiguration();
+                platformConfiguration = new PlatformConfiguration();
                 configs = new ArrayList<>();
             }
             ConfigurationEntry entry = new ConfigurationEntry();
@@ -71,7 +73,7 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
                 entry.setName(AndroidConstants.TenantConfigProperties.LICENSE_KEY);
                 entry.setValue(license.getText());
                 configs.add(entry);
-                PlatformConfiguration.setConfiguration(configs);
+                platformConfiguration.setConfiguration(configs);
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while retrieving the Android tenant configuration";
@@ -79,15 +81,22 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return Response.status(Response.Status.OK).entity(PlatformConfiguration).build();
+        return Response.status(Response.Status.OK).entity(platformConfiguration).build();
     }
 
     @PUT
     @Override
-    public Response updateConfiguration(PlatformConfiguration configuration) {
+    public Response updateConfiguration(@Valid AndroidPlatformConfiguration androidPlatformConfiguration) {
         String msg;
-        Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
+        PlatformConfiguration configuration = new PlatformConfiguration();
+        if (androidPlatformConfiguration == null) {
+            String errorMessage = "The payload of the android platform configuration is incorrect.";
+            log.error(errorMessage);
+            throw new org.wso2.carbon.mdm.services.android.exception.BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
+        configuration.setConfiguration(androidPlatformConfiguration.getConfiguration());
         try {
             configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             List<ConfigurationEntry> configs = configuration.getConfiguration();
@@ -110,16 +119,13 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             configuration.setConfiguration(configs);
             AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
             //AndroidAPIUtils.getGCMService().resetTenantConfigCache();
-            Response.status(Response.Status.ACCEPTED);
-            responseMsg.setResponseMessage("Android platform configuration has been updated successfully.");
-            responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());
         } catch (DeviceManagementException e) {
             msg = "Error occurred while modifying configuration settings of Android platform";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return Response.status(Response.Status.CREATED).entity(responseMsg).build();
+        return Response.status(Response.Status.OK).entity("Android platform configuration has been updated successfully.").build();
     }
 
 

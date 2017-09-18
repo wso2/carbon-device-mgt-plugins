@@ -16,9 +16,17 @@
  * under the License.
  */
 
-function onRequest(context){
+function onRequest(context) {
     var viewModel = {};
-    var devicemgtProps = require('/app/conf/devicemgt-props.js').config();
-    viewModel.hostName = devicemgtProps["httpsURL"];
+    var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
+    var isCloud = devicemgtProps["isCloud"];
+    viewModel["isVirtual"] = request.getParameter("type") == 'virtual';
+    viewModel["isCloud"] = isCloud;
+    viewModel["hostName"] = devicemgtProps["httpsURL"];
+    if (isCloud) {
+        viewModel["enrollmentURL"] = "https://play.google.com/store/apps/details?id=org.wso2.iot.agent";
+    } else {
+        viewModel["enrollmentURL"] = devicemgtProps["managerHTTPSURL"] + devicemgtProps["androidEnrollmentDir"];
+    }
     return viewModel;
 }

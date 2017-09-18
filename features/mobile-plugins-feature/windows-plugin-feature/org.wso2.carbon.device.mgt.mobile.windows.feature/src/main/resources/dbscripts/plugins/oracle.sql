@@ -23,10 +23,25 @@ CREATE TABLE WIN_DEVICE (
 -- Table `WIN_FEATURE`
 -- -----------------------------------------------------
 CREATE TABLE WIN_FEATURE (
-  ID INT NOT NULL,
+  ID NUMBER(10) NOT NULL,
   CODE VARCHAR(45) NOT NULL,
   NAME VARCHAR(100) NOT NULL,
   DESCRIPTION VARCHAR(200) NULL,
+  PRIMARY KEY (ID)
+)
+/
+
+-- -----------------------------------------------------
+-- Table `WINDOWS_ENROLLMENT_TOKEN`
+-- -----------------------------------------------------
+CREATE TABLE WINDOWS_ENROLLMENT_TOKEN (
+  ID NUMBER(10) NOT NULL,
+  TENANT_DOMAIN VARCHAR(45) NOT NULL,
+  TENANT_ID NUMBER(10) DEFAULT 0,
+  ENROLLMENT_TOKEN VARCHAR(100) NULL,
+  DEVICE_ID VARCHAR(100) NULL,
+  USERNAME VARCHAR(45) NULL,
+  OWNERSHIP VARCHAR(45) NULL,
   PRIMARY KEY (ID)
 )
 /
@@ -47,5 +62,24 @@ REFERENCING NEW AS NEW
 FOR EACH ROW
   BEGIN
     SELECT WIN_FEATURE_ID_INC_SEQ.NEXTVAL INTO :NEW.ID FROM DUAL;
+  END;
+/
+
+-- -----------------------------------------------------
+-- Sequence `WIN_ENR_TOKEN_ID_INC_SEQ`
+-- -----------------------------------------------------
+CREATE SEQUENCE WIN_ENR_TOKEN_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE
+/
+
+-- -----------------------------------------------------
+-- Trigger `WIN_ENR_TOKEN_ID_INC_TRIG`
+-- -----------------------------------------------------
+CREATE OR REPLACE TRIGGER WIN_ENR_TOKEN_ID_INC_TRIG
+BEFORE INSERT
+ON WINDOWS_ENROLLMENT_TOKEN
+REFERENCING NEW AS NEW
+FOR EACH ROW
+  BEGIN
+    SELECT WIN_ENR_TOKEN_ID_INC_SEQ.NEXTVAL INTO :NEW.ID FROM DUAL;
   END;
 /

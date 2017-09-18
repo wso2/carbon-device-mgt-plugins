@@ -26,14 +26,14 @@ import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
-import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
-import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.windows.exception.WindowsDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.AbstractMobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.WindowsDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.util.WindowsPluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.util.WindowsPluginUtils;
-import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 
@@ -62,7 +62,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
         try {
             if (licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS,
-                    MobilePluginConstants.LANGUAGE_CODE_ENGLISH_US) == null) {
+                    WindowsPluginConstants.LANGUAGE_CODE_ENGLISH_US) == null) {
                 licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
             }
             featureManager.addSupportedFeaturesToDB();
@@ -97,10 +97,10 @@ public class WindowsDeviceManager implements DeviceManager {
 
             resource = MobileDeviceManagementUtil.getConfigurationRegistry().newResource();
             resource.setContent(writer.toString());
-            resource.setMediaType(MobilePluginConstants.MEDIA_TYPE_XML);
+            resource.setMediaType(WindowsPluginConstants.MEDIA_TYPE_XML);
             MobileDeviceManagementUtil.putRegistryResource(resourcePath, resource);
             status = true;
-        } catch (MobileDeviceMgtPluginException e) {
+        } catch (WindowsDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
         } catch (RegistryException e) {
@@ -126,10 +126,10 @@ public class WindowsDeviceManager implements DeviceManager {
                 Unmarshaller unmarshaller = context.createUnmarshaller();
                 return (PlatformConfiguration) unmarshaller.unmarshal(
                         new StringReader(new String((byte[]) resource.getContent(), Charset.
-                                forName(MobilePluginConstants.CHARSET_UTF8))));
+                                forName(WindowsPluginConstants.CHARSET_UTF8))));
             }
             return null;
-        } catch (MobileDeviceMgtPluginException e) {
+        } catch (WindowsDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
         } catch (JAXBException e) {

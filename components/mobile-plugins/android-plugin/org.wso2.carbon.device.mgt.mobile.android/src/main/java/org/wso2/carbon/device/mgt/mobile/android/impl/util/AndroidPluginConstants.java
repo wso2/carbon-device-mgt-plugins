@@ -21,11 +21,11 @@ package org.wso2.carbon.device.mgt.mobile.android.impl.util;
 /**
  * Defines constants used by android plugin.
  */
-public class AndroidPluginConstants {
+public final class AndroidPluginConstants {
 
 	//Properties related to AD_DEVICE table
 	public static final String DEVICE_ID = "DEVICE_ID";
-	public static final String GCM_TOKEN = "GCM_TOKEN";
+	public static final String FCM_TOKEN = "FCM_TOKEN";
 	public static final String DEVICE_INFO = "DEVICE_INFO";
 	public static final String SERIAL = "SERIAL";
 	public static final String DEVICE_MODEL = "DEVICE_MODEL";
@@ -37,7 +37,7 @@ public class AndroidPluginConstants {
 	public static final String VENDOR = "VENDOR";
 	public static final String OS_VERSION = "OS_VERSION";
 	public static final String OS_BUILD_DATE = "OS_BUILD_DATE";
-	public static final String MAC_ADDRESS = "MAC_ADDRESS";
+	public static final String MAC_ADDRESS = "MAC";
 
 	//Properties related to AD_FEATURE table
 	public static final String ANDROID_FEATURE_ID = "ID";
@@ -45,4 +45,23 @@ public class AndroidPluginConstants {
 	public static final String ANDROID_FEATURE_NAME = "NAME";
 	public static final String ANDROID_FEATURE_DESCRIPTION = "DESCRIPTION";
 
+	public static final class NotifierType {
+		private NotifierType() {
+			throw new AssertionError();
+		}
+
+		public static final String FCM = "FCM";
+		public static final String LOCAL = "LOCAL";
+	}
+
+	public class MobilePluginConstants {
+		public static final String MOBILE_DB_SCRIPTS_FOLDER = "cdm";
+		public static final String MOBILE_CONFIG_REGISTRY_ROOT = "/_system/config";
+
+		public static final String MEDIA_TYPE_XML = "application/xml";
+		public static final String CHARSET_UTF8 = "UTF8";
+		public static final String LANGUAGE_CODE_ENGLISH_US = "en_US";
+		public static final String LANGUAGE_CODE_ENGLISH_UK = "en_UK";
+
+	}
 }

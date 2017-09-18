@@ -1,174 +1,163 @@
-{{#zone "device-opetations"}}
-    <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
-        Operations
-    </div>
-    <div class="add-margin-top-4x">
-        {{unit "mdm.unit.device.operation-bar"}}
-    </div>
-{{/zone}}
+{{unit "cdmf.unit.lib.qrcode"}}
+{{unit "cdmf.unit.device.type.qr-modal"}}
 
-{{#zone "device-detail-properties"}}
-    <div class="media">
-        <div class="media-left col-xs-12 col-sm-2 col-md-2 col-lg-2">
-            <ul class="list-group" role="tablist">
-                <li class="active"><a class="list-group-item"
-                                      href="#device_details"
-                                      role="tab" data-toggle="tab"
-                                      aria-controls="device_details">Device
-                                                                     Details</a>
-                </li>
-                <li><a class="list-group-item" href="#policies"
-                       role="tab"
-                       data-toggle="tab" aria-controls="policies">Policies</a>
-                </li>
-                <li><a class="list-group-item" href="#policy_compliance"
-                       role="tab"
-                       data-toggle="tab" aria-controls="policy_compliance">Policy
-                                                                           Compliance</a>
-                </li>
-                <li><a class="list-group-item" href="#device_location"
-                       role="tab"
-                       data-toggle="tab" aria-controls="device_location">Device
-                                                                         Location</a>
-                </li>
+{{#if deviceFound}}
+    {{#if isAuthorized}}
 
-                <li><a class="list-group-item" href="#installed_applications" role="tab"
-                       data-toggle="tab" aria-controls="installed_applications">Installed
-                                                                                Applications</a>
-                </li>
-                <li><a class="list-group-item" href="#event_log" role="tab"
-                       data-toggle="tab" aria-controls="event_log">Operations
-                                                                   Log</a></li>
-            </ul>
-        </div>
-        <div class="media-body add-padding-left-5x remove-padding-xs tab-content">
-            <div class="panel-group tab-content">
+        {{#zone "device-thumbnail"}}
+          <i class="fw fw-android device-type fw-2x"></i>
+        {{/zone}}
 
-                <div class="panel panel-default tab-pane active"
-                     id="device_details" role="tabpanel"
-                     aria-labelledby="device_details">
-                    {{unit "cdmf.unit.device.details" device=device}}
+        {{#zone "device-details-header"}}
+            <h1 class="device-id"
+            data-deviceid="{{device.deviceIdentifier}}"
+            data-type="{{device.type}}"
+            data-ownership="{{device.ownership}}"
+            data-owner="{{device.owner}}"
+            data-status="{{device.status}}">
+            {{device.owner}}'s {{device.name}}
+            </h1>
+            <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
+              Firmware Build Date: {{device.osBuildDate}}
+              UDID: {{device.udid}}">
+              <i class="fw fw-info"></i>
+            </a>
+            {{#if device.model}}
+              <h4>{{device.vendor}} {{device.model}}</h4>
+            {{/if}}
+            <h4>Ownership - <strong>{{device.ownership}}</strong></h4>
+            <h4>Device is
+              <strong>
+                {{#equal device.status "ACTIVE"}}Active{{/equal}}
+                {{#equal device.status "INACTIVE"}}Inactive{{/equal}}
+                {{#equal device.status "BLOCKED"}}Blocked{{/equal}}
+                {{#equal device.status "REMOVED"}}Removed{{/equal}}
+                {{#equal device.status "UNREACHABLE"}}Unreachable{{/equal}}
+              </strong>
+            </h4>
+        {{/zone}}
+
+        {{#zone "device-opetations"}}
+            {{#if device.isNotRemoved}}
+                <div class="operation-container">
+                  <div class="operation-title">
+                      <h4>Device Operations</h4>
+                  </div>
+                    {{unit "cdmf.unit.device.type.android.operation-bar" device=device
+                           backendApiUri=backendApiUri autoCompleteParams=autoCompleteParams}}
                 </div>
-                <div class="panel panel-default tab-pane" id="policies" role="tabpanel"
-                     aria-labelledby="policies">
-                    <div class="panel-heading">Policies</div>
-                    <div class="panel-body">
-                        <div id="policy-spinner" class="wr-advance-operations-init hidden">
-                            <br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <i class="fw fw-settings fw-spin fw-2x"></i>
-                            &nbsp;&nbsp;&nbsp;
-                            Loading Policies . . .
-                            <br>
-                            <br>
-                        </div>
-                        <div id="policy-list-container">
-                            <div class="panel-body">
-                                No policies found
-                            </div>
-                            <br class="c-both"/>
-                        </div>
-                    </div>
-                    <a class="padding-left"
-                       href="{{@app.context}}/policy/add/{{device.type}}?deviceId={{device.deviceIdentifier}}">
-                                        <span class="fw-stack">
-                                            <i class="fw fw-ring fw-stack-2x"></i>
-                                            <i class="fw fw-policy fw-stack-1x"></i>
-                                        </span> Add device specific policy</a>
-                </div>
-                <div class="panel panel-default tab-pane" id="policy_compliance"
-                     role="tabpanel" aria-labelledby="policy_compliance">
-                    <div class="panel-heading">Policy Compliance <span><a
-                            href="#" id="refresh-policy"><i
-                            class="fw fw-refresh"></i></a></span></div>
-                    <div class="panel-body">
-                        <div id="policy-spinner"
-                             class="wr-advance-operations-init hidden">
-                            <br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <i class="fw fw-settings fw-spin fw-2x"></i>
-                            &nbsp;&nbsp;&nbsp;
-                            Loading Policy Compliance . . .
-                            <br>
-                            <br>
-                        </div>
-                        <div id="policy-list-container">
-                            <div class="panel-body">
-                                Not available yet
-                            </div>
-                            <br class="c-both"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default tab-pane" id="device_location"
-                     role="tabpanel" aria-labelledby="device_location">
-                    <div class="panel-heading">Device Location</div>
-                    <div class="panel-body">
-                        <div id="device-location"
-                             data-lat="{{device.viewModel.location.latitude}}"
-                             data-long="{{device.viewModel.location.longitude}}"
-                             style="height:450px" class="panel-body">
-                        </div>
-                        <div id="map-error" class="panel-body">
-                            Not available yet
-                        </div>
-                        <br class="c-both"/>
-                    </div>
-                </div>
-                <div class="panel panel-default tab-pane" id="installed_applications"
-                     role="tabpanel" aria-labelledby="installed_applications">
-                    <div class="panel-heading">Installed Applications <span><a href="#"
-                                                                               id="refresh-apps"><i
-                            class="fw fw-refresh"></i></a></span></div>
-                    <div class="panel-body">
-                        <div id="apps-spinner" class="wr-advance-operations-init hidden">
-                            <br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <i class="fw fw-settings fw-spin fw-2x"></i>
-                            &nbsp;&nbsp;&nbsp;
-                            Loading App List . . .
-                            <br>
-                            <br>
-                        </div>
-                        <div id="applications-list-container">
-                            <div class="panel-body">
-                                Not available yet
-                            </div>
-                            <br class="c-both"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default tab-pane" id="event_log"
-                     role="tabpanel" aria-labelledby="event_log">
-                    <div class="panel-heading">Operations Log <span><a href="#"
-                                                                       id="refresh-operations"><i
-                            class="fw fw-refresh"></i></a></span></div>
-                    <div class="panel-body">
-                        <div id="operations-spinner"
-                             class="wr-advance-operations-init hidden">
-                            <br>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <i class="fw fw-settings fw-spin fw-2x"></i>
-                            &nbsp;&nbsp;&nbsp;
-                            Loading Operations Log . . .
-                            <br>
-                            <br>
-                        </div>
-                        <div id="operations-log-container">
-                            <div class="panel-body">
-                                Not available yet
-                            </div>
-                            <br class="c-both"/>
-                        </div>
-                    </div>
-                </div>
+            {{/if}}
+        {{/zone}}
+
+        {{#zone "device-details"}}
+          <div class="vital-strip">
+            {{#if device.deviceInfoAvailable}}
+              {{#if device.BatteryLevel}}
+                <p><i class="icon fw fw-battery fw-2x"></i> <span>{{device.BatteryLevel.value}}%</span></p>
+              {{/if}}
+              {{#if device.ramUsage}}
+                <p><i class="icon fw fw-hardware fw-2x fw-rotate-90"></i> <span>{{device.ramUsage.value}}%</span></p>
+              {{/if}}
+              {{#if device.internalMemory}}
+                <p><i class="icon fw fw-hdd fw-2x fw-rotate-90"></i> <span>{{device.internalMemory.usage}}</span>
+                  <span class="memory-amt">GB/{{device.internalMemory.total}}GB</span></p>
+              {{/if}}
+              {{#if device.externalMemory}}
+                <p><i class="icon fw fw-usb-drive fw-2x"></i> <span>{{device.externalMemory.usage}}</span>
+                  <span class="memory-amt">GB/{{device.externalMemory.total}}GB</span></p>
+              {{/if}}
+            {{else}}
+              <p>Battery, RAM and Storage related information are not
+              available yet.</p>
+            {{/if}}
+          </div>
+        {{/zone}}
+
+        {{#zone "device-details-tab-injected"}}
+            <li>
+                <a data-toggle="tab" href="#location"
+                   data-lat="{{device.location.latitude}}"
+                   data-long="{{device.location.longitude}}"
+                   class="initGeoLocationLink">Location</a>
+            </li>
+            <li><a data-toggle="tab" href="#app">Applications</a></li>
+            <li><a data-toggle="tab" href="#policy">Policy Compliance</a></li>
+        {{/zone}}
+
+        {{#zone "device-view-tab-injected-conents"}}
+            <div id="location" class="tab-pane fade">
+              {{#if device.location}}
+                  <div class="tab-actions">
+                      <div class="action-btn-container" id="location-action-bar">
+                      </div>
+                  </div>
+                  <br/>
+                  {{unit "cdmf.unit.geo-dashboard" device=device noGeoFencing=false hideSearch=true}}
+              {{else}}
+                  <div id="map-error" class="message message-warning">
+                      <h4 class="remove-margin">
+                          <i class="icon fw fw-warning"></i>
+                          The device location information is not available right now! Please refresh the page in a few minutes.
+                          The location details will not be available if the device’s “Location Services setting” is disabled
+                          or if WSO2 IoT Server has not received the device’s location information from the device.
+                      </h4>
+                  </div>
+                  <p class="add-padding-5x"></p>
+                  <p class="add-padding-5x"></p>
+                  <p class="add-padding-5x"></p>
+              {{/if}}
             </div>
+            <div id="app" class="tab-pane fade">
+                <div class="tab-actions">
+                    <div class="action-btn-container">
+                        <div class="action-btn show filter">
+                            <a href="javascript:void(0);" id="refresh-apps">
+                                <i class="fw fw-refresh"></i> Refresh List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="apps-spinner" class="wr-advance-operations-init hidden">
+                    <i class="fw fw-wso2-logo fw-pulse fw-2x"></i> Loading Application List...
+                </div>
+              <div id="applications-list-container" data-public-uri="{{@unit.publicUri}}">
+              </div>
+            </div>
+            <div id="policy" class="tab-pane fade">
+              <div id="policy-list-container">
+              </div>
+            </div>
+
+        {{/zone}}
+
         </div>
-    </div>
-{{/zone}}
+        </div>
+    {{else}}
+        <h1 class="page-sub-title">
+            Permission Denied
+        </h1>
+        <br>
+        You are not authorized to view specified device in the system.
+    {{/if}}
+{{else}}
+    <h1 class="page-sub-title">
+        Device not found
+    </h1>
+    <br>
+    You have tried to access either a removed or non-existing device.
+{{/if}}
 
 {{#zone "bottomJs"}}
-    {{js "js/device-detail.js"}}
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-    {{js "js/load-map.js"}}
+    {{#if isAuthorized}}
+        <!--suppress HtmlUnknownTarget -->
+        <script id="policy-view" src="{{@unit.publicUri}}/templates/policy-compliance.hbs"
+                data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
+                type="text/x-handlebars-template"></script>
+        <!--suppress HtmlUnknownTarget -->
+        <script id="applications-list" src="{{@unit.publicUri}}/templates/applications-list.hbs"
+                data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
+                type="text/x-handlebars-template"></script>
+        <!--suppress HtmlUnknownTarget -->
+        {{js "js/device-detail.js"}}
+    {{/if}}
 {{/zone}}

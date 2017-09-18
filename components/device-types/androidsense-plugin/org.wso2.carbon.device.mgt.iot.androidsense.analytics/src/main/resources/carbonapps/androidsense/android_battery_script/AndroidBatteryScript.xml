@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Analytics>
+    <Editable>true</Editable>
+    <Name>AndroidBatteryScript</Name>
+    <Script>        CREATE TEMPORARY TABLE AndroidBatteryData USING CarbonAnalytics OPTIONS(tableName
+        "IOT_PER_DEVICE_STREAM_ANDROID_BATTERY_STATS", incrementalParams "IOT_PER_DEVICE_STREAM_ANDROID_BATTERY_STATS, DAY");
+    
+        CREATE TEMPORARY TABLE Android_Battery_Stat_Per_Day USING CarbonAnalytics
+        OPTIONS (tableName "Android_Battery_Stat_Per_Day",
+        schema "owner STRING, deviceId STRING, type STRING, level INT -i, year INT -i, month INT -i, day INT -i,
+        timestamp STRING", primaryKeys "year, month, day, deviceId, owner, type", mergeSchema "false");
+
+        INSERT INTO TABLE Android_Battery_Stat_Per_Day
+        SELECT meta_owner as owner, meta_deviceId as deviceId, type, sum(level) as level, year, month, day,
+        getDateStartingTime(year, month, day) as timestamp
+        FROM AndroidBatteryData
+        GROUP BY year, month, day, meta_deviceId, meta_owner, type ORDER BY timestamp DESC;
+        
+        INCREMENTAL_TABLE_COMMIT IOT_PER_DEVICE_STREAM_ANDROID_BATTERY_STATS;
+    </Script>
+    <CronExpression>0 0/5 * * * ?</CronExpression>
+</Analytics>

@@ -1,0 +1,304 @@
+{{!
+  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+
+  WSO2 Inc. licenses this file to you under the Apache License,
+  Version 2.0 (the "License"); you may not use this file except
+  in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations
+  under the License.
+}}
+
+{{unit "cdmf.unit.device.type.qr-modal" enrollmentURL=enrollmentURL deviceTypeName="Android"}}
+{{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="android_sense"}}
+
+<div class="col-lg-12  margin-top-double">
+    <h1 class="grey ">Android Sense</h1>
+    <hr>
+</div>
+
+<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 padding-top">
+    <img src="{{@unit.publicUri}}/images/android-sense-icon.png" class="img-responsive">
+</div>
+
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
+
+</div>
+
+<div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 padding-top">
+    <h3 class="uppercase">What it Does</h3>
+    <hr>
+    <p class="grey margin-top">Connect an Android device to WSO2 IoT Server and visualize sensor
+                               data.</p>
+    <br>
+    <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
+    <a href="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+    <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
+    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS310/Android+Sense"
+                                 target="_blank">[ here ]</a> for latest instructions and
+        troubleshooting.</p>
+
+    <h3 class="uppercase">What You Need</h3>
+    <hr>
+    <p class="grey margin-top">You should have an Android Device to get started.</p>
+    <ul class="list-unstyled">
+        <li class="padding-top-double">
+            <span class="badge">STEP 01</span>
+               Go ahead and click [Enroll Device].
+        </li>
+        <li>
+            <span class="badge">STEP 02</span>
+               You can either scan the QR code or directly download Android agent.
+        </li>
+        <li>
+            <span class="badge">STEP 03</span>
+               Install Android agent into your Android Device.
+        </li>
+        <li><span class="badge">STEP 04</span>
+               Proceed to [Prepare] section.
+    </ul>
+    <br>
+
+    <div id="device-400-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Exception at backend. Try Later.</h3>
+
+                    <div class="buttons">
+                        <a href="#" id="device-400-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-401-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>You have to log in first.</h3><br/>
+                    <div class="buttons">
+                        <a href="#" id="device-401-link" class="blue-button">
+                            Goto Login Page
+                        </a>
+                        <a href="#" onclick="hidePopup();" class="btn-operations">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-403-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Action not permitted.</h3><br/>
+                    <div class="buttons">
+                        <a href="#" id="device-403-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-409-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Device Sketch does not exist.</h3><br/>
+                    <div class="buttons">
+                        <a href="#" id="device-409-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-unexpected-error-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Unexpected error.</h3><br/>
+                    <div class="buttons">
+                        <a href="#" id="device-unexpected-error-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/><br/>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
+    <ul class="list-unstyled">
+        <li class="padding-top-double">
+            <span class="badge">01</span>
+               Connect Android device to network.
+        </li>
+        <li class="padding-top-double">
+            <span class="badge">02</span>
+               Start Android Sense app in your device.
+        </li>
+        <li class="padding-top-double">
+            <span class="badge">03</span>
+               Fill login form with the credentials.
+            <i>(Use server URL as [ https://&lt;WSO2_IoT_SERVER_HOST&gt;:&lt;
+               HTTPS_SERVER_PORT&gt; ] and click on
+                <strong>Register Device</strong> button.)</i>
+        </li>
+        <li>
+            <a href="{{@unit.publicUri}}/images/registerView.png" target="_blank"
+               class="padding-top-double">
+                <img src="{{@unit.publicUri}}/images/registerView.png" class="img-responsive">
+            </a>
+        </li>
+
+        <li class="padding-top-double">
+            <span class="badge">04</span>
+               Once the device is enrolled, click on <strong>[+]</strong> button to
+            select the sensors.
+            <a href="{{@unit.publicUri}}/images/selectSensorView.png" target="_blank"
+               class="padding-top-double">
+                <img src="{{@unit.publicUri}}/images/selectSensorView.png" class="img-responsive">
+            </a>
+        </li>
+        <li class="padding-top-double">
+            <span class="badge">05</span>
+               Click on <i>[Publish data]</i> button to publish sensor readings to
+            IoT server.
+            <a href="{{@unit.publicUri}}/images/publishDataView.png" target="_blank"
+               class="padding-top-double">
+                <img src="{{@unit.publicUri}}/images/publishDataView.png" class="img-responsive">
+            </a>
+        </li>
+    </ul>
+    <br>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <h3 class="uppercase">Try Out</h3>
+            <hr>
+            <ul class="list-unstyled">
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
+                <i class="fw fw-circle-outline fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+                    You can view all your connected devices
+                    <a href="{{@app.context}}/devices">[Device Management]</a> page.
+                </li>
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
+                <i class="fw fw-circle-outline fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+                    You can select any one of your connected devices for available
+                    operations and Real-Time data monitoring.
+                </li>
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
+                <i class="fw fw-circle-outline fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>   For historical analytics of sensor data navigate to device
+                    analytics page.
+                </li>
+            </ul>
+            <br/>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <p class="grey margin-top">Click on the image to zoom</p>
+            <center>
+                <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+                    <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+                </a>
+            </center>
+        </div>
+    </div>
+</div>
+
+{{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="androidSense"}}
+<div id="androidsense-statistic-response-template" style="display: none">
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-5 col-md-6 col-centered">
+                <h3>
+                    <span class="fw-stack">
+                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                        <i id="status-icon" class="fw fw-error fw-stack-1x"></i>
+                    </span>
+                    <br>
+                </h3>
+                <h4>
+                    <span id="title"></span>
+                    <br>
+                </h4>
+                <span id="description"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="content">-->
+<!--<div class="row">-->
+<!--<div class="col-lg-5 col-md-6 col-centered">-->
+<!--<h3>Scan QR code to start enrollment</h3>-->
+<!--<p>Please scan the QR code using your mobile device to retrieve enrollment URL.</p>-->
+<!--<div class="panel panel-default">-->
+<!--<div class="panel-body col-centered">-->
+<!--<div class="qr-code"></div>-->
+<!--<br>-->
+<!--<h5>-->
+<!--Not having a QR code scanner in your device?-->
+<!--<br><br>-->
+<!--Try following link-->
+<!--<br><br>-->
+<!--<b>{{hostName}}/{{@unit.publicUri}}/asset/androidsense.apk</b>-->
+<!--<br><br>-->
+<!--on your device's Internet browser instead.-->
+<!--</h5>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<div id="device-agent-downloading-content" class="hide">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-md-7 col-centered center-container">
+                <h3>Device Agent will downloading shortly.</h3>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{{#zone "topCss"}}
+    {{css "css/styles.css"}}
+{{/zone}}
+
+{{#zone "bottomJs"}}
+    {{js "/js/download.js"}}
+    {{js "/js/jquery.validate.js"}}
+{{/zone}}

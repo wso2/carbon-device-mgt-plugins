@@ -22,14 +22,14 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>windows-plugin-feature</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>4.0.81-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.windows.feature</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>4.0.81-SNAPSHOT</version>
     <name>WSO2 Carbon - Windows Device Management Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for Windows Device Management
@@ -44,6 +44,24 @@
         <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.server.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.extensions.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
     </dependencies>
 
@@ -95,7 +113,7 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>
-                                        ${project.build.directory}/maven-shared-archive-resources/jaggeryapps/devicemgt
+                                        ${project.build.directory}/maven-shared-archive-resources/jaggeryapps/
                                     </outputDirectory>
                                     <includes>**/*</includes>
                                 </artifactItem>
@@ -118,7 +136,7 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/
                                     </outputDirectory>
-                                    <destFileName>mdm-windows-agent.war</destFileName>
+                                    <destFileName>api#device-mgt#windows#v1.0.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

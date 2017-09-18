@@ -21,33 +21,34 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.BlacklistApplications;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
  * This class is used to wrap the BlacklistApplications bean with devices.
  */
 @ApiModel(value = "BlacklistApplicationsBeanWrapper",
-          description = "Mapping between blacklist application and the device ids.")
+        description = "Mapping between blacklist application and the device ids.")
 public class BlacklistApplicationsBeanWrapper {
 
     @ApiModelProperty(name = "operation", value = "Blacklist applications information", required = true)
-	private BlacklistApplications operation;
+    private  @Valid BlacklistApplications operation;
     @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
-	private List<String> deviceIDs;
+    private List<String> deviceIDs;
 
-	public BlacklistApplications getOperation() {
-		return operation;
-	}
+    public @Valid BlacklistApplications getOperation() {
+        return operation;
+    }
 
-	public void setOperation(BlacklistApplications operation) {
-		this.operation = operation;
-	}
+    public void setOperation(@Valid BlacklistApplications operation) {
+        this.operation = operation;
+    }
 
-	public List<String> getDeviceIDs() {
-		return deviceIDs;
-	}
+    public List<String> getDeviceIDs() {
+        return deviceIDs;
+    }
 
-	public void setDeviceIDs(List<String> deviceIDs) {
-		this.deviceIDs = deviceIDs;
-	}
+    public void setDeviceIDs(List<String> deviceIDs) {
+        this.deviceIDs = deviceIDs;
+    }
 }

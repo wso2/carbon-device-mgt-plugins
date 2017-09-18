@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifact name="WSO2IoT-EventSink-FusedStream" version="1.0.0" type="analytics/eventstore" serverRole="GeoDashboard">
+    <file>iot_per_device_stream_geo_FusedSpatialEvent.xml</file>
+</artifact>
