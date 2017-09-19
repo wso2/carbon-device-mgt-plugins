@@ -279,12 +279,12 @@ public interface DeviceManagementAdminService {
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
-                            "Server error occurred while locking the device.")
+                            "Server error occurred while file transfer operation.")
     })
     Response fileTransfer(
             @ApiParam(
                     name = "fileTransfer",
-                    value ="Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
+                    value = "Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true) FileTransferBeanWrapper fileTransferBeanWrapper);
 
     @POST

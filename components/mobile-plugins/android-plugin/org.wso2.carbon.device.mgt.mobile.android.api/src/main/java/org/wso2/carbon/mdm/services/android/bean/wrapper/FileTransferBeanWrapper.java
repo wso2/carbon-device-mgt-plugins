@@ -33,7 +33,8 @@ public class FileTransferBeanWrapper {
     @ApiModelProperty(name = "deviceIDs", value = "Device id list of the operation to be executed.", required = true)
     private List<String> deviceIDs;
 
-    @ApiModelProperty(name = "upload", value = "This is an inbound file transfer or out bound file transfer respective to the device.", required = true)
+    @ApiModelProperty(name = "upload", value = "Upload / Download w.r.t device.",
+            notes = "upload = true , If file is to be uploaded to the device.", required = true)
     private boolean upload;
 
     @ApiModelProperty(name = "operation", value = "Information of the File Transfer Operation.", required = true)
