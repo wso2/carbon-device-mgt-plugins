@@ -316,15 +316,15 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @Path("/{id}/status")
     @Override
     public Response isEnrolled(@PathParam("id") String id, @HeaderParam("If-Modified-Since") String ifModifiedSince) {
-        boolean result;
         DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
         try {
-            result = AndroidAPIUtils.getDeviceManagementService().isEnrolled(deviceIdentifier);
-            if (result) {
+            Device device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+            if (device != null) {
+                String status = String.valueOf(device.getEnrolmentInfo().getStatus());
                 Message responseMessage = new Message();
                 responseMessage.setResponseCode(Response.Status.OK.toString());
-                responseMessage.setResponseMessage("Android device that carries the id '" +
-                        id + "' is enrolled");
+                responseMessage
+                        .setResponseMessage("Status of android device that carries the id '" + id + "' is " + status);
                 return Response.status(Response.Status.OK).entity(responseMessage).build();
             } else {
                 Message responseMessage = new Message();
