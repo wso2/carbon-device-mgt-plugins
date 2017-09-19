@@ -1048,7 +1048,7 @@
             <dependency>
                 <groupId>org.wso2.andes.wso2</groupId>
                 <artifactId>andes</artifactId>
-                <version>${carbon.messaging.version}</version>
+                <version>${andes.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -1259,7 +1259,7 @@
         <javax.xml.parsers.import.pkg.version>[0.0.0,1.0.0)</javax.xml.parsers.import.pkg.version>
 
         <!-- MB Features -->
-        <carbon.messaging.version>3.1.3</carbon.messaging.version>
+        <andes.version>3.2.25</andes.version>
 
         <!--Feign Version-->
         <io.github.openfeign.version>9.3.1</io.github.openfeign.version>
