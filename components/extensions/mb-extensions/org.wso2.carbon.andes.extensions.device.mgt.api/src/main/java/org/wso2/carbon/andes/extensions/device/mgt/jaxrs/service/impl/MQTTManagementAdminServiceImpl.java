@@ -16,7 +16,7 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.impl.admin;
+package org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.impl;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
@@ -29,11 +29,15 @@ import org.wso2.carbon.andes.core.types.xsd.MQTTSubscription;
 import org.wso2.carbon.andes.core.types.xsd.Subscription;
 import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.beans.ErrorResponse;
 import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.beans.SubscriptionList;
-import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.api.admin.MQTTManagementAdminService;
-import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.impl.util.RequestValidationUtil;
+import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.exception.MQTTConfigurationException;
+import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.MQTTManagementAdminService;
+import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.util.MQTTMgtAPIUtils;
+import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.util.RequestValidationUtil;
 import org.wso2.carbon.andes.mqtt.stub.AndesMQTTAdminServiceBrokerManagerAdminException;
 import org.wso2.carbon.andes.mqtt.stub.AndesMQTTAdminServiceStub;
 import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.user.api.UserStoreException;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -105,7 +109,8 @@ public class MQTTManagementAdminServiceImpl implements MQTTManagementAdminServic
             }
 
             return Response.status(Response.Status.OK).entity(topics).build();
-        } catch (RemoteException | AndesMQTTAdminServiceBrokerManagerAdminException e) {
+        } catch (RemoteException | AndesMQTTAdminServiceBrokerManagerAdminException |
+                UserStoreException | MQTTConfigurationException e) {
             String msg = "Error occurred at server side while fetching topic list.";
             log.error(msg, e);
             return Response.serverError().entity(
@@ -118,28 +123,28 @@ public class MQTTManagementAdminServiceImpl implements MQTTManagementAdminServic
      *
      * @param config  the servlet configuration
      * @return an AndesAdminServiceStub
-     * @throws AxisFault
+     * @throws AxisFault, UserStoreException
      */
     private static AndesMQTTAdminServiceStub getAndesMQTTAdminServiceStub(ServletConfig config)
-            throws AxisFault {
+            throws AxisFault, UserStoreException, MQTTConfigurationException {
 
         String hostName = System.getProperty("mqtt.broker.host");
-        final String MQTT_ENDPOINT = System.getProperty("mqtt.broker.https.port");
+        String mqttPort = System.getProperty("mqtt.broker.https.port");
 
-        if (hostName == null) {
-            hostName = System.getProperty("mqtt.broker.host");
+        if (hostName == null || mqttPort == null) {
+            throw new MQTTConfigurationException("MQTT hostname/port configuration is not available in system " +
+                    "properties");
         }
 
-        String backendServerURL = "https://" + hostName + ":" + MQTT_ENDPOINT +
+        String backendServerURL = "https://" + hostName + ":" + mqttPort +
                 "/services/AndesMQTTAdminService.AndesMQTTAdminServiceHttpsSoap11Endpoint/";
         ConfigurationContext configContext =
                 (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
         AndesMQTTAdminServiceStub stub = new AndesMQTTAdminServiceStub(configContext, backendServerURL);
 
-        // TODO: Need to use JWT Authenticator instead of Basic Auth
         HttpTransportProperties.Authenticator basicAuthentication = new HttpTransportProperties.Authenticator();
-        basicAuthentication.setUsername("admin");
-        basicAuthentication.setPassword("admin");
+        basicAuthentication.setUsername(MQTTMgtAPIUtils.getUserRealm().getRealmConfiguration().getAdminUserName());
+        basicAuthentication.setPassword(MQTTMgtAPIUtils.getUserRealm().getRealmConfiguration().getAdminPassword());
         stub._getServiceClient().getOptions().setProperty(HTTPConstants.AUTHENTICATE, basicAuthentication);
 
         return stub;

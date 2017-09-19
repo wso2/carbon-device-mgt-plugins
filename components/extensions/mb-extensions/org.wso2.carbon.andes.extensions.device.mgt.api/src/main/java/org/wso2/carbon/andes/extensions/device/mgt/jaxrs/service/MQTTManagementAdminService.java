@@ -16,7 +16,7 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.api.admin;
+package org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service;
 
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Info;

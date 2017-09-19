@@ -37,10 +37,6 @@
 
     <bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers"/>
     <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource"/>
-    <bean id="ValidationInterceptor"
-          class="org.wso2.carbon.andes.extensions.device.mgt.jaxrs.exception.ValidationInterceptor"/>
-    <bean id="GlobalExceptionMapper"
-          class="org.wso2.carbon.andes.extensions.device.mgt.jaxrs.exception.GlobalThrowableMapper"/>
 
     <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
         <property name="resourcePackage" value="org.wso2.carbon.device.mgt.jaxrs"/>
@@ -56,7 +52,7 @@
     </bean>
 
     <bean id="mqttManagementService"
-          class="org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.impl.admin.MQTTManagementAdminServiceImpl"/>
+          class="org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.impl.MQTTManagementAdminServiceImpl"/>
     <bean id="jsonProvider" class="org.wso2.carbon.andes.extensions.device.mgt.jaxrs.common.GsonMessageBodyHandler"/>
 
     <cxf:bus>

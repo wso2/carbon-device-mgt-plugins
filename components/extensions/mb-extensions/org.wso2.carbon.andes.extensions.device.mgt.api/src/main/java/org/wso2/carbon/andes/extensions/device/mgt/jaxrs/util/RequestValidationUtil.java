@@ -16,7 +16,7 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.andes.extensions.device.mgt.jaxrs.service.impl.util;
+package org.wso2.carbon.andes.extensions.device.mgt.jaxrs.util;
 
 import org.wso2.carbon.andes.extensions.device.mgt.jaxrs.beans.*;
 
