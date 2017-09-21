@@ -1141,7 +1141,7 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>3.0.106</carbon.devicemgt.version>
+        <carbon.devicemgt.version>3.0.112-SNAPSHOT</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[3.0.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
@@ -1172,7 +1172,7 @@
         <carbon.governance.version>4.7.8</carbon.governance.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>6.1.64</carbon.api.mgt.version>
+        <carbon.api.mgt.version>6.1.109</carbon.api.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
