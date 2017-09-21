@@ -94,17 +94,16 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @Path("/file-transfer")
     @Override
     public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
-        if (log.isDebugEnabled()) {
-            log.debug("Invoking Android file transfer operation for " + fileTransferBeanWrapper.getDeviceIDs());
-        }
-
-        try {
-            if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null) {
-                String errorMessage = "The payload of the file transfer operation is incorrect.";
-                log.error(errorMessage);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-            }
+         try {
+             if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null) {
+                 String errorMessage = "The payload of the file transfer operation is incorrect.";
+                 log.error(errorMessage);
+                 throw new BadRequestException(
+                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+             }
+             if (fileTransferBeanWrapper.getDeviceIDs() != null && log.isDebugEnabled()) {
+                 log.debug("Invoking Android file transfer operation for " + fileTransferBeanWrapper.getDeviceIDs());
+             }
             FileTransfer file = fileTransferBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             if (fileTransferBeanWrapper.isUpload()) {

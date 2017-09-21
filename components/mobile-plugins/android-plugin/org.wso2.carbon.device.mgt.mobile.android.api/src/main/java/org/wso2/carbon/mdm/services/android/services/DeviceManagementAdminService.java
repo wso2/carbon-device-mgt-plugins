@@ -233,7 +233,8 @@ public interface DeviceManagementAdminService {
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
             value = "Transferring file to the device.",
-            notes = "Using this API you have the option to transfer a file from FTP server to an Android device.",
+            notes = "Using this API you have the option to transfer a file from SFTP/FTP server or using an " +
+                    "HTTP link to the device or retrieve file from the device to FTP/SFTP server .",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
             extensions = {
@@ -245,7 +246,6 @@ public interface DeviceManagementAdminService {
     @ApiResponses(value = {
             @ApiResponse(
                     code = 201,
-                    //todo
                     message = "File transferred.",
                     response = Activity.class,
                     responseHeaders = {
@@ -284,7 +284,8 @@ public interface DeviceManagementAdminService {
     Response fileTransfer(
             @ApiParam(
                     name = "fileTransfer",
-                    value = "Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values.",
+                    value = "Provide the ID of the Android device. Multiple device IDs can be added by using " +
+                            "comma separated values.",
                     required = true) FileTransferBeanWrapper fileTransferBeanWrapper);
 
     @POST

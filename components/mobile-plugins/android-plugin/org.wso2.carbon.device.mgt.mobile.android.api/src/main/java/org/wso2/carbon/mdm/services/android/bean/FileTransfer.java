@@ -47,7 +47,6 @@ public class FileTransfer extends AndroidOperation implements Serializable {
         this.fileURL = fileURL;
     }
 
-
     public String getFtpPassword() {
         return ftpPassword;
     }

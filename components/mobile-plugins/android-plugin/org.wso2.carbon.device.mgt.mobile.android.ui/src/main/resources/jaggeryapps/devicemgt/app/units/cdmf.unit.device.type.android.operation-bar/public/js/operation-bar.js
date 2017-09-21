@@ -32,6 +32,11 @@ var resetLoader = function () {
     $('#lbl-execution').addClass("hidden");
 };
 
+/**
+ * This changes the text box label when the operation is toggled between FILE UPLOAD and FILE DOWNLOAD
+ * and shows an info label for FILE UPLOAD regarding saving location.
+ * @param type
+ */
 function changeLabel(type) {
     $(".modal #operation-error-msg").addClass("hidden");
     if (type == "no") {
