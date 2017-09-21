@@ -157,7 +157,7 @@
                         "type": "password",
                         "id": "ftpPassword",
                         "optional": false,
-                        "label": "FTP Password"
+                        "label": "Password (Ignore if you don't need any)"
                     },
                     {
                         "type": "text",

@@ -37,7 +37,7 @@ function changeLabel(type) {
     if (type == "no") {
         $(".modal #operation-warn-msg span").text("File will be saved in default location if not specified.");
         $(".modal #operation-warn-msg").removeClass("hidden");
-        document.getElementById('fileURL').placeholder = "FTP URL of the file";
+        document.getElementById('fileURL').placeholder = "HTTP/FTP URL of the file";
         document.getElementById('fileLocation').placeholder = "Location to save file in device";
     } else {
         $(".modal #operation-warn-msg").addClass("hidden");
@@ -197,13 +197,11 @@ function validatePayload(operationCode, payload) {
             break;
         case "FILE_TRANSFER":
             if (payload.upload && !payload.fileURL) {
-                returnVal = "Please enter the FTP URL of the file";
+                returnVal = "Please enter the URL of the file";
             } else if (!payload.upload && !payload.fileURL) {
                 returnVal = "Please enter the FTP URL of the folder to upload file";
             }
-            else if (!payload.ftpPassword) {
-                returnVal = "Please enter FTP password";
-            } else if (!payload.upload && !payload.fileLocation) {
+            else if (!payload.upload && !payload.fileLocation) {
                 returnVal = "Please specify the file location in device";
             }
             break;
