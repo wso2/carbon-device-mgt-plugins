@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>mb-extensions</artifactId>
-        <version>4.0.82-SNAPSHOT</version>
+        <version>4.0.82</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -70,10 +70,9 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <copy todir="${basedir}/../../../repository/deployment/server/webapps"
-                                              overwrite="true">
+                                        <copy todir="${basedir}/../../../repository/deployment/server/webapps" overwrite="true">
                                             <fileset dir="${basedir}/target">
-                                                <include name="api#mqtt-topics#v1.0"/>
+                                                <include name="api#mqtt-topics#v1.0" />
                                             </fileset>
                                         </copy>
                                     </tasks>

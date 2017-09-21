@@ -22,7 +22,7 @@
     <parent>
         <artifactId>windows-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.82-SNAPSHOT</version>
+        <version>4.0.82</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
