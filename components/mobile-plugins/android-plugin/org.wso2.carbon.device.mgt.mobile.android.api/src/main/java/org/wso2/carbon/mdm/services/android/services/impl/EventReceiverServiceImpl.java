@@ -74,8 +74,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         JsonObject jsonObject = gson.fromJson(eventPayload, JsonObject.class);
         Object payload[] = {
                 jsonObject.get(TIME_STAMP).getAsLong(),
-                jsonObject.get(LONGITUDE).getAsDouble(),
-                jsonObject.get(LATITUDE).getAsDouble()
+                jsonObject.get(LATITUDE).getAsDouble(),
+                jsonObject.get(LONGITUDE).getAsDouble()
         };
         try {
             if (AndroidAPIUtils.getEventPublisherService().publishEvent(
