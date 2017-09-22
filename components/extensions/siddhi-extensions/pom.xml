@@ -33,6 +33,7 @@
     <url>http://wso2.org</url>
 
     <modules>
+        <module>org.wso2.extension.siddhi.devicegroup</module>
         <module>org.wso2.extension.siddhi.execution.json</module>
         <module>org.wso2.gpl.siddhi.extension.geo.script</module>
     </modules>
