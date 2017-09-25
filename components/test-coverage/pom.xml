@@ -18,13 +18,11 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>carbon-device-mgt-plugins-parent</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.84-SNAPSHOT</version>
+        <version>4.0.84</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -133,208 +131,185 @@
 
                         <configuration>
                             <target name="mergeReports">
-                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
-                                         classpathref="maven.plugin.classpath"/>
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                 <if>
                                     <and>
-                                        <available
-                                                file="${siddhi.extensions}/${target}/${coverge-report}/${individual.test.report.name}"/>
+                                        <available file="${siddhi.extensions}/${target}/${coverge-report}/${individual.test.report.name}" />
 
                                     </and>
                                     <then>
                                         <taskdef name="report" classname="org.jacoco.ant.ReportTask">
-                                            <classpath path="${basedir}/target/jacoco-jars/org.jacoco.ant.jar"/>
+                                            <classpath path="${basedir}/target/jacoco-jars/org.jacoco.ant.jar" />
                                         </taskdef>
-                                        <mkdir dir="${basedir}/target/coverage-report"/>
+                                        <mkdir dir="${basedir}/target/coverage-report" />
                                         <report>
                                             <executiondata>
                                                 <fileset dir="${siddhi.extensions}/${target}/${coverge-report}">
-                                                    <include name="${individual.test.report.name}"/>
+                                                    <include name="${individual.test.report.name}" />
                                                 </fileset>
 
                                                 <!-- Need to list the newly added exec files here -->
                                             </executiondata>
-                                            <structure
-                                                    name="Carbon Device Management Plugins Component Coverage Report">
+                                            <structure name="Carbon Device Management Plugins Component Coverage Report">
                                                 <group name="device-types">
                                                     <group name="androidsense-plugin">
                                                         <classfiles>
-                                                            <fileset
-                                                                dir="${device.types.androidsense.api}/${target}/${classes}"/>
+                                                            <fileset dir="${device.types.androidsense.api}/${target}/${classes}" />
                                                         </classfiles>
                                                         <sourcefiles encoding="UTF-8">
-                                                            <fileset dir="${device.types.androidsense.api}/${source}"/>
+                                                            <fileset dir="${device.types.androidsense.api}/${source}" />
                                                         </sourcefiles>
                                                     </group>
                                                     <group name="arudino-plugin">
                                                         <classfiles>
-                                                            <fileset dir="${device.types.arduino.api}/${target}/${classes}"/>
+                                                            <fileset dir="${device.types.arduino.api}/${target}/${classes}" />
                                                         </classfiles>
                                                         <sourcefiles encoding="UTF-8">
-                                                            <fileset dir="${device.types.arduino.api}/${source}"/>
+                                                            <fileset dir="${device.types.arduino.api}/${source}" />
                                                         </sourcefiles>
                                                     </group>
 
                                                     <group name="raspberrypi-plugin">
                                                         <classfiles>
-                                                            <fileset
-                                                                    dir="${device.types.raspberrypi.api}/${target}/${classes}"/>
+                                                            <fileset dir="${device.types.raspberrypi.api}/${target}/${classes}" />
                                                         </classfiles>
                                                         <sourcefiles encoding="UTF-8">
-                                                            <fileset dir="${device.types.raspberrypi.api}/${source}"/>
+                                                            <fileset dir="${device.types.raspberrypi.api}/${source}" />
                                                         </sourcefiles>
                                                     </group>
                                                     <group name="virtual-fire-alarm-plugin">
                                                         <classfiles>
-                                                            <fileset
-                                                                    dir="${device.types.virtualfirealarm.api}/${target}/${classes}"/>
+                                                            <fileset dir="${device.types.virtualfirealarm.api}/${target}/${classes}" />
                                                         </classfiles>
                                                         <sourcefiles encoding="UTF-8">
-                                                            <fileset dir="${device.types.virtualfirealarm.api}/${source}"/>
+                                                            <fileset dir="${device.types.virtualfirealarm.api}/${source}" />
                                                         </sourcefiles>
                                                     </group>
                                                 </group>
 
                                                 <group name="extensions">
                                                     <group name="appm-connector">
-                                                        <group name = "org.wso2.carbon.appmgt.mdm.osgiconnector">
+                                                        <group name="org.wso2.carbon.appmgt.mdm.osgiconnector">
                                                             <classfiles>
-                                                                <fileset
-                                                                        dir="${extensions.osgi.connector}/${target}/${classes}"/>
+                                                                <fileset dir="${extensions.osgi.connector}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${extensions.rest.connector}/${source}"/>
+                                                                <fileset dir="${extensions.rest.connector}/${source}" />
                                                             </sourcefiles>
                                                         </group>
-                                                        <group name = "org.wso2.carbon.appmgt.mdm.restconnector">
+                                                        <group name="org.wso2.carbon.appmgt.mdm.restconnector">
                                                             <classfiles>
-                                                                <fileset
-                                                                        dir="${extensions.rest.connector}/${target}/${classes}"/>
+                                                                <fileset dir="${extensions.rest.connector}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${extensions.rest.connector}/${source}"/>
+                                                                <fileset dir="${extensions.rest.connector}/${source}" />
                                                             </sourcefiles>
                                                         </group>
                                                     </group>
 
                                                     <group name="cdmf-transport-adapters">
                                                         <group name="input">
-                                                            <group name = "org.wso2.carbon.device.mgt.input.adapter.extension">
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.extension">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${input.extension}/${target}/${classes}"/>
+                                                                    <fileset dir="${input.extension}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${input.extension}/${source}"/>
+                                                                    <fileset dir="${input.extension}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
-                                                            <group name = "org.wso2.carbon.device.mgt.input.adapter.http">
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.http">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${input.http}/${target}/${classes}"/>
+                                                                    <fileset dir="${input.http}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${input.http}/${source}"/>
+                                                                    <fileset dir="${input.http}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
-                                                            <group name =
-                                                                           "org.wso2.carbon.device.mgt.input.adapter.mqtt">
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.mqtt">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${input.mqtt}/${target}/${classes}"/>
+                                                                    <fileset dir="${input.mqtt}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${input.mqtt}/${source}"/>
+                                                                    <fileset dir="${input.mqtt}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
-                                                            <group name =
-                                                                           "org.wso2.carbon.device.mgt.input.adapter.thrift">
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.thrift">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${input.thrift}/${target}/${classes}"/>
+                                                                    <fileset dir="${input.thrift}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${input.thrift}/${source}"/>
+                                                                    <fileset dir="${input.thrift}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
                                                         </group>
 
                                                         <group name="output">
-                                                            <group name =
-                                                                           "org.wso2.carbon.device.mgt.output.adapter.mqtt">
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.mqtt">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${output.mqtt}/${target}/${classes}"/>
+                                                                    <fileset dir="${output.mqtt}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${output.mqtt}/${source}"/>
+                                                                    <fileset dir="${output.mqtt}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
-                                                            <group name = "org.wso2.carbon.device.mgt.output.adapter.websocket">
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.websocket">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${output.websocket}/${target}/${classes}"/>
+                                                                    <fileset dir="${output.websocket}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${output.websocket}/${source}"/>
+                                                                    <fileset dir="${output.websocket}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
-                                                            <group name =
-                                                                           "org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint">
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${output.websocket.endpoint}/${target}/${classes}"/>
+                                                                    <fileset dir="${output.websocket.endpoint}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${output.websocket.endpoint}/${source}"/>
+                                                                    <fileset dir="${output.websocket.endpoint}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
-                                                            <group name =
-                                                                           "org.wso2.carbon.device.mgt.output.adapter.xmpp">
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.xmpp">
                                                                 <classfiles>
-                                                                    <fileset
-                                                                            dir="${output.xmpp}/${target}/${classes}"/>
+                                                                    <fileset dir="${output.xmpp}/${target}/${classes}" />
                                                                 </classfiles>
                                                                 <sourcefiles encoding="UTF-8">
-                                                                    <fileset dir="${output.xmpp}/${source}"/>
+                                                                    <fileset dir="${output.xmpp}/${source}" />
                                                                 </sourcefiles>
                                                             </group>
                                                         </group>
                                                     </group>
                                                     <group name="mb-extensions">
-                                                        <group name = "org.wso2.carbon.andes.extensions.device.mgt.api">
+                                                        <group name="org.wso2.carbon.andes.extensions.device.mgt.api">
                                                             <classfiles>
-                                                                <fileset dir="${mb.api}/${target}/${classes}"/>
+                                                                <fileset dir="${mb.api}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${mb.api}/${source}"/>
+                                                                <fileset dir="${mb.api}/${source}" />
                                                             </sourcefiles>
                                                         </group>
-                                                        <group name =
-                                                                       "org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization">
+                                                        <group name="org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization">
                                                             <classfiles>
-                                                                <fileset
-                                                                        dir="${mb.authorization}/${target}/${classes}"/>
+                                                                <fileset dir="${mb.authorization}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${mb.authorization}/${source}"/>
+                                                                <fileset dir="${mb.authorization}/${source}" />
                                                             </sourcefiles>
                                                         </group>
                                                     </group>
                                                     <group name="pull-notification-listeners">
                                                       <classfiles>
-                                                            <fileset dir="${pull.notification.listener}/${target}/${classes}"/>
+                                                            <fileset dir="${pull.notification.listener}/${target}/${classes}" />
                                                         </classfiles>
                                                         <sourcefiles encoding="UTF-8">
-                                                            <fileset dir="${pull.notification.listener}/${source}"/>
+                                                            <fileset dir="${pull.notification.listener}/${source}" />
                                                         </sourcefiles>
                                                     </group>
                                                     <group name="siddhi-extensions">
                                                         <classfiles>
-                                                            <fileset dir="${siddhi.extensions}/${target}/${classes}"/>
+                                                            <fileset dir="${siddhi.extensions}/${target}/${classes}" />
                                                         </classfiles>
                                                         <sourcefiles encoding="UTF-8">
-                                                            <fileset dir="${siddhi.extensions}/${source}"/>
+                                                            <fileset dir="${siddhi.extensions}/${source}" />
                                                         </sourcefiles>
                                                     </group>
                                                 </group>
@@ -342,43 +317,43 @@
                                                     <group name="android-plugin">
                                                         <group name="org.wso2.carbon.device.mgt.mobile.android">
                                                             <classfiles>
-                                                                <fileset dir="${android.mobile}/${target}/${classes}"/>
+                                                                <fileset dir="${android.mobile}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${android.mobile}/${source}"/>
+                                                                <fileset dir="${android.mobile}/${source}" />
                                                             </sourcefiles>
                                                         </group>
                                                         <group name="org.wso2.carbon.device.mgt.mobile.android.api">
                                                             <classfiles>
-                                                                <fileset dir="${android.api}/${target}/${classes}"/>
+                                                                <fileset dir="${android.api}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${android.api}/${source}"/>
+                                                                <fileset dir="${android.api}/${source}" />
                                                             </sourcefiles>
                                                         </group>
                                                     </group>
                                                     <group name="windows-plugin">
                                                         <group name="org.wso2.carbon.device.mgt.mobile.windows">
                                                             <classfiles>
-                                                                <fileset dir="${windows.mobile}/${target}/${classes}"/>
+                                                                <fileset dir="${windows.mobile}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${windows.mobile}/${source}"/>
+                                                                <fileset dir="${windows.mobile}/${source}" />
                                                             </sourcefiles>
                                                         </group>
                                                         <group name="org.wso2.carbon.device.mgt.mobile.windows.api">
                                                             <classfiles>
-                                                                <fileset dir="${windows.api}/${target}/${classes}"/>
+                                                                <fileset dir="${windows.api}/${target}/${classes}" />
                                                             </classfiles>
                                                             <sourcefiles encoding="UTF-8">
-                                                                <fileset dir="${windows.api}/${source}"/>
+                                                                <fileset dir="${windows.api}/${source}" />
                                                             </sourcefiles>
                                                         </group>
                                                     </group>
                                                 </group>
                                             </structure>
 
-                                            <html destdir="${basedir}/target/coverage-report/site"/>
+                                            <html destdir="${basedir}/target/coverage-report/site" />
                                         </report>
                                     </then>
                                 </if>
