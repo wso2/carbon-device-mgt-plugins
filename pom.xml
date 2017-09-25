@@ -39,6 +39,7 @@
         <module>components/mobile-plugins</module>
         <module>components/device-types</module>
         <module>components/analytics</module>
+        <module>components/test-coverage</module>
         <module>features/analytics-feature</module>
         <module>features/mobile-plugins-feature</module>
         <module>features/device-types-feature</module>
@@ -1287,6 +1288,11 @@
         <siddhi.version>3.1.2</siddhi.version>
         <maven.scr.version>1.7.2</maven.scr.version>
         <maven.javadoc.skip>true</maven.javadoc.skip>
+
+        <!-- jacoco plugin version -->
+        <jacoco.maven.plugin.version>0.7.8</jacoco.maven.plugin.version>
+        <jacoco.ant.verision>0.7.5.201505241946</jacoco.ant.verision>
+        <ant.contrib.version>1.0b3</ant.contrib.version>
     </properties>
 
     <scm>
@@ -1407,6 +1413,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.maven.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
