@@ -23,7 +23,7 @@
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.82-SNAPSHOT</version>
+    <version>4.0.86-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -39,6 +39,7 @@
         <module>components/mobile-plugins</module>
         <module>components/device-types</module>
         <module>components/analytics</module>
+        <module>components/test-coverage</module>
         <module>features/analytics-feature</module>
         <module>features/mobile-plugins-feature</module>
         <module>features/device-types-feature</module>
@@ -832,6 +833,11 @@
                 <artifactId>jackson-jaxrs</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson-annotations.version}</version>
+            </dependency>
 
             <!--Windows Jax-RS dependencies-->
             <dependency>
@@ -1056,6 +1062,11 @@
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.andes.extensions.device.mgt.api</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons.lang.version}</version>
@@ -1075,10 +1086,15 @@
                 <artifactId>feign-gson</artifactId>
                 <version>${io.github.openfeign.version}</version>
             </dependency>
+			<dependency>
+				<groupId>io.github.openfeign</groupId>
+				<artifactId>feign-slf4j</artifactId>
+				<version>${io.github.openfeign.version}</version>
+			</dependency>
             <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-slf4j</artifactId>
-                <version>${io.github.openfeign.version}</version>
+                <groupId>org.wso2.carbon.messaging</groupId>
+                <artifactId>org.wso2.carbon.andes.mqtt.stub</artifactId>
+                <version>${carbon.andes.mqtt.version}</version>
             </dependency>
 
             <!-- dependencies for siddhi extension -->
@@ -1116,6 +1132,7 @@
         <!-- Axis2 -->
         <axis2.osgi.version.range>[1.6.1.wso2v11, 1.7.0)</axis2.osgi.version.range>
         <axis2.orbit.version>1.6.1.wso2v11</axis2.orbit.version>
+        <axis2-transports.version>1.1.0-wso2v10</axis2-transports.version>
 
         <!--Maven build number plugin-->
         <maven-buildnumber-plugin.version>1.3</maven-buildnumber-plugin.version>
@@ -1141,14 +1158,14 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>3.0.106</carbon.devicemgt.version>
+        <carbon.devicemgt.version>3.0.112</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[3.0.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.40</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>4.0.82-SNAPSHOT</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>4.0.86-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1172,7 +1189,7 @@
         <carbon.governance.version>4.7.8</carbon.governance.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>6.1.64</carbon.api.mgt.version>
+        <carbon.api.mgt.version>6.1.109</carbon.api.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
@@ -1259,7 +1276,10 @@
         <javax.xml.parsers.import.pkg.version>[0.0.0,1.0.0)</javax.xml.parsers.import.pkg.version>
 
         <!-- MB Features -->
+        <carbon.messaging.version>3.2.16</carbon.messaging.version>
         <andes.version>3.2.25</andes.version>
+        <jackson-annotations.version>2.6.1.wso2v1</jackson-annotations.version>
+        <carbon.andes.mqtt.version>3.2.16</carbon.andes.mqtt.version>
 
         <!--Feign Version-->
         <io.github.openfeign.version>9.3.1</io.github.openfeign.version>
@@ -1268,6 +1288,11 @@
         <siddhi.version>3.1.2</siddhi.version>
         <maven.scr.version>1.7.2</maven.scr.version>
         <maven.javadoc.skip>true</maven.javadoc.skip>
+
+        <!-- jacoco plugin version -->
+        <jacoco.maven.plugin.version>0.7.8</jacoco.maven.plugin.version>
+        <jacoco.ant.verision>0.7.5.201505241946</jacoco.ant.verision>
+        <ant.contrib.version>1.0b3</ant.contrib.version>
     </properties>
 
     <scm>
@@ -1388,6 +1413,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.0.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.maven.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
