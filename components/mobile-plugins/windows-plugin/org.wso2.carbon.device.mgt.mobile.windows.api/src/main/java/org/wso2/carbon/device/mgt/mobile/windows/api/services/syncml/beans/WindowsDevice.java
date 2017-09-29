@@ -32,6 +32,15 @@ public class WindowsDevice {
     private String model;
     private String user;
     private String deviceName;
+    private String windowsType;
+
+    public String getWindowsType() {
+        return windowsType;
+    }
+
+    public void setWindowsType(String windowsType) {
+        this.windowsType = windowsType;
+    }
 
     public String getImei() {
         return imei;

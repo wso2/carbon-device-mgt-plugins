@@ -44,6 +44,17 @@ public class StatusTag {
         this.data = data;
     }
 
+    public StatusTag(int commandId, int messageReference, int commandReference, String command,
+                     ChallengeTag challengeTag, String targetReference, String data) {
+        this.commandId = commandId;
+        this.messageReference = messageReference;
+        this.commandReference = commandReference;
+        this.command = command;
+        this.challenge = challengeTag;
+        this.targetReference = targetReference;
+        this.data = data;
+    }
+
     public StatusTag() {
     }
 
@@ -140,5 +151,4 @@ public class StatusTag {
             status.appendChild(data);
         }
     }
-
 }
