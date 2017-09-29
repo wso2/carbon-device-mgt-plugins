@@ -140,7 +140,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                                     syncmlDocument, pendingOperations)).build();
                         } else {
                             if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier, false) != null) {
-                                operationHandler.updateDisenrollOperation(deviceIdentifier);
+                                operationHandler.updateDisenrollOperationStatus(deviceIdentifier);
                                 WindowsAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
                                 return Response.ok().entity(operationReply.generateReply(syncmlDocument, null)).build();
                             } else {

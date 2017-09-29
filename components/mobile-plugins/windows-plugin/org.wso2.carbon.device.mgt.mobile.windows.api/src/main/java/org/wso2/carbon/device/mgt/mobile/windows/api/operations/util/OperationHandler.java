@@ -231,7 +231,7 @@ public class OperationHandler {
         }
     }
 
-    public void updateDisenrollOperation(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
+    public void updateDisenrollOperationStatus(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
         List<? extends Operation> pendingDeviceInfoOperations;
         try {
             pendingDeviceInfoOperations = WindowsAPIUtils.getPendingOperations(deviceIdentifier);

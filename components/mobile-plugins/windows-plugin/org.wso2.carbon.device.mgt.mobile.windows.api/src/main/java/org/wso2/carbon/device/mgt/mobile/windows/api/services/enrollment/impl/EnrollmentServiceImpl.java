@@ -390,11 +390,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         deviceInfoProperties.setValue(windowsDevice.getWindowsType());
         String deviceInfo = gson.toJson(deviceInfoProperties);
 
-
         Device.Property winDeviceType = new Device.Property();
         winDeviceType.setName(PluginConstants.SyncML.DEVICE_INFO);
         winDeviceType.setValue(deviceInfo);
-
 
         List<Device.Property> propertyList = new ArrayList<>();
         propertyList.add(OSVersionProperty);
@@ -407,7 +405,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
         enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
         
-
         generatedDevice.setEnrolmentInfo(enrolmentInfo);
         generatedDevice.setDeviceIdentifier(windowsDevice.getDeviceId());
         generatedDevice.setProperties(propertyList);
