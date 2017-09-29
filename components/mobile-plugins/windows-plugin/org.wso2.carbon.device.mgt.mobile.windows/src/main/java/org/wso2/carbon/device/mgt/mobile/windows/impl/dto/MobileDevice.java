@@ -39,6 +39,7 @@ public class MobileDevice implements Serializable {
     private String serial;
     private String osBuildDate;
 
+
     private Map<String, String> deviceProperties;
 
     public MobileDevice() {

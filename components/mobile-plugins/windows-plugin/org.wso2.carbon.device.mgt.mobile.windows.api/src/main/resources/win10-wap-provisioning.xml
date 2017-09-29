@@ -29,7 +29,7 @@
     </characteristic>
     <characteristic type="APPLICATION">
         <parm name="APPID" value="w7"/>
-        <parm name="PROVIDER-ID" value="TestMDMServer"/>
+        <parm name="PROVIDER-ID" value="MobiCDMServer"/>
         <parm name="NAME" value="Microsoft"/>
         <parm name="ADDR" value="https://DM.contoso.com:443/omadm/Windows.ashx"/>
         <parm name="CONNRETRYFREQ" value="6" />
@@ -42,8 +42,8 @@
         <characteristic type="APPAUTH">
             <parm name="AAUTHLEVEL" value="CLIENT"/>
             <parm name="AAUTHTYPE" value="DIGEST"/>
-            <parm name="AAUTHSECRET" value="password1"/>
-            <parm name="AAUTHDATA" value="B64encodedBinaryNonceInsertedHere"/>
+            <parm name="AAUTHSECRET" value="dummy"/>
+            <parm name="AAUTHDATA" value="ZHVtbXk="/>
         </characteristic>
         <characteristic type="APPAUTH">
             <parm name="AAUTHLEVEL" value="APPSRV"/>

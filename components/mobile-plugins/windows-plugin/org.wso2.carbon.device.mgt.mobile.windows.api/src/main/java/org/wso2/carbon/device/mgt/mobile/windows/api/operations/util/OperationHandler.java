@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
@@ -32,15 +31,21 @@ import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagement
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
-import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
-import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.Profile;
-import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
-import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.device.mgt.common.policy.mgt.ProfileFeature;
 import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
 import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.StatusTag;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.SyncmlDocument;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.SyncmlHeader;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.ItemTag;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.WindowsOperationException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.ResultsTag;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.SyncmlBody;
+import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.Profile;
+import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -226,6 +231,22 @@ public class OperationHandler {
         }
     }
 
+    public void updateDisenrollOperation(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
+        List<? extends Operation> pendingDeviceInfoOperations;
+        try {
+            pendingDeviceInfoOperations = WindowsAPIUtils.getPendingOperations(deviceIdentifier);
+        } catch (DeviceManagementException e) {
+            throw new OperationManagementException("Error occurred while getting pending operations.");
+        }
+        for (Operation operation : pendingDeviceInfoOperations) {
+            if (PluginConstants.OperationCodes.DISENROLL.equals(operation.getCode())) {
+                operation.setStatus(Operation.Status.COMPLETED);
+                updateStatus(deviceIdentifier.getId(), pendingDeviceInfoOperations);
+            }
+        }
+
+    }
+
 
     public void updateDeviceInfoStatus(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
         List<? extends Operation> pendingDeviceInfoOperations;
@@ -292,6 +313,9 @@ public class OperationHandler {
                     updateLocation(syncmlDocument);
                 }
                 if (OperationCode.Command.TOTAL_RAM.getCode().equals(itemTag.getSource().getLocURI())) {
+                    updateDeviceInfo(syncmlDocument);
+                }
+                if (OperationCode.Command.BATTERY_CHARGE_REMAINING.equals(itemTag.getSource().getLocURI())) {
                     updateDeviceInfo(syncmlDocument);
                 }
             }
@@ -562,6 +586,7 @@ public class OperationHandler {
         String totalRAM;
         String deviceID = null;
         String totalStorage;
+        Double battery;
 
         List<ItemTag> deviceInformations = syncmlDocument.getBody().getResults().getItem();
         DeviceInfo deviceInfo = new DeviceInfo();
@@ -597,6 +622,10 @@ public class OperationHandler {
             }
             if (OperationCode.Info.DEV_ID.getCode().equals(source)) {
                 deviceID = item.getData();
+            }
+            if (OperationCode.Info.BATTERY_CHARGE_REMAINING.getCode().equals(source)) {
+                battery = Double.valueOf(item.getData());
+                deviceInfo.setBatteryLevel(battery);
             }
         }
         DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(deviceID);
@@ -636,6 +665,18 @@ public class OperationHandler {
         } catch (OperationManagementException e) {
             throw new WindowsOperationException("Error occurred while updating Device Location operation status.");
         }
+    }
+
+    public void checkForDeviceWipe(List<? extends Operation> pendingDeviceInfoOperations
+            , DeviceIdentifier deviceIdentifier) throws OperationManagementException {
+
+        for (Operation operation : pendingDeviceInfoOperations) {
+            if (PluginConstants.OperationCodes.WIPE_DATA.equals(operation.getCode())) {
+                operation.setStatus(Operation.Status.COMPLETED);
+                updateStatus(deviceIdentifier.getId(), pendingDeviceInfoOperations);
+            }
+        }
 
     }
 }
+
