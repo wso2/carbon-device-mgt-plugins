@@ -201,7 +201,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.transform(DOMSource, streamResult);
-
         return stringWriter.toString();
     }
 
@@ -448,7 +447,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         }
         Device device = generateDevice(windowsDevice);
         WindowsAPIUtils.getDeviceManagementService().enrollDevice(device);
-
         PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
         policyManagerService.getEffectivePolicy(new DeviceIdentifier(windowsDevice.getDeviceId(), device.getType()));
 
