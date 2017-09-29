@@ -207,7 +207,6 @@ public final class PluginConstants {
         public static final String MANUFACTURER = "MANUFACTURER";
         public static final String LANGUAGE = "LANGUAGE";
         public static final String RESOLUTION = "RESOLUTION";
-        public static final String WINDOWS_TYPE = "WINDOWS_TYPE";
 
         // windows 10 codes
         public static final String TOTAL_RAM = "TOTAL_RAM";// available ram in MB
