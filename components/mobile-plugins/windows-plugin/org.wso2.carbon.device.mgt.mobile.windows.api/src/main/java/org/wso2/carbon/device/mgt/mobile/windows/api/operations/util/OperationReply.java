@@ -161,7 +161,6 @@ public class OperationReply {
     }
 
     private SyncmlBody generateStatuses() {
-
         SyncmlBody sourceSyncmlBody = syncmlDocument.getBody();
         SyncmlHeader sourceHeader = syncmlDocument.getHeader();
         StatusTag headerStatus;
@@ -183,7 +182,6 @@ public class OperationReply {
         } else {
             for (StatusTag sourceStatus : sourceStatuses) {
                 if (sourceStatus.getChallenge() != null && HEADER_COMMAND_TEXT.equals(sourceStatus.getCommand())) {
-
                     headerStatus =
                             new StatusTag(headerCommandId, sourceHeader.getMsgID(), HEADER_STATUS_ID,
                                     HEADER_COMMAND_TEXT, challengeTag, sourceHeader.getSource().getLocURI(),
@@ -239,7 +237,6 @@ public class OperationReply {
 
     private void appendOperations(SyncmlBody syncmlBody) throws PolicyManagementException,
             FeatureManagementException, JSONException, SyncmlOperationException {
-
         GetTag getElement = new GetTag();
         List<ItemTag> getElements = new ArrayList<>();
         List<ExecuteTag> executeElements = new ArrayList<>();

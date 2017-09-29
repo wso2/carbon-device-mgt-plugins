@@ -89,20 +89,16 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                         (PluginConstants.SyncML.SYNCML_FIRST_SESSION_ID == sessionId)) {
                     if (syncmlHeader.getCredential() != null) {
                         token = syncmlHeader.getCredential().getData();
-
                         MobileCacheEntry cacheToken = DeviceUtil.getTokenEntry(token);
                         DeviceUtil.persistChallengeToken(token, deviceIdentifier.getId(), user);
                         PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
                         carbonCtx.setTenantId(cacheToken.getTenanatID(), true);
-
                         if ((cacheToken.getUsername() != null) && (cacheToken.getUsername().equals(user))) {
-
                             if (modifyEnrollWithMoreDetail(request, cacheToken.getTenantDomain(), cacheToken.getTenanatID())) {
                                 pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
                                 operationHandler.checkForDeviceWipe(pendingOperations, deviceIdentifier);
                                 response = operationReply.generateReply(syncmlDocument, pendingOperations);
                                 return Response.status(Response.Status.OK).entity(response).build();
-
                             } else {
                                 String msg = "Error occurred in while modify the enrollment.";
                                 log.error(msg);
@@ -113,7 +109,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                             log.error(msg);
                             return Response.status(Response.Status.UNAUTHORIZED).entity(msg).build();
                         }
-
                     } else {
                         return Response.ok().entity(operationReply.generateReply(syncmlDocument, null)).build();
                     }
@@ -121,7 +116,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                     if (DeviceUtil.getTokenEntryFromDeviceId(deviceIdentifier.getId()) == null) {
                         if (syncmlHeader.getCredential() != null) {
                             token = syncmlHeader.getCredential().getData();
-
                             MobileCacheEntry cacheToken = DeviceUtil.getTokenEntry(token);
                             DeviceUtil.persistChallengeToken(token, deviceIdentifier.getId(), user);
                             PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -193,7 +187,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         boolean status = false;
         String user;
         SyncmlDocument syncmlDocument;
-
         try {
             syncmlDocument = SyncmlParser.parseSyncmlPayload(request);
             ReplaceTag replace = syncmlDocument.getBody().getReplace();
@@ -218,7 +211,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             Device existingDevice = WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
             if (!existingDevice.getProperties().isEmpty()) {
                 List<Device.Property> existingProperties = new ArrayList<>();
-
+                
                 Device.Property vendorProperty = new Device.Property();
                 vendorProperty.setName(PluginConstants.SyncML.VENDOR);
                 vendorProperty.setValue(devMan);

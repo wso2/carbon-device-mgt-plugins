@@ -244,9 +244,7 @@ public class OperationHandler {
                 updateStatus(deviceIdentifier.getId(), pendingDeviceInfoOperations);
             }
         }
-
     }
-
 
     public void updateDeviceInfoStatus(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
         List<? extends Operation> pendingDeviceInfoOperations;
@@ -669,14 +667,12 @@ public class OperationHandler {
 
     public void checkForDeviceWipe(List<? extends Operation> pendingDeviceInfoOperations
             , DeviceIdentifier deviceIdentifier) throws OperationManagementException {
-
         for (Operation operation : pendingDeviceInfoOperations) {
             if (PluginConstants.OperationCodes.WIPE_DATA.equals(operation.getCode())) {
                 operation.setStatus(Operation.Status.COMPLETED);
                 updateStatus(deviceIdentifier.getId(), pendingDeviceInfoOperations);
             }
         }
-
     }
 }
 

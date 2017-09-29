@@ -100,7 +100,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                                      AdditionalContext additionalContext,
                                      Holder<RequestSecurityTokenResponse> response)
             throws WindowsDeviceEnrolmentException, UnsupportedEncodingException, WAPProvisioningException {
-
         String headerBinarySecurityToken = null;
         String headerTo = null;
         String encodedWap;
@@ -221,13 +220,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String signedCertEncodedString;
         X509Certificate signedCertificate;
         String provisioningXmlString;
-
         CertificateManagementServiceImpl certMgtServiceImpl = CertificateManagementServiceImpl.getInstance();
         Base64 base64Encoder = new Base64();
         try {
             X509Certificate rootCACertificate = (X509Certificate) certMgtServiceImpl.getCACertificate();
             rootCertEncodedString = base64Encoder.encodeAsString(rootCACertificate.getEncoded());
-
 
             signedCertificate = certMgtServiceImpl.getSignedCertificateFromCSR(binarySecurityToken);
             signedCertEncodedString = base64Encoder.encodeAsString(signedCertificate.getEncoded());
@@ -313,7 +310,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             Node pollValue = pollingAttributes.getNamedItem(PluginConstants.CertificateEnrolment.VALUE);
             pollValue.setTextContent(pollingFrequency);
             provisioningXmlString = convertDocumentToString(document);
-
         } catch (ParserConfigurationException e) {
             throw new WAPProvisioningException("Problem occurred while creating configuration request", e);
         } catch (CertificateEncodingException e) {

@@ -43,6 +43,7 @@ public class StatusTag {
         this.targetReference = targetReference;
         this.data = data;
     }
+
     public StatusTag(int commandId, int messageReference, int commandReference, String command,
                      ChallengeTag challengeTag, String targetReference, String data) {
         this.commandId = commandId;
@@ -142,15 +143,12 @@ public class StatusTag {
             status.appendChild(targetReference);
         }
         if (getChallenge() != null) {
-
             getChallenge().buildChallengeElement(doc, status);
         }
-
         if (getData() != null) {
             Element data = doc.createElement(Constants.DATA);
             data.appendChild(doc.createTextNode(getData()));
             status.appendChild(data);
         }
     }
-
 }

@@ -352,12 +352,10 @@ public final class PluginConstants {
         private WindowsEnrollmentProperties() {
             throw new AssertionError();
         }
-
         public static final String DEVICE_NAME =  "DeviceName";
         public static final String DEVICE_VERSION = "OSVersion";
         public static final String DEVICE_ID = "DeviceID";
         public static final String IMEI = "MobileEquipmentId";
         public static final String TYPE = "DeviceType";
-
     }
 }
