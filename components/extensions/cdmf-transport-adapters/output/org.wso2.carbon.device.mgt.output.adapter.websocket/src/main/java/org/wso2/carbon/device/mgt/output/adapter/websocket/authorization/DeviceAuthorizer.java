@@ -81,7 +81,7 @@ public class DeviceAuthorizer implements Authorizer {
     }
 
     @Override
-    public boolean isAuthorized(AuthenticationInfo authenticationInfo, Session session, String stream) {
+    public  synchronized boolean isAuthorized(AuthenticationInfo authenticationInfo, Session session, String stream) {
         WebSocketSessionRequest webSocketSessionRequest = new WebSocketSessionRequest(session);
         Map<String, String> queryParams = webSocketSessionRequest.getQueryParamValuePairs();
         String deviceId = queryParams.get(DEVICE_ID);
@@ -104,7 +104,7 @@ public class DeviceAuthorizer implements Authorizer {
                 List<DeviceIdentifier> devices = deviceAuthorizationResult.getAuthorizedDevices();
                 if (devices != null && devices.size() > 0) {
                     DeviceIdentifier authorizedDevice = devices.get(0);
-                    if (authorizedDevice.getId().equals(deviceId) && authorizedDevice.getType().equals(deviceType)) {
+                    if (authorizedDevice.getId().equals(deviceId) && authorizedDevice.getType().equalsIgnoreCase(deviceType)) {
                         return true;
                     }
                 }

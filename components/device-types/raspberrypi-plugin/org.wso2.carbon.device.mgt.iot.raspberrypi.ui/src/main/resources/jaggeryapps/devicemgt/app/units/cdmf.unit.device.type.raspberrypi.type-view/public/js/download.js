@@ -84,8 +84,8 @@ function attachEvents() {
      * on Device Management page in WSO2 DC Console.
      */
     $("a.download-link").click(function () {
-        var sketchType = $(this).data("sketchtype");
-        var deviceType = $(this).data("devicetype");
+        var sketchType = $(".deviceType").val();
+        var deviceType = $(".sketchType").val();
         var downloadDeviceAPI = "/devicemgt/api/devices/sketch/generate_link";
         var payload = {"sketchType": sketchType, "deviceType": deviceType};
         $(modalPopupContent).html($('#download-device-modal-content').html());
@@ -100,16 +100,24 @@ function attachEvents() {
             $('label[for=deviceName]').remove();
             if (deviceName && deviceName.length >= 4) {
                 payload.deviceName = deviceName;
-                invokerUtil.post(
-                    downloadDeviceAPI,
-                    payload,
-                    function (data, textStatus, jqxhr) {
-                        doAction(data);
-                    },
-                    function (data) {
-                        doAction(data);
+                var request = {
+                    url: downloadDeviceAPI,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(payload),
+                    accept: "application/json",
+                    async : true,
+                    success: doAction,
+                    error: function (jqXHR) {
+                        if (jqXHR.status == 401) {
+                            $(modalPopupContent).html($("#error-msg").html());
+                            showPopup();
+                        } else {
+                            doAction(jqXHR);
+                        }
                     }
-                );
+                };
+                $.ajax(request);
             }else if(deviceName){
                 $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
                                       'style="display: inline-block;">Please enter at least 4 ' +
@@ -159,10 +167,7 @@ function doAction(data) {
 
     if (data.status == "200") {
         $(modalPopupContent).html($('#download-device-modal-content-links').html());
-        $("input#download-device-url").val(data.responseText);
-        $("input#download-device-url").focus(function () {
-            $(this).select();
-        });
+        $("#download-device-url").html(data.responseText);
         showPopup();
     } else if (data.status == "401") {
         $(modalPopupContent).html($('#device-401-content').html());

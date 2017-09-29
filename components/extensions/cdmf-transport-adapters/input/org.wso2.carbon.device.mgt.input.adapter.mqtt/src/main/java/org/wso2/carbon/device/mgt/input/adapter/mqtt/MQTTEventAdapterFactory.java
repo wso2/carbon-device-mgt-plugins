@@ -84,10 +84,10 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
 
         //Broker Password
         Property password = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
-        userName.setDisplayName(
+        password.setDisplayName(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD));
-        userName.setRequired(false);
-        userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD_HINT));
+        password.setRequired(false);
+        password.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD_HINT));
         propertyList.add(password);
 
         //Broker Required Scopes.

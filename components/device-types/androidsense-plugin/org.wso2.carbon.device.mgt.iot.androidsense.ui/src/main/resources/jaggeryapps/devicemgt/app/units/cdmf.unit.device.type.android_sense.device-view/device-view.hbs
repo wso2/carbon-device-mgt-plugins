@@ -31,52 +31,52 @@
 {{/zone}}
 
 {{#zone "device-details"}}
+    <span class="device-id"
+          data-deviceid="{{device.deviceIdentifier}}"
+          data-type="{{device.type}}"></span>
 {{/zone}}
 
 {{#zone "device-view-tabs"}}
     <li class="active"><a class="list-group-item" href="#device_statistics" role="tab"
                           data-toggle="tab" aria-controls="device_statistics">Device
-        Statistics</a>
+                                                                              Statistics</a>
     </li>
-    <li><a class="list-group-item location_tab" href="#geo_dashboard" role="tab" data-toggle="tab"
-           aria-controls="geo_dashboard">Device Location</a></li>
+    <li><a class="initGeoLocationLink" href="#geo_dashboard" role="tab" data-toggle="tab"
+           aria-controls="geo_dashboard"
+           data-lat="{{device.location.latitude}}"
+           data-long="{{device.location.longitude}}">Device Location</a></li>
 {{/zone}}
 
 {{#zone "device-view-tab-contents"}}
     <div class="panel panel-default tab-pane active"
          id="device_statistics" role="tabpanel" aria-labelledby="device_statistics">
-        <div class="panel-heading">Device Statistics</div>
         {{unit "cdmf.unit.device.type.android_sense.realtime.analytics-view" device=device}}
     </div>
     <div class="panel panel-default tab-pane"
          id="geo_dashboard" role="tabpanel" aria-labelledby="geo_dashboard">
-        <div class="panel-heading">Device Location</div>
-        <br/>
-        {{unit "cdmf.unit.geo-dashboard" device=device}}
-        {{#if locationHistory}}
-            <div id="device-location"
-                 data-locations = "{{locationHistory}}">
+        {{#if locationEnabled}}
+            <div id="location" class="tab-pane">
+                <div class="tab-actions">
+                    <div class="action-btn-container" id="location-action-bar">
+                    </div>
+                </div>
+                <br/>
+                {{unit "cdmf.unit.geo-dashboard" device=device noGeoFencing=false hideSearch=true}}
             </div>
-            <br/>
-            <a class="padding-left" target="_blank"
-               href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
-                                <span class="fw-stack">
-                                    <i class="fw fw-circle-outline fw-stack-2x"></i>
-                                    <i class="fw fw-map-location fw-stack-1x"></i>
-                                </span>  Add Geo Fencing
-            </a>
         {{else}}
             <div id="map-error" class="message message-warning">
                 <h4 class="remove-margin">
                     <i class="icon fw fw-warning"></i>
+                    {{#if geoServicesEnabled}}
                     Device location information is not available.
+                    {{else}}
+                    Geo Location Based Services is not enabled.
+                    {{/if}}
                 </h4>
             </div>
             <p class="add-padding-5x"></p>
             <p class="add-padding-5x"></p>
             <p class="add-padding-5x"></p>
         {{/if}}
-        <div id="chartWrapper">
-        </div>
     </div>
 {{/zone}}

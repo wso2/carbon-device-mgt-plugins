@@ -73,13 +73,13 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         String eventPayload = eventBeanWrapper.getPayload();
         JsonObject jsonObject = gson.fromJson(eventPayload, JsonObject.class);
         Object payload[] = {
-                jsonObject.get(TIME_STAMP),
-                jsonObject.get(LONGITUDE),
-                jsonObject.get(LATITUDE)
+                jsonObject.get(TIME_STAMP).getAsLong(),
+                jsonObject.get(LATITUDE).getAsDouble(),
+                jsonObject.get(LONGITUDE).getAsDouble()
         };
         try {
             if (AndroidAPIUtils.getEventPublisherService().publishEvent(
-                    EVENT_STREAM_DEFINITION, "1.0.0", new Object[0], new Object[0], payload)) {
+                    EVENT_STREAM_DEFINITION, "1.0.0", metaData, new Object[0], payload)) {
                 message.setResponseCode("Event is published successfully.");
                 return Response.status(Response.Status.CREATED).entity(message).build();
             } else {

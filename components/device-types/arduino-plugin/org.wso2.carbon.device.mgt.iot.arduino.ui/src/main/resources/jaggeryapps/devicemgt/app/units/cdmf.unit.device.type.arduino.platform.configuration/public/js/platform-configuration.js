@@ -104,7 +104,7 @@ var addConfiguration = function () {
     );
 };
 
-var artifactUpload = function () {
+var arduinoArtifactUpload = function () {
 	var contentType = "application/json";
 	var backendEndBasePath = "/api/device-mgt/v1.0";
 	var urix = backendEndBasePath + "/admin/publish-artifact/deploy/arduino";

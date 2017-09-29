@@ -2,8 +2,6 @@ package org.wso2.carbon.device.mgt.mobile.windows.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.TransactionManagementException;
-import org.wso2.carbon.device.mgt.core.dao.DeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.WindowsDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.WindowsEnrollmentTokenDAO;
@@ -16,7 +14,6 @@ public class WindowsTokenServiceImpl implements WindowsTokenService {
     private static WindowsEnrollmentTokenDAO windowsEnrollmentTokenDAO;
 
     public WindowsTokenServiceImpl() {
-        WindowsDAOFactory windowsDAOFactory = new WindowsDAOFactory();
         windowsEnrollmentTokenDAO = new WindowsEnrollmentTokenDAOImpl();
     }
 
@@ -46,9 +43,8 @@ public class WindowsTokenServiceImpl implements WindowsTokenService {
     public MobileCacheEntry getCacheToken(String token) throws MobileDeviceManagementDAOException {
         MobileCacheEntry cacheEntry = null;
         try {
-            WindowsDAOFactory.beginTransaction();
+            WindowsDAOFactory.openConnection();
             cacheEntry = windowsEnrollmentTokenDAO.getCacheToken(token);
-            WindowsDAOFactory.commitTransaction();
         } finally {
             WindowsDAOFactory.closeConnection();
         }
@@ -59,9 +55,8 @@ public class WindowsTokenServiceImpl implements WindowsTokenService {
             throws MobileDeviceManagementDAOException {
         MobileCacheEntry cacheEntry = null;
         try {
-            WindowsDAOFactory.beginTransaction();
+            WindowsDAOFactory.openConnection();
             cacheEntry = windowsEnrollmentTokenDAO.getCacheTokenFromDeviceId(deviceId);
-            WindowsDAOFactory.commitTransaction();
         } finally {
             WindowsDAOFactory.closeConnection();
         }

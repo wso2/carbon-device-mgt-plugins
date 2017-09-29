@@ -17,12 +17,12 @@
             data-owner="{{device.owner}}"
             data-status="{{device.status}}">
             {{device.owner}}'s {{device.name}}
-              <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
+            </h1>
+            <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
               Firmware Build Date: {{device.osBuildDate}}
               UDID: {{device.udid}}">
-                <i class="fw fw-info"></i>
-              </a>
-            </h1>
+              <i class="fw fw-info"></i>
+            </a>
             {{#if device.model}}
               <h4>{{device.vendor}} {{device.model}}</h4>
             {{/if}}
@@ -91,7 +91,9 @@
                     <div id="map-error" class="message message-warning">
                         <h4 class="remove-margin">
                             <i class="icon fw fw-warning"></i>
-                            Device location information is not available.
+                            The device location information is not available right now! Please refresh the page in a few minutes.
+                            The location details will not be available if the device’s “Location Services setting” is disabled
+                            or if WSO2 IoT Server has not received the device’s location information from the device.
                         </h4>
                     </div>
                     <p class="add-padding-5x"></p>
