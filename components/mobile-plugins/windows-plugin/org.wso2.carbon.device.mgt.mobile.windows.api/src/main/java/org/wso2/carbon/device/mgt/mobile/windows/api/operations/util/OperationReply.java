@@ -165,12 +165,11 @@ public class OperationReply {
         SyncmlBody sourceSyncmlBody = syncmlDocument.getBody();
         SyncmlHeader sourceHeader = syncmlDocument.getHeader();
         StatusTag headerStatus;
-        ChallengeTag challengeTag;
-        challengeTag = new ChallengeTag();
+        ChallengeTag challengeTag = new ChallengeTag();
         MetaTag metaTag = new MetaTag();
-        metaTag.setFormat("b64");
-        metaTag.setType("syncml:auth-md5");
-        metaTag.setNextNonce("ZHVtbXk=");
+        metaTag.setFormat(Constants.CRED_FORMAT);
+        metaTag.setType(Constants.CRED_TYPE);
+        metaTag.setNextNonce(Constants.INITIAL_NONCE);
         challengeTag.setMeta(metaTag);
         SyncmlBody syncmlBodyReply = new SyncmlBody();
         List<StatusTag> statuses = new ArrayList<>();
