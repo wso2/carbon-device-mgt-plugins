@@ -104,7 +104,7 @@ public class DeviceAuthorizer implements Authorizer {
                 List<DeviceIdentifier> devices = deviceAuthorizationResult.getAuthorizedDevices();
                 if (devices != null && devices.size() > 0) {
                     DeviceIdentifier authorizedDevice = devices.get(0);
-                    if (authorizedDevice.getId().equals(deviceId) && authorizedDevice.getType().equals(deviceType)) {
+                    if (authorizedDevice.getId().equals(deviceId) && authorizedDevice.getType().equalsIgnoreCase(deviceType)) {
                         return true;
                     }
                 }

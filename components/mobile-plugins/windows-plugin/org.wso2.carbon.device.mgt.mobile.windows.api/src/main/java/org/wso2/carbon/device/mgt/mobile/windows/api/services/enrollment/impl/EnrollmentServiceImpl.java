@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.impl;
 
+import com.google.gson.Gson;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
@@ -40,6 +41,7 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WAPProvis
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.DeviceUtil;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.DeviceInfo;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.SyncmlCredentialUtil;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.EnrollmentService;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.beans.*;
@@ -98,7 +100,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                                      AdditionalContext additionalContext,
                                      Holder<RequestSecurityTokenResponse> response)
             throws WindowsDeviceEnrolmentException, UnsupportedEncodingException, WAPProvisioningException {
-
         String headerBinarySecurityToken = null;
         String headerTo = null;
         String encodedWap;
@@ -199,7 +200,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
         transformer.transform(DOMSource, streamResult);
-
         return stringWriter.toString();
     }
 
@@ -220,13 +220,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String signedCertEncodedString;
         X509Certificate signedCertificate;
         String provisioningXmlString;
-
         CertificateManagementServiceImpl certMgtServiceImpl = CertificateManagementServiceImpl.getInstance();
         Base64 base64Encoder = new Base64();
         try {
             X509Certificate rootCACertificate = (X509Certificate) certMgtServiceImpl.getCACertificate();
             rootCertEncodedString = base64Encoder.encodeAsString(rootCACertificate.getEncoded());
-
 
             signedCertificate = certMgtServiceImpl.getSignedCertificateFromCSR(binarySecurityToken);
             signedCertEncodedString = base64Encoder.encodeAsString(signedCertificate.getEncoded());
@@ -312,7 +310,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             Node pollValue = pollingAttributes.getNamedItem(PluginConstants.CertificateEnrolment.VALUE);
             pollValue.setTextContent(pollingFrequency);
             provisioningXmlString = convertDocumentToString(document);
-
         } catch (ParserConfigurationException e) {
             throw new WAPProvisioningException("Problem occurred while creating configuration request", e);
         } catch (CertificateEncodingException e) {
@@ -368,7 +365,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
      * @return Value added Device.
      */
     private Device generateDevice(WindowsDevice windowsDevice) {
-
+        Gson gson = new Gson();
         Device generatedDevice = new Device();
 
         Device.Property OSVersionProperty = new Device.Property();
@@ -383,16 +380,26 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         IMEIProperty.setName(PluginConstants.SyncML.IMEI);
         IMEIProperty.setValue(windowsDevice.getImei());
 
+        Device.Property deviceInfoProperties = new Device.Property();
+        deviceInfoProperties.setName(PluginConstants.WindowsEnrollmentProperties.TYPE);
+        deviceInfoProperties.setValue(windowsDevice.getWindowsType());
+        String deviceInfo = gson.toJson(deviceInfoProperties);
+
+        Device.Property winDeviceType = new Device.Property();
+        winDeviceType.setName(PluginConstants.SyncML.DEVICE_INFO);
+        winDeviceType.setValue(deviceInfo);
+
         List<Device.Property> propertyList = new ArrayList<>();
         propertyList.add(OSVersionProperty);
         propertyList.add(IMSEIProperty);
         propertyList.add(IMEIProperty);
+        propertyList.add(winDeviceType);
 
         EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
         enrolmentInfo.setOwner(windowsDevice.getUser());
         enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
         enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
-
+        
         generatedDevice.setEnrolmentInfo(enrolmentInfo);
         generatedDevice.setDeviceIdentifier(windowsDevice.getDeviceId());
         generatedDevice.setProperties(propertyList);
@@ -429,6 +436,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             }
             if (PluginConstants.WindowsEnrollmentProperties.DEVICE_VERSION.equals(contextItem.getName())) {
                 windowsDevice.setOsVersion(contextItem.getValue());
+            }
+            if (PluginConstants.WindowsEnrollmentProperties.TYPE.equals(contextItem.getName())) {
+                windowsDevice.setWindowsType(contextItem.getValue());
             }
         }
         Device device = generateDevice(windowsDevice);
