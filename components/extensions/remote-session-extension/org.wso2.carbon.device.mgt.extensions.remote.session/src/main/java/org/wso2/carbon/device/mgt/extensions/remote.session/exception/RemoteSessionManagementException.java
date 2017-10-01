@@ -18,28 +18,23 @@
 package org.wso2.carbon.device.mgt.extensions.remote.session.exception;
 
 
+import javax.websocket.CloseReason;
+
 /**
- * This Exception will be thrown, when there any interference with Remote RemoteSession.
+ * This Exception will be thrown, when there any management issues with Remote Session.
  */
 public class RemoteSessionManagementException extends Exception {
 
-    public RemoteSessionManagementException(String msg, Exception nestedEx) {
-        super(msg, nestedEx);
-    }
-
-    public RemoteSessionManagementException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    CloseReason closeReason;
 
     public RemoteSessionManagementException(String msg) {
         super(msg);
+        this.closeReason = new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, msg);
     }
 
-    public RemoteSessionManagementException() {
-        super();
+    public CloseReason getCloseReason() {
+        return closeReason;
     }
 
-    public RemoteSessionManagementException(Throwable cause) {
-        super(cause);
-    }
+
 }

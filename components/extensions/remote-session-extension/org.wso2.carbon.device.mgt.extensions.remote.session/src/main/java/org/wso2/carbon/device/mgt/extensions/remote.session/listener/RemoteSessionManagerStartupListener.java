@@ -62,10 +62,14 @@ public class RemoteSessionManagerStartupListener implements ServerStartupObserve
             Map<String, String> configProperties = new HashMap<>();
 
             // Set max idle timeout in milliseconds
-            RemoteSessionManagementDataHolder.getInstance().setMaxIdleTimeout(rsConfig.getSessionIdleTimeOut()*60000);
+            RemoteSessionManagementDataHolder.getInstance().setMaxIdleTimeout((long) rsConfig.getSessionIdleTimeOut() *
+                    60000);
 
             // Set max messages per second.
-            RemoteSessionManagementDataHolder.getInstance().setMessagesPerSession(rsConfig.getMaxMessagesPerSession());
+            if (rsConfig.getMaxMessagesPerSession() > 0) {
+                RemoteSessionManagementDataHolder.getInstance().setMaxMessagesPerSecond(rsConfig
+                        .getMaxMessagesPerSession());
+            }
             // Token validation related configuration
             configProperties.put(RemoteSessionConstants.TOKEN_VALIDATION_ENDPOINT_URL, kmConfig.getServerUrl());
             configProperties.put(RemoteSessionConstants.USERNAME, kmConfig.getAdminUsername());

@@ -21,12 +21,15 @@ package org.wso2.carbon.device.mgt.extensions.remote.session.internal;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.extensions.remote.session.authentication.OAuthAuthenticator;
-import org.wso2.carbon.device.mgt.extensions.remote.session.dto.common.RemoteSession;
+import org.wso2.carbon.device.mgt.extensions.remote.session.dto.RemoteSession;
 
-import javax.websocket.Session;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Class {@link RemoteSessionManagementDataHolder} will hold the configurations and in memory storage strictures to
+ * manage remote sessions.
+ */
 public class RemoteSessionManagementDataHolder {
 
     private static RemoteSessionManagementDataHolder thisInstance = new RemoteSessionManagementDataHolder();
@@ -35,9 +38,9 @@ public class RemoteSessionManagementDataHolder {
     private boolean isEnabled;
     private String serverUrl;
     private long maxIdleTimeout;
-    private int messagesPerSession;
+    private int maxMessagesPerSecond;
     private OAuthAuthenticator oAuthAuthenticator;
-    private Map<String, Session> deviceRequestMap = new ConcurrentHashMap<String, Session>();
+    private Map<String, RemoteSession> activeDeviceClientSessionMap = new ConcurrentHashMap<String, RemoteSession>();
     private Map<String, RemoteSession> sessionMap = new ConcurrentHashMap<String, RemoteSession>();
 
     public static RemoteSessionManagementDataHolder getInstance() {
@@ -72,16 +75,8 @@ public class RemoteSessionManagementDataHolder {
         return sessionMap;
     }
 
-    public void setSessionMap(Map<String, RemoteSession> sessionMap) {
-        this.sessionMap = sessionMap;
-    }
-
-    public Map<String, Session> getDeviceRequestMap() {
-        return deviceRequestMap;
-    }
-
-    public void setDeviceRequestMap(Map<String, Session> deviceRequestMap) {
-        this.deviceRequestMap = deviceRequestMap;
+    public Map<String, RemoteSession> getActiveDeviceClientSessionMap() {
+        return activeDeviceClientSessionMap;
     }
 
     public boolean isEnabled() {
@@ -100,12 +95,12 @@ public class RemoteSessionManagementDataHolder {
         this.serverUrl = serverUrl;
     }
 
-    public int getMessagesPerSession() {
-        return messagesPerSession;
+    public int getMaxMessagesPerSecond() {
+        return maxMessagesPerSecond;
     }
 
-    public void setMessagesPerSession(int messagesPerSession) {
-        this.messagesPerSession = messagesPerSession;
+    public void setMaxMessagesPerSecond(int maxMessagesPerSecond) {
+        this.maxMessagesPerSecond = maxMessagesPerSecond;
     }
 
     public long getMaxIdleTimeout() {

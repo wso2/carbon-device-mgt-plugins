@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -19,7 +19,7 @@
 package org.wso2.carbon.device.mgt.extensions.remote.session.constants;
 
 /**
- * This holds the constants related to this feature
+ * This holds the constants related to remote session
  */
 public class RemoteSessionConstants {
 
@@ -28,14 +28,18 @@ public class RemoteSessionConstants {
     public static final String TOKEN_VALIDATION_CONTEX = "/services/OAuth2TokenValidationService";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
-    public static final String REMOTE_CONNECT = "REMOTE_CONNECT";
-    public static final String THROTTLE_OUT = "THROTTLE_OUT";
+    public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+    public static final int MAX_BUFFER_SIZE = 640 * 1024;
+
     public static final String QUERY_STRING = "queryString";
     public static final String MAXIMUM_TOTAL_HTTP_CONNECTION = "maximumTotalHttpConnection";
     public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";
     public static final String DEFAULT_MAXIMUM_HTTP_CONNECTION_PER_HOST = "2";
     public static final String DEFAULT_MAXIMUM_TOTAL_HTTP_CONNECTIONS = "100";
 
+    // Initial remote connection operation related Constants
+    public static final String REMOTE_CONNECT = "REMOTE_CONNECT";
+    public static final String REMOTE_CONNECT_CODE = "code";
 
     private RemoteSessionConstants() {
     }

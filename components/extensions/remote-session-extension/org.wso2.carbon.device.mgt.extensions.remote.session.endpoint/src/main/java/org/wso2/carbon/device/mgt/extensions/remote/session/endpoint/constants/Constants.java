@@ -20,6 +20,9 @@
 
 package org.wso2.carbon.device.mgt.extensions.remote.session.endpoint.constants;
 
+/**
+ * This holds the constants related to remote session web socket endpoint
+ */
 public class Constants {
     public static final String HTTP_HEADERS = "HttpHeaders";
 }

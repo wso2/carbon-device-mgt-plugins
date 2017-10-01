@@ -1,5 +1,5 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 *  WSO2 Inc. licenses this file to you under the Apache License,
 *  Version 2.0 (the "License"); you may not use this file except
@@ -23,9 +23,17 @@ import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSess
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class for reading web socket url parameters
+ */
 public class PropertyUtils {
 
-    //This method is only used if the mb features are within DAS.
+    /**
+     * Replace URL with placeholders with properties
+     * @param urlWithPlaceholders URL
+     * @return replaced url
+     * @throws RemoteSessionManagementException
+     */
     public static String replaceProperty(String urlWithPlaceholders) throws RemoteSessionManagementException {
         String regex = "\\$\\{(.*?)\\}";
         Pattern pattern = Pattern.compile(regex);

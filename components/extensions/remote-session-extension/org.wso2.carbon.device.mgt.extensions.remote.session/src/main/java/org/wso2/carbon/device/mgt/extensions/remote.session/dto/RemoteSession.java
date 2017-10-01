@@ -15,41 +15,44 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.device.mgt.extensions.remote.session.dto.common;
+package org.wso2.carbon.device.mgt.extensions.remote.session.dto;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionInvalidException;
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
+import org.wso2.carbon.device.mgt.extensions.remote.session.internal.RemoteSessionManagementDataHolder;
 
-import javax.websocket.CloseReason;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
  * {@link RemoteSession} will represent remote websocket session
- * This class implements the behaviours of sending message to the session in multithreaded environment.
+ * This class implements the behaviours of sending message to the session in multithreaded context.
  */
 public class RemoteSession {
 
     private static final Log log = LogFactory.getLog(RemoteSession.class);
     private String tenantDomain, operationId, deviceType, deviceId;
     private long lastMessageTimeStamp = System.currentTimeMillis();
-    ;
     private RemoteSession peerSession;
     private Session mySession;
     private final Object writeLockObject = new Object();
+    private int maxMessagesPerSecond;
+    private int messageAllowance;
+    private double messageRatePerSecond;
 
-    protected RemoteSession(Session session, String tenantDomain, String deviceType, String deviceId) {
+    public RemoteSession(Session session, String tenantDomain, String deviceType, String deviceId) {
         this.mySession = session;
         this.deviceType = deviceType;
         this.deviceId = deviceId;
         this.tenantDomain = tenantDomain;
+        maxMessagesPerSecond = RemoteSessionManagementDataHolder.getInstance().getMaxMessagesPerSecond();
+        messageAllowance = maxMessagesPerSecond;
+        messageRatePerSecond = (double) maxMessagesPerSecond / 1000;
     }
 
-    private void sendMessage(Object message) throws RemoteSessionInvalidException, RemoteSessionManagementException {
-
+    private void sendMessage(Object message) throws RemoteSessionManagementException {
         if (message != null) {
             boolean isMessageCountExceed = false;
             if (mySession != null && mySession.isOpen()) {
@@ -71,36 +74,39 @@ public class RemoteSession {
                     }
                 }
             } else {
-                throw new RemoteSessionInvalidException("Peer Session already closed ", new CloseReason
-                        (CloseReason.CloseCodes.CANNOT_ACCEPT, "Peer Session already closed "));
+                throw new RemoteSessionManagementException("Peer Session already closed ");
             }
         } else {
             throw new RemoteSessionManagementException("Message is empty");
         }
     }
 
-    public void sendMessageToPeer(Object message) throws RemoteSessionInvalidException,
-            RemoteSessionManagementException {
+    public void sendMessageToPeer(Object message) throws RemoteSessionManagementException {
         peerSession.sendMessage(message);
     }
-
 
     /**
      * Use for limit the messages for given time
      *
      * @return message rate applied
      */
-    public boolean applyRateLimit(){
-        return false;
+    private boolean applyRateLimit() {
+        long currentTime = System.currentTimeMillis();
+        messageAllowance += (currentTime - lastMessageTimeStamp) * messageRatePerSecond;
+        if (messageAllowance > maxMessagesPerSecond) {
+            messageAllowance = maxMessagesPerSecond;
+        }
+        if (messageAllowance >= 1) {
+            lastMessageTimeStamp = currentTime;
+            messageAllowance -= 1;
+            return false;
+        } else {
+            return true;
+        }
     }
-
 
     public Session getMySession() {
         return mySession;
-    }
-
-    public void setMySession(Session mySession) {
-        this.mySession = mySession;
     }
 
     public RemoteSession getPeerSession() {
@@ -115,10 +121,6 @@ public class RemoteSession {
         return tenantDomain;
     }
 
-    public void setTenantDomain(String tenantDomain) {
-        this.tenantDomain = tenantDomain;
-    }
-
     public String getOperationId() {
         return operationId;
     }
@@ -131,23 +133,7 @@ public class RemoteSession {
         return deviceType;
     }
 
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
     public String getDeviceId() {
         return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public long getLastMessageTimeStamp() {
-        return lastMessageTimeStamp;
-    }
-
-    public void setLastMessageTimeStamp(long lastMessageTimeStamp) {
-        this.lastMessageTimeStamp = lastMessageTimeStamp;
     }
 }

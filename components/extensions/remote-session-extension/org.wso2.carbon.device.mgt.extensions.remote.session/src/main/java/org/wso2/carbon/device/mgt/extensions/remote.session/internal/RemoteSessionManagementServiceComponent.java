@@ -54,10 +54,10 @@ public class RemoteSessionManagementServiceComponent {
         try {
 
             BundleContext bundleContext = componentContext.getBundleContext();
-            bundleContext.registerService(ServerStartupObserver.class.getName(), new RemoteSessionManagerStartupListener(),
-                    null);
-            bundleContext.registerService(RemoteSessionManagementService.class.getName(), new RemoteSessionManagementServiceImpl(),
-                    null);
+            bundleContext.registerService(ServerStartupObserver.class.getName(), new
+                    RemoteSessionManagerStartupListener(), null);
+            bundleContext.registerService(RemoteSessionManagementService.class.getName(), new
+                    RemoteSessionManagementServiceImpl(), null);
             if (log.isDebugEnabled()) {
                 log.debug("Remote Session device access service implementation bundle has been successfully " +
                         "initialized");
@@ -73,18 +73,23 @@ public class RemoteSessionManagementServiceComponent {
     }
 
     protected void setDeviceManagementProviderService(DeviceManagementProviderService deviceManagementProviderService) {
-        RemoteSessionManagementDataHolder.getInstance().setDeviceManagementProviderService(deviceManagementProviderService);
+        RemoteSessionManagementDataHolder.getInstance()
+                .setDeviceManagementProviderService(deviceManagementProviderService);
     }
 
-    protected void unsetDeviceManagementProviderService(DeviceManagementProviderService deviceManagementProviderService) {
+    protected void unsetDeviceManagementProviderService(DeviceManagementProviderService
+                                                                deviceManagementProviderService) {
         RemoteSessionManagementDataHolder.getInstance().setDeviceManagementProviderService(null);
     }
 
-    protected void setDeviceAccessAuthorizationService(DeviceAccessAuthorizationService deviceAccessAuthorizationService) {
-        RemoteSessionManagementDataHolder.getInstance().setDeviceAccessAuthorizationService(deviceAccessAuthorizationService);
+    protected void setDeviceAccessAuthorizationService(DeviceAccessAuthorizationService
+                                                               deviceAccessAuthorizationService) {
+        RemoteSessionManagementDataHolder.getInstance()
+                .setDeviceAccessAuthorizationService(deviceAccessAuthorizationService);
     }
 
-    protected void unsetDeviceAccessAuthorizationService(DeviceAccessAuthorizationService deviceAccessAuthorizationService) {
+    protected void unsetDeviceAccessAuthorizationService(DeviceAccessAuthorizationService
+                                                                 deviceAccessAuthorizationService) {
         RemoteSessionManagementDataHolder.getInstance().setDeviceManagementProviderService(null);
     }
 

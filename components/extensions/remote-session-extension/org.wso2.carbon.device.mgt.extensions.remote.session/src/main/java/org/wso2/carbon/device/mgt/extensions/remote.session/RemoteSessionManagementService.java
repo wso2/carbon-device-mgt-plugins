@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.device.mgt.extensions.remote.session;
 
-import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionInvalidException;
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
 
 import javax.websocket.Session;
@@ -34,11 +33,10 @@ public interface RemoteSessionManagementService {
      * @param session    Web socket RemoteSession
      * @param deviceType Device Type
      * @param deviceId   Device Id
-     * @throws RemoteSessionInvalidException    throws when session cannot be made due to invalid data
-     * @throws RemoteSessionManagementException throws when session has error with accessing device resources
+     * @throws RemoteSessionManagementException throws when session has errors with accessing device resources
      */
     public void initializeSession(Session session, String deviceType, String deviceId) throws
-            RemoteSessionInvalidException, RemoteSessionManagementException;
+            RemoteSessionManagementException;
 
     /**
      * Initialize session based on web socket request . This method use by the device to connect
@@ -47,39 +45,34 @@ public interface RemoteSessionManagementService {
      * @param deviceType  Device Type
      * @param deviceId    Device Id
      * @param operationId Operation Id that device needs to connec
-     * @throws RemoteSessionInvalidException    throws when session cannot be made due to invalid data
-     * @throws RemoteSessionManagementException throws when session has error with accessing device resources
+     * @throws RemoteSessionManagementException throws when session has errors with accessing device resources
      */
     public void initializeSession(Session session, String deviceType, String deviceId, String operationId) throws
-            RemoteSessionInvalidException, RemoteSessionManagementException;
+            RemoteSessionManagementException;
 
     /**
-     * Send message to connected remote device or client
+     * Send string message to connected remote device or client
      *
      * @param session Web socket RemoteSession
      * @param message Message needs to send to peer connection client
-     * @throws RemoteSessionInvalidException
      * @throws RemoteSessionManagementException
      */
-    public void sendMessageToPeer(Session session, String message) throws
-            RemoteSessionInvalidException, RemoteSessionManagementException;
+    public void sendMessageToPeer(Session session, String message) throws  RemoteSessionManagementException;
 
     /**
-     * Send message to connected remote device or client
+     * Send byte message to connected remote device or client
      *
      * @param session Web socket RemoteSession
      * @param message Message needs to send to peer connection
-     * @throws RemoteSessionInvalidException
      * @throws RemoteSessionManagementException
      */
-    public void sendMessageToPeer(Session session, byte[] message) throws
-            RemoteSessionInvalidException, RemoteSessionManagementException;
+    public void sendMessageToPeer(Session session, byte[] message) throws RemoteSessionManagementException;
 
     /**
      * Close the session
      *
      * @param session Web socket RemoteSession
      */
-    public void endSession(Session session) throws IOException;
+    public void endSession(Session session,String closeReason);
 
 }

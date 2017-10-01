@@ -20,11 +20,9 @@ package org.wso2.carbon.device.mgt.extensions.remote.session.endpoint;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.extensions.remote.session.constants.RemoteSessionConstants;
-import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionInvalidException;
-import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
 import org.wso2.carbon.device.mgt.extensions.remote.session.endpoint.utils.HttpSessionConfigurator;
 import org.wso2.carbon.device.mgt.extensions.remote.session.endpoint.utils.ServiceHolder;
+import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -43,6 +41,7 @@ import java.io.IOException;
 public class ClientSessionSubscriptionEndpoint extends SubscriptionEndpoint {
 
     private static final Log log = LogFactory.getLog(ClientSessionSubscriptionEndpoint.class);
+
     /**
      * Web socket onOpen - When client sends a message
      *
@@ -51,15 +50,10 @@ public class ClientSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     @OnOpen
     public void onOpen(Session session, @PathParam("deviceType") String deviceType, @PathParam("deviceId") String
             deviceId) {
-        System.out.print("**************Open***************");
-        if (log.isDebugEnabled()) {
-            log.debug("WebSocket opened, for RemoteSession id: " + session.getId());
-        }
         try {
-            ServiceHolder.getInstance().getRemoteSessionManagementService().initializeSession(session, deviceType, deviceId);
-            System.out.print("**************Opened***************");
-        } catch (RemoteSessionInvalidException e) {
-            System.out.print(e.getMessage());
+            ServiceHolder.getInstance().getRemoteSessionManagementService().initializeSession(session, deviceType,
+                    deviceId);
+        } catch (RemoteSessionManagementException e) {
             if (log.isDebugEnabled()) {
                 log.error("Error occurred while initializing session ", e);
             }
@@ -68,20 +62,7 @@ public class ClientSessionSubscriptionEndpoint extends SubscriptionEndpoint {
             } catch (IOException ex) {
                 log.error("Failed to disconnect the client.", ex);
             }
-        } catch (RemoteSessionManagementException e) {
-            System.out.print(e.getMessage());
-            if (log.isDebugEnabled()) {
-                log.error("Error occurred while initializing session ", e);
-            }
-            try {
-                session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Error occurred while adding operation"));
-            } catch (IOException ex) {
-                if (log.isDebugEnabled()) {
-                    log.error("Failed to disconnect the client.", ex);
-                }
-            }
         }
-
     }
 
     /**
@@ -92,7 +73,7 @@ public class ClientSessionSubscriptionEndpoint extends SubscriptionEndpoint {
      */
     @OnMessage
     public void onMessage(Session session, String message, @PathParam("deviceType") String deviceType, @PathParam
-            ("deviceId") String deviceId) throws RemoteSessionManagementException {
+            ("deviceId") String deviceId) {
         super.onMessage(session, message, deviceType, deviceId);
     }
 
@@ -104,7 +85,7 @@ public class ClientSessionSubscriptionEndpoint extends SubscriptionEndpoint {
      */
     @OnMessage
     public void onMessage(Session session, byte[] message, @PathParam("deviceType") String deviceType, @PathParam
-            ("deviceId") String deviceId) throws RemoteSessionManagementException {
+            ("deviceId") String deviceId) {
         super.onMessage(session, message, deviceType, deviceId);
     }
 
