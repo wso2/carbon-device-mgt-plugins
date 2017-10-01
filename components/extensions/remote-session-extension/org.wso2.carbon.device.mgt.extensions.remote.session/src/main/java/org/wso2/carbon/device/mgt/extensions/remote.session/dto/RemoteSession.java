@@ -19,8 +19,6 @@ package org.wso2.carbon.device.mgt.extensions.remote.session.dto.common;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
-import org.wso2.carbon.device.mgt.extensions.remote.session.constants.RemoteSessionConstants;
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionInvalidException;
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
 
@@ -31,10 +29,9 @@ import java.nio.ByteBuffer;
 
 /**
  * {@link RemoteSession} will represent remote websocket session
- *  This class implements the behaviours of sending message to the session in multithreaded environment.
- *
+ * This class implements the behaviours of sending message to the session in multithreaded environment.
  */
-public abstract class RemoteSession {
+public class RemoteSession {
 
     private static final Log log = LogFactory.getLog(RemoteSession.class);
     private String tenantDomain, operationId, deviceType, deviceId;
@@ -44,23 +41,21 @@ public abstract class RemoteSession {
     private Session mySession;
     private final Object writeLockObject = new Object();
 
-    protected RemoteSession(Session session, String tenantDomain, String deviceType, String deviceId, String
-            operationId) {
+    protected RemoteSession(Session session, String tenantDomain, String deviceType, String deviceId) {
         this.mySession = session;
         this.deviceType = deviceType;
         this.deviceId = deviceId;
         this.tenantDomain = tenantDomain;
-        this.operationId = operationId;
     }
 
-    public void sendMessage(Object message) throws RemoteSessionInvalidException, RemoteSessionManagementException {
+    private void sendMessage(Object message) throws RemoteSessionInvalidException, RemoteSessionManagementException {
 
         if (message != null) {
             boolean isMessageCountExceed = false;
             if (mySession != null && mySession.isOpen()) {
                 synchronized (writeLockObject) {
                     try {
-                        isMessageCountExceed = applyThrottlingPolicy();
+                        isMessageCountExceed = applyRateLimit();
                         if (!isMessageCountExceed) {
                             if (message instanceof String) {
                                 mySession.getBasicRemote().sendText(message.toString());
@@ -68,6 +63,8 @@ public abstract class RemoteSession {
                                 mySession.getBasicRemote().sendBinary(ByteBuffer.wrap((byte[]) message));
                             }
                             this.lastMessageTimeStamp = System.currentTimeMillis();
+                        } else {
+                            log.warn("Message count per second is exceeded for device id :" + deviceId);
                         }
                     } catch (IOException e) {
                         log.warn("Send data to session failed due to ", e);
@@ -77,23 +74,25 @@ public abstract class RemoteSession {
                 throw new RemoteSessionInvalidException("Peer Session already closed ", new CloseReason
                         (CloseReason.CloseCodes.CANNOT_ACCEPT, "Peer Session already closed "));
             }
-
-            if (isMessageCountExceed) {
-                JSONObject response = new JSONObject();
-                response.put("code", RemoteSessionConstants.THROTTLE_OUT);
-                sendMessageToPeer(message.toString());
-            }
         } else {
             throw new RemoteSessionManagementException("Message is empty");
         }
     }
 
-    public void sendMessageToPeer(Object message) throws RemoteSessionInvalidException, RemoteSessionManagementException {
+    public void sendMessageToPeer(Object message) throws RemoteSessionInvalidException,
+            RemoteSessionManagementException {
         peerSession.sendMessage(message);
     }
 
 
-    public abstract boolean applyThrottlingPolicy();
+    /**
+     * Use for limit the messages for given time
+     *
+     * @return message rate applied
+     */
+    public boolean applyRateLimit(){
+        return false;
+    }
 
 
     public Session getMySession() {
