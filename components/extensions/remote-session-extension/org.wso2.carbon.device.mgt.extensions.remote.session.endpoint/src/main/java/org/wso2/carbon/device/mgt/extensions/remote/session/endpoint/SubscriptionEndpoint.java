@@ -38,7 +38,9 @@ public class SubscriptionEndpoint {
     /**
      * Web socket onMessage - When client sends a message
      *
-     * @param session - Users registered session.
+     * @param session   - Registered  session.
+     * @param deviceType - DeviceType
+     * @param deviceId - Device Identifier
      * @param message - Status code for web-socket close.
      */
     public void onMessage(Session session, String message, @PathParam("deviceType") String deviceType, @PathParam
@@ -64,9 +66,11 @@ public class SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onMessage - When client sends a message
+     * Web socket onMessage use When client sends a message
      *
-     * @param session - Users registered session.
+     * @param session   - Registered  session.
+     * @param deviceType - DeviceType
+     * @param deviceId - Device Identifier
      * @param message - Message which needs to send to peer
      */
     public void onMessage(Session session, byte[] message, @PathParam("deviceType") String deviceType, @PathParam
@@ -92,9 +96,11 @@ public class SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onClose - Remove the registered sessions
+     * Web socket onClose - Handle socket connection close
      *
-     * @param session - Users registered session.
+     * @param session   - Registered  session.
+     * @param deviceType - DeviceType
+     * @param deviceId - Device Identifier
      * @param reason  - Status code for web-socket close.
      */
     public void onClose(Session session, CloseReason reason, @PathParam("deviceType") String deviceType, @PathParam
@@ -110,9 +116,11 @@ public class SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onError - Remove the registered sessions
+     * Web socket onError - Handle socket connection error
      *
-     * @param session   - Users registered session.
+     * @param session   - Registered  session.
+     * @param deviceType - DeviceType
+     * @param deviceId - Device Identifier
      * @param throwable - Status code for web-socket close.
      */
     public void onError(Session session, Throwable throwable, @PathParam("deviceType") String deviceType, @PathParam

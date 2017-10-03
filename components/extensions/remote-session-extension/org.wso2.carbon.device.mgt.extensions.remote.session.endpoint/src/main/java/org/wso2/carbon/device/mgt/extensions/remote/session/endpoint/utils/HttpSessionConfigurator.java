@@ -28,6 +28,9 @@ import javax.websocket.server.ServerEndpointConfig;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for handle HTTP session
+ */
 public class HttpSessionConfigurator extends ServerEndpointConfig.Configurator {
     public void modifyHandshake(ServerEndpointConfig config, HandshakeRequest request, HandshakeResponse response) {
         Map<String, List<String>> httpHeaders = request.getHeaders();

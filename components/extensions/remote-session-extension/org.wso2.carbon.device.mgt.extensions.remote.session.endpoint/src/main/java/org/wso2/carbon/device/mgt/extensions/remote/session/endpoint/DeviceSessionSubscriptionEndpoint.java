@@ -43,9 +43,12 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     private static final Log log = LogFactory.getLog(DeviceSessionSubscriptionEndpoint.class);
 
     /**
-     * Web socket onOpen - When client sends a message
+     * Web socket onOpen use when device connect to web socket url
      *
-     * @param session - Users registered session..
+     * @param session     - Web socket Session
+     * @param deviceType  - DeviceType
+     * @param deviceId    - Device Identifier
+     * @param operationId - Operations Id
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("deviceType") String deviceType, @PathParam("deviceId") String
@@ -66,10 +69,12 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onMessage - When client sends a message
+     * Web socket onMessage use when device sends a string message
      *
-     * @param session - Users registered session.
-     * @param message - Status code for web-socket close.
+     * @param session    - Registered  session.
+     * @param message    - Status code for web-socket close.
+     * @param deviceType - DeviceType
+     * @param deviceId   - Device Identifier
      */
     @OnMessage
     public void onMessage(Session session, String message, @PathParam("deviceType") String deviceType, @PathParam
@@ -78,10 +83,13 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onMessage - When client sends a message
+     * Web socket onMessage use when device sends a byte message
      *
-     * @param session - Users registered session.
-     * @param message - Message which needs to send to peer
+     * @param session    - Registered  session.
+     * @param message    - Status code for web-socket close.
+     * @param deviceType - DeviceType
+     * @param deviceId   - Device Identifier
+     * @param message    - Message which needs to send to peer
      */
     @OnMessage
     public void onMessage(Session session, byte[] message, @PathParam("deviceType") String deviceType, @PathParam
@@ -90,10 +98,12 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onClose - Remove the registered sessions
+     * Web socket onClose - Handle socket connection close
      *
-     * @param session - Users registered session.
-     * @param reason  - Status code for web-socket close.
+     * @param session    - Registered  session.
+     * @param deviceType - DeviceType
+     * @param deviceId   - Device Identifier
+     * @param reason     - Status code for web-socket close.
      */
     @OnClose
     public void onClose(Session session, CloseReason reason, @PathParam("deviceType") String deviceType, @PathParam
@@ -102,10 +112,12 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onError - Remove the registered sessions
+     * Web socket onError - Handle socket connection error
      *
-     * @param session   - Users registered session.
-     * @param throwable - Status code for web-socket close.
+     * @param session    - Registered  session.
+     * @param deviceType - DeviceType
+     * @param deviceId   - Device Identifier
+     * @param throwable  - Status code for web-socket close.
      */
     @OnError
     public void onError(Session session, Throwable throwable, @PathParam("deviceType") String deviceType, @PathParam

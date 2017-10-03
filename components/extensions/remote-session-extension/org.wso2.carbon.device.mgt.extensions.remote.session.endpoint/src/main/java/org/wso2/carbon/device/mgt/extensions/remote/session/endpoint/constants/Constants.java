@@ -25,4 +25,7 @@ package org.wso2.carbon.device.mgt.extensions.remote.session.endpoint.constants;
  */
 public class Constants {
     public static final String HTTP_HEADERS = "HttpHeaders";
+
+    private Constants() {
+    }
 }

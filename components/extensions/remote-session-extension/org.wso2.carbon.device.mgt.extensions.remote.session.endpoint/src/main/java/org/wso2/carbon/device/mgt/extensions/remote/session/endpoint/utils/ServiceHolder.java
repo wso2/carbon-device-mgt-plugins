@@ -23,6 +23,9 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.extensions.remote.session.RemoteSessionManagementService;
 
+/**
+ * Class for store remote management service instances
+ */
 public class ServiceHolder {
 
     private static ServiceHolder instance;
