@@ -33,6 +33,9 @@ public class FileTransfer extends AndroidOperation implements Serializable {
     @ApiModelProperty(name = "fileURL", value = "File URL", required = true)
     private String fileURL;
 
+    @ApiModelProperty(name = "userName", value = "User Name", required = true)
+    private String userName;
+
     @ApiModelProperty(name = "ftpPassword", value = "FTP password", required = true)
     private String ftpPassword;
 
@@ -61,5 +64,13 @@ public class FileTransfer extends AndroidOperation implements Serializable {
 
     public void setFileLocation(String fileLocation) {
         this.fileLocation = fileLocation;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

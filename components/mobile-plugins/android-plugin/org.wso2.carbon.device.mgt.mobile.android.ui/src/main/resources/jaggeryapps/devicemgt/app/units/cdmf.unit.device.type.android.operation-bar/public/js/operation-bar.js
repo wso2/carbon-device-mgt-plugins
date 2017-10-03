@@ -24,6 +24,9 @@ function operationSelect(selection) {
     $(modalPopupContent).addClass("operation-data");
     $(modalPopupContent).html($(" .operation[data-operation-code=" + selection + "]").html());
     $(modalPopupContent).data("operation-code", selection);
+    if (selection === "FILE_TRANSFER") {
+        fillUserName();
+    }
     showPopup();
 }
 
@@ -31,6 +34,24 @@ var resetLoader = function () {
     $("#btnSend").removeClass("hidden");
     $('#lbl-execution').addClass("hidden");
 };
+
+function fillUserName() {
+    var inputBox = document.getElementById('fileURL');
+    var regexp = ':\/\/[^\/]*@';
+    var pattern = new RegExp(regexp);
+    jQuery(inputBox).on('input', function () {
+            var fileUrl = inputBox.value;
+            var res = pattern.test(fileUrl);
+            if (res) {
+                var name = fileUrl.match(regexp).toString();
+                document.getElementById('userName').value = name.substring(3, name.length - 1);
+            } else {
+                document.getElementById('userName').value = "";
+                document.getElementById('userName').placeholder = "User Name"
+            }
+        }
+    );
+}
 
 /**
  * This changes the text box label when the operation is toggled between FILE UPLOAD and FILE DOWNLOAD
@@ -42,13 +63,14 @@ function changeLabel(type) {
     if (type == "no") {
         $(".modal #operation-warn-msg span").text("File will be saved in default location if not specified.");
         $(".modal #operation-warn-msg").removeClass("hidden");
-        document.getElementById('fileURL').placeholder = "HTTP/FTP URL of the file";
+        document.getElementById('fileURL').placeholder = "File URL";
         document.getElementById('fileLocation').placeholder = "Location to save file in device";
     } else {
         $(".modal #operation-warn-msg").addClass("hidden");
-        document.getElementById('fileURL').placeholder = "FTP URL of the folder to upload file";
+        document.getElementById('fileURL').placeholder = "URL for file upload";
         document.getElementById('fileLocation').placeholder = "File location in the device";
     }
+    fillUserName();
 }
 
 function submitForm(formId) {
@@ -97,7 +119,7 @@ function submitForm(formId) {
         var defaultStatusClasses = "fw fw-stack-1x";
         var content = $("#operation-response-template").find(".content");
         var title = content.find("#title");
-        title.attr("class","center-block text-center");
+        title.attr("class", "center-block text-center");
         var statusIcon = content.find("#status-icon");
         var description = content.find("#description");
         description.html("");
@@ -275,6 +297,7 @@ var generatePayload = function (operationCode, operationData, deviceList) {
             payload = {
                 "operation": {
                     "fileURL": operationData["fileURL"],
+                    "userName": operationData["userName"],
                     "ftpPassword": operationData["ftpPassword"],
                     "fileLocation": operationData["fileLocation"]
                 },
