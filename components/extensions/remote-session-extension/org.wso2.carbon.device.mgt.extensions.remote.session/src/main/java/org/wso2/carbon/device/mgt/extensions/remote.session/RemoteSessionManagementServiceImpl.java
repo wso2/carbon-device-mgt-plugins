@@ -47,6 +47,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class @{@link RemoteSessionManagementServiceImpl} is the implementation of @{@link RemoteSessionManagementService}
+ * which is used manage initial connection, sending messages to peer session, manage and close the session.
+ */
 public class RemoteSessionManagementServiceImpl implements RemoteSessionManagementService {
 
     private static final Log log = LogFactory.getLog(RemoteSessionManagementServiceImpl.class);

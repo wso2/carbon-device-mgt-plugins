@@ -143,8 +143,7 @@ public class OAuthTokenValidatorStubFactory extends BasePoolableObjectFactory {
      */
     private EasySSLProtocolSocketFactory createProtocolSocketFactory() throws OAuthTokenValidationException {
         try {
-            EasySSLProtocolSocketFactory easySSLPSFactory = new EasySSLProtocolSocketFactory();
-            return easySSLPSFactory;
+            return new EasySSLProtocolSocketFactory();
         } catch (IOException e) {
             String errorMsg = "Failed to initiate EasySSLProtocolSocketFactory.";
             throw new OAuthTokenValidationException(errorMsg, e);

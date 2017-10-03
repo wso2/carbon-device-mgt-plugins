@@ -28,18 +28,18 @@ import java.io.IOException;
 public interface RemoteSessionManagementService {
 
     /**
-     * Initialize session based on web socket request .this method use by the device to connect
+     * Initialize session based on web socket request .This method is used by the device to connect
      *
      * @param session    Web socket RemoteSession
      * @param deviceType Device Type
      * @param deviceId   Device Id
      * @throws RemoteSessionManagementException throws when session has errors with accessing device resources
      */
-    public void initializeSession(Session session, String deviceType, String deviceId) throws
+    void initializeSession(Session session, String deviceType, String deviceId) throws
             RemoteSessionManagementException;
 
     /**
-     * Initialize session based on web socket request . This method use by the device to connect
+     * Initialize session based on web socket request . This method is used by the device to connect
      *
      * @param session     Web socket RemoteSession
      * @param deviceType  Device Type
@@ -47,7 +47,7 @@ public interface RemoteSessionManagementService {
      * @param operationId Operation Id that device needs to connec
      * @throws RemoteSessionManagementException throws when session has errors with accessing device resources
      */
-    public void initializeSession(Session session, String deviceType, String deviceId, String operationId) throws
+    void initializeSession(Session session, String deviceType, String deviceId, String operationId) throws
             RemoteSessionManagementException;
 
     /**
@@ -57,7 +57,7 @@ public interface RemoteSessionManagementService {
      * @param message Message needs to send to peer connection client
      * @throws RemoteSessionManagementException
      */
-    public void sendMessageToPeer(Session session, String message) throws  RemoteSessionManagementException;
+    void sendMessageToPeer(Session session, String message) throws  RemoteSessionManagementException;
 
     /**
      * Send byte message to connected remote device or client
@@ -66,13 +66,13 @@ public interface RemoteSessionManagementService {
      * @param message Message needs to send to peer connection
      * @throws RemoteSessionManagementException
      */
-    public void sendMessageToPeer(Session session, byte[] message) throws RemoteSessionManagementException;
+    void sendMessageToPeer(Session session, byte[] message) throws RemoteSessionManagementException;
 
     /**
      * Close the session
      *
      * @param session Web socket RemoteSession
      */
-    public void endSession(Session session,String closeReason);
+    void endSession(Session session, String closeReason);
 
 }

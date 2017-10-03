@@ -44,4 +44,21 @@ public class RemoteSessionConstants {
     private RemoteSessionConstants() {
     }
 
+    /**
+     * OAuthTokenValidator specific constants
+     */
+    public final class OAuthTokenValidator {
+        public static final String COOKIE_KEY_VALUE_SEPERATOR = "=";
+        public static final String COOKIE_KEYPAIR_SEPERATOR = ";";
+        public static final String COOKIE = "cookie";
+        public static final String TOKEN_TYPE = "bearer";
+        public static final String TOKEN_IDENTIFIER = "websocketToken";
+        public static final String QUERY_STRING_SEPERATOR = "&";
+        public static final String QUERY_KEY_VALUE_SEPERATOR = "=";
+        public static final String QUERY_STRING = "queryString";
+
+        private OAuthTokenValidator() {
+        }
+    }
+
 }
