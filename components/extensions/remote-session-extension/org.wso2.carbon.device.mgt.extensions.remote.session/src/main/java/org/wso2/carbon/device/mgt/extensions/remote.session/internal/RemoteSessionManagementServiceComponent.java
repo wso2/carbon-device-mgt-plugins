@@ -49,7 +49,6 @@ public class RemoteSessionManagementServiceComponent {
 
     private static final Log log = LogFactory.getLog(RemoteSessionManagementServiceComponent.class);
 
-    @SuppressWarnings("unused")
     protected void activate(ComponentContext componentContext) {
         try {
 
