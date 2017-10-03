@@ -34,7 +34,7 @@ public class BlacklistApplications extends AndroidOperation implements Serializa
 
     @ApiModelProperty(name = "appIdentifiers", value = "A list of application package names to be blacklisted.",
             required = true)
-	@Size(min = 2, max = 45)
+	@Size(min = 1, max = 45)
 	private List<String> appIdentifiers;
 
 	public List<String> getAppIdentifier() {

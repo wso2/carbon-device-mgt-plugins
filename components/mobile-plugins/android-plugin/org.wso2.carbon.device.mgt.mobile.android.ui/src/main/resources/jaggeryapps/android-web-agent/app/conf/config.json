@@ -2,6 +2,7 @@
     "appContext" : "/android-web-agent/",
     "httpsURL" : "%https.ip%",
     "httpURL" : "%http.ip%",
+    "managerHTTPSURL": "https://%iot.manager.host%:%iot.manager.https.port%",
     "enrollmentDir": "/android-web-agent/enrollment",
     "adminService":"%https.ip%",
     "callBackUrl":"%https.ip%/mdm-admin",

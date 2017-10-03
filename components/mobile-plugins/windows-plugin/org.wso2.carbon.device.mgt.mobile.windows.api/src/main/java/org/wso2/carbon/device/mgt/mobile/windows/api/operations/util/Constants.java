@@ -87,6 +87,7 @@ public class Constants {
     public final class SyncMLResponseCodes {
         public static final String AUTHENTICATION_ACCEPTED = "212";
         public static final String ACCEPTED = "200";
+        public static final String UNAUTHORIZED = "401";
         public static final String ACCEPTED_FOR_PROCESSING = "202";
         public static final String PIN_NOTFOUND = "405";
         public static final String LOCK_RESET_NOTIFICATION = "Error occurred in Device Lock Operation. " +

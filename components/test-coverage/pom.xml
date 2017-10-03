@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>carbon-device-mgt-plugins-parent</artifactId>
+        <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+        <version>4.0.87-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>test-coverage</artifactId>
+    <name>WSO2 Carbon - Carbon Device Management Plugins Test Coverage Component</name>
+
+    <properties>
+        <target>target</target>
+        <coverge-report>coverage-reports</coverge-report>
+        <individual.test.report.name>jacoco-unit.exec</individual.test.report.name>
+        <classes>classes</classes>
+        <source>src/main/java</source>
+
+        <!-- device-types component related properties -->
+        <device.types>device-types</device.types>
+        <device.types.androidsense.api>
+            ${basedir}/../${device.types}/androidsense-plugin/org.wso2.carbon.device.mgt.iot.androidsense.api
+        </device.types.androidsense.api>
+        <device.types.arduino.api>
+            ${basedir}/../${device.types}/arduino-plugin/org.wso2.carbon.device.mgt.iot.arduino.api
+        </device.types.arduino.api>
+        <device.types.raspberrypi.api>
+            ${basedir}/../${device.types}/raspberrypi-plugin/org.wso2.carbon.device.mgt.iot.raspberrypi.api
+        </device.types.raspberrypi.api>
+        <device.types.virtualfirealarm.api>
+            ${basedir}/../${device.types}/virtual-fire-alarm-plugin/org.wso2.carbon.device.mgt.iot.virtualfirealarm.api
+        </device.types.virtualfirealarm.api>
+
+        <!-- extensions  component related properties -->
+        <extensions>extensions</extensions>
+
+        <!-- appm-connector -->
+        <extensions.osgi.connector>
+            ${basedir}/../${extensions}/appm-connector/org.wso2.carbon.appmgt.mdm.osgiconnector
+        </extensions.osgi.connector>
+        <extensions.rest.connector>
+            ${basedir}/../${extensions}/appm-connector/org.wso2.carbon.appmgt.mdm.restconnector
+        </extensions.rest.connector>
+
+        <!-- cdmf-transport adapters-->
+        <cdmf.adapters>${extensions}/cdmf-transport-adapters</cdmf.adapters>
+        <input.extension>
+            ${basedir}/../${cdmf.adapters}/input/org.wso2.carbon.device.mgt.input.adapter.extension
+        </input.extension>
+        <input.http>
+            ${basedir}/../${cdmf.adapters}/input/org.wso2.carbon.device.mgt.input.adapter.http
+        </input.http>
+        <input.mqtt>
+            ${basedir}/../${cdmf.adapters}/input/org.wso2.carbon.device.mgt.input.adapter.mqtt
+        </input.mqtt>
+        <input.thrift>
+            ${basedir}/../${cdmf.adapters}/input/org.wso2.carbon.device.mgt.input.adapter.thrift
+        </input.thrift>
+        <input.xmpp>
+            ${basedir}/../${cdmf.adapters}/input/org.wso2.carbon.device.mgt.input.adapter.xmpp
+        </input.xmpp>
+        <output.mqtt>
+            ${basedir}/../${cdmf.adapters}/output/org.wso2.carbon.device.mgt.output.adapter.mqtt
+        </output.mqtt>
+        <output.websocket>
+            ${basedir}/../${cdmf.adapters}/output/org.wso2.carbon.device.mgt.output.adapter.websocket
+        </output.websocket>
+        <output.websocket.endpoint>
+            ${basedir}/../${cdmf.adapters}/output/org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint
+        </output.websocket.endpoint>
+        <output.xmpp>
+            ${basedir}/../${cdmf.adapters}/output/org.wso2.carbon.device.mgt.output.adapter.xmpp
+        </output.xmpp>
+
+        <mb.extensions>${extensions}/mb-extensions</mb.extensions>
+        <mb.api>${basedir}/../${mb.extensions}/org.wso2.carbon.andes.extensions.device.mgt.api</mb.api>
+        <mb.authorization>
+            ${basedir}/../${mb.extensions}/org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization
+        </mb.authorization>
+
+        <pull.notification.listener>
+            ${basedir}/../${extensions}/pull-notification-listeners/org.wso2.carbon.device.mgt.mqtt.notification.listener
+        </pull.notification.listener>
+
+        <siddhi.extensions>
+            ${basedir}/../${extensions}/siddhi-extensions/org.wso2.extension.siddhi.execution.json
+        </siddhi.extensions>
+
+        <!-- mobile-plugins component -->
+        <mobile.plugins>mobile-plugins</mobile.plugins>
+        <android.plugin>${mobile.plugins}/android-plugin</android.plugin>
+        <android.mobile>${basedir}/../${android.plugin}/org.wso2.carbon.device.mgt.mobile.android</android.mobile>
+        <android.api>${basedir}/../${android.plugin}/org.wso2.carbon.device.mgt.mobile.android.api</android.api>
+        <windows.plugin>${mobile.plugins}/windows-plugin</windows.plugin>
+        <windows.mobile>${basedir}/../${windows.plugin}/org.wso2.carbon.device.mgt.mobile.windows</windows.mobile>
+        <windows.api>${basedir}/../${windows.plugin}/org.wso2.carbon.device.mgt.mobile.windows.api</windows.api>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+
+                        <configuration>
+                            <target name="mergeReports">
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                <if>
+                                    <and>
+                                        <available file="${siddhi.extensions}/${target}/${coverge-report}/${individual.test.report.name}" />
+
+                                    </and>
+                                    <then>
+                                        <taskdef name="report" classname="org.jacoco.ant.ReportTask">
+                                            <classpath path="${basedir}/target/jacoco-jars/org.jacoco.ant.jar" />
+                                        </taskdef>
+                                        <mkdir dir="${basedir}/target/coverage-report" />
+                                        <report>
+                                            <executiondata>
+                                                <fileset dir="${siddhi.extensions}/${target}/${coverge-report}">
+                                                    <include name="${individual.test.report.name}" />
+                                                </fileset>
+
+                                                <!-- Need to list the newly added exec files here -->
+                                            </executiondata>
+                                            <structure name="Carbon Device Management Plugins Component Coverage Report">
+                                                <group name="device-types">
+                                                    <group name="androidsense-plugin">
+                                                        <classfiles>
+                                                            <fileset dir="${device.types.androidsense.api}/${target}/${classes}" />
+                                                        </classfiles>
+                                                        <sourcefiles encoding="UTF-8">
+                                                            <fileset dir="${device.types.androidsense.api}/${source}" />
+                                                        </sourcefiles>
+                                                    </group>
+                                                    <group name="arudino-plugin">
+                                                        <classfiles>
+                                                            <fileset dir="${device.types.arduino.api}/${target}/${classes}" />
+                                                        </classfiles>
+                                                        <sourcefiles encoding="UTF-8">
+                                                            <fileset dir="${device.types.arduino.api}/${source}" />
+                                                        </sourcefiles>
+                                                    </group>
+
+                                                    <group name="raspberrypi-plugin">
+                                                        <classfiles>
+                                                            <fileset dir="${device.types.raspberrypi.api}/${target}/${classes}" />
+                                                        </classfiles>
+                                                        <sourcefiles encoding="UTF-8">
+                                                            <fileset dir="${device.types.raspberrypi.api}/${source}" />
+                                                        </sourcefiles>
+                                                    </group>
+                                                    <group name="virtual-fire-alarm-plugin">
+                                                        <classfiles>
+                                                            <fileset dir="${device.types.virtualfirealarm.api}/${target}/${classes}" />
+                                                        </classfiles>
+                                                        <sourcefiles encoding="UTF-8">
+                                                            <fileset dir="${device.types.virtualfirealarm.api}/${source}" />
+                                                        </sourcefiles>
+                                                    </group>
+                                                </group>
+
+                                                <group name="extensions">
+                                                    <group name="appm-connector">
+                                                        <group name="org.wso2.carbon.appmgt.mdm.osgiconnector">
+                                                            <classfiles>
+                                                                <fileset dir="${extensions.osgi.connector}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${extensions.rest.connector}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                        <group name="org.wso2.carbon.appmgt.mdm.restconnector">
+                                                            <classfiles>
+                                                                <fileset dir="${extensions.rest.connector}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${extensions.rest.connector}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                    </group>
+
+                                                    <group name="cdmf-transport-adapters">
+                                                        <group name="input">
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.extension">
+                                                                <classfiles>
+                                                                    <fileset dir="${input.extension}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${input.extension}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.http">
+                                                                <classfiles>
+                                                                    <fileset dir="${input.http}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${input.http}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.mqtt">
+                                                                <classfiles>
+                                                                    <fileset dir="${input.mqtt}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${input.mqtt}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                            <group name="org.wso2.carbon.device.mgt.input.adapter.thrift">
+                                                                <classfiles>
+                                                                    <fileset dir="${input.thrift}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${input.thrift}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                        </group>
+
+                                                        <group name="output">
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.mqtt">
+                                                                <classfiles>
+                                                                    <fileset dir="${output.mqtt}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${output.mqtt}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.websocket">
+                                                                <classfiles>
+                                                                    <fileset dir="${output.websocket}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${output.websocket}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint">
+                                                                <classfiles>
+                                                                    <fileset dir="${output.websocket.endpoint}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${output.websocket.endpoint}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                            <group name="org.wso2.carbon.device.mgt.output.adapter.xmpp">
+                                                                <classfiles>
+                                                                    <fileset dir="${output.xmpp}/${target}/${classes}" />
+                                                                </classfiles>
+                                                                <sourcefiles encoding="UTF-8">
+                                                                    <fileset dir="${output.xmpp}/${source}" />
+                                                                </sourcefiles>
+                                                            </group>
+                                                        </group>
+                                                    </group>
+                                                    <group name="mb-extensions">
+                                                        <group name="org.wso2.carbon.andes.extensions.device.mgt.api">
+                                                            <classfiles>
+                                                                <fileset dir="${mb.api}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${mb.api}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                        <group name="org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization">
+                                                            <classfiles>
+                                                                <fileset dir="${mb.authorization}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${mb.authorization}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                    </group>
+                                                    <group name="pull-notification-listeners">
+                                                      <classfiles>
+                                                            <fileset dir="${pull.notification.listener}/${target}/${classes}" />
+                                                        </classfiles>
+                                                        <sourcefiles encoding="UTF-8">
+                                                            <fileset dir="${pull.notification.listener}/${source}" />
+                                                        </sourcefiles>
+                                                    </group>
+                                                    <group name="siddhi-extensions">
+                                                        <classfiles>
+                                                            <fileset dir="${siddhi.extensions}/${target}/${classes}" />
+                                                        </classfiles>
+                                                        <sourcefiles encoding="UTF-8">
+                                                            <fileset dir="${siddhi.extensions}/${source}" />
+                                                        </sourcefiles>
+                                                    </group>
+                                                </group>
+                                                <group name="mobile-plugins">
+                                                    <group name="android-plugin">
+                                                        <group name="org.wso2.carbon.device.mgt.mobile.android">
+                                                            <classfiles>
+                                                                <fileset dir="${android.mobile}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${android.mobile}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                        <group name="org.wso2.carbon.device.mgt.mobile.android.api">
+                                                            <classfiles>
+                                                                <fileset dir="${android.api}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${android.api}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                    </group>
+                                                    <group name="windows-plugin">
+                                                        <group name="org.wso2.carbon.device.mgt.mobile.windows">
+                                                            <classfiles>
+                                                                <fileset dir="${windows.mobile}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${windows.mobile}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                        <group name="org.wso2.carbon.device.mgt.mobile.windows.api">
+                                                            <classfiles>
+                                                                <fileset dir="${windows.api}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${windows.api}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                    </group>
+                                                </group>
+                                            </structure>
+
+                                            <html destdir="${basedir}/target/coverage-report/site" />
+                                        </report>
+                                    </then>
+                                </if>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>org.jacoco.ant</artifactId>
+                        <version>${jacoco.ant.verision}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>ant-contrib</groupId>
+                        <artifactId>ant-contrib</artifactId>
+                        <version>${ant.contrib.version}</version>
+                        <exclusions>
+                            <exclusion>
+                                <groupId>ant</groupId>
+                                <artifactId>ant</artifactId>
+                            </exclusion>
+                        </exclusions>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
