@@ -72,7 +72,7 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
      * Web socket onMessage use when device sends a string message
      *
      * @param session    - Registered  session.
-     * @param message    - Status code for web-socket close.
+     * @param message    - String message  which needs to send to peer
      * @param deviceType - DeviceType
      * @param deviceId   - Device Identifier
      */
@@ -86,10 +86,9 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
      * Web socket onMessage use when device sends a byte message
      *
      * @param session    - Registered  session.
-     * @param message    - Status code for web-socket close.
+     * @param message    - Byte message  which needs to send to peer
      * @param deviceType - DeviceType
      * @param deviceId   - Device Identifier
-     * @param message    - Message which needs to send to peer
      */
     @OnMessage
     public void onMessage(Session session, byte[] message, @PathParam("deviceType") String deviceType, @PathParam
@@ -98,7 +97,7 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onClose - Handle socket connection close
+     * Web socket onClose use to handle  socket connection close
      *
      * @param session    - Registered  session.
      * @param deviceType - DeviceType
@@ -112,12 +111,12 @@ public class DeviceSessionSubscriptionEndpoint extends SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onError - Handle socket connection error
+     * Web socket onError use to handle  socket connection error
      *
      * @param session    - Registered  session.
+     * @param throwable  - Web socket exception
      * @param deviceType - DeviceType
      * @param deviceId   - Device Identifier
-     * @param throwable  - Status code for web-socket close.
      */
     @OnError
     public void onError(Session session, Throwable throwable, @PathParam("deviceType") String deviceType, @PathParam

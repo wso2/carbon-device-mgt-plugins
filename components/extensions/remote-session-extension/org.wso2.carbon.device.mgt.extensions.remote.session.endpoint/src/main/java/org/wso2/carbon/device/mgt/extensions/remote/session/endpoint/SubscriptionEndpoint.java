@@ -38,10 +38,9 @@ public class SubscriptionEndpoint {
     /**
      * Web socket onMessage - When client sends a message
      *
-     * @param session   - Registered  session.
+     * @param session    - Registered  session.
      * @param deviceType - DeviceType
-     * @param deviceId - Device Identifier
-     * @param message - Status code for web-socket close.
+     * @param message    - String Message which needs to send to peer
      */
     public void onMessage(Session session, String message, @PathParam("deviceType") String deviceType, @PathParam
             ("deviceId") String deviceId) {
@@ -68,10 +67,10 @@ public class SubscriptionEndpoint {
     /**
      * Web socket onMessage use When client sends a message
      *
-     * @param session   - Registered  session.
+     * @param session    - Registered  session.
      * @param deviceType - DeviceType
-     * @param deviceId - Device Identifier
-     * @param message - Message which needs to send to peer
+     * @param deviceId   - Device Identifier
+     * @param message    - Byte Message which needs to send to peer
      */
     public void onMessage(Session session, byte[] message, @PathParam("deviceType") String deviceType, @PathParam
             ("deviceId") String deviceId) {
@@ -96,12 +95,12 @@ public class SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onClose - Handle socket connection close
+     * Web socket onClose use to handle  socket connection close
      *
-     * @param session   - Registered  session.
+     * @param session    - Registered  session.
      * @param deviceType - DeviceType
-     * @param deviceId - Device Identifier
-     * @param reason  - Status code for web-socket close.
+     * @param deviceId   - Device Identifier
+     * @param reason     - Status code for web-socket close.
      */
     public void onClose(Session session, CloseReason reason, @PathParam("deviceType") String deviceType, @PathParam
             ("deviceId") String deviceId) {
@@ -116,12 +115,12 @@ public class SubscriptionEndpoint {
     }
 
     /**
-     * Web socket onError - Handle socket connection error
+     * Web socket onError use to handle  socket connection error
      *
-     * @param session   - Registered  session.
+     * @param session    - Registered  session.
+     * @param throwable  - Web socket exception
      * @param deviceType - DeviceType
-     * @param deviceId - Device Identifier
-     * @param throwable - Status code for web-socket close.
+     * @param deviceId   - Device Identifier
      */
     public void onError(Session session, Throwable throwable, @PathParam("deviceType") String deviceType, @PathParam
             ("deviceId") String deviceId) {
