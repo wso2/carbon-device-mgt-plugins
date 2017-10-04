@@ -140,36 +140,64 @@
                 "icon": "fw-save",
                 "formParams": [
                     {
-                        "type": "bi-radio",
-                        "name": "selection",
+                        "type": "radio",
+                        "name": "directionSelection",
                         "id": "upload",
                         "optional": false,
-                        "yesValue": "From device",
-                        "noValue": "To device"
+                        "value": "To device"
+                    },
+                    {
+                        "type": "radio",
+                        "name": "directionSelection",
+                        "id": "download",
+                        "optional": false,
+                        "value": "From device"
+                    },
+                    {
+                        "type": "select",
+                        "name": "protocolSelection",
+                        "id": "protocol",
+                        "optional": false,
+                        "valueOne": "HTTP",
+                        "valueTwo": "FTP",
+                        "valueThree": "SFTP",
+                        "label": "Protocol"
                     },
                     {
                         "type": "text",
                         "id": "fileURL",
                         "optional": false,
-                        "label": "URL for file upload"
-                    },
-                    {
-                        "type": "text",
-                        "id": "userName",
-                        "optional": false,
-                        "label": "User Name (Ignore if you don't need authentication.)"
-                    },
-                    {
-                        "type": "password",
-                        "id": "ftpPassword",
-                        "optional": false,
-                        "label": "Password (Ignore if you don't need authentication.)"
+                        "label": "URL to upload file from device"
                     },
                     {
                         "type": "text",
                         "id": "fileLocation",
                         "optional": false,
                         "label": "File location in the device"
+                    },
+                    {
+                        "type": "info",
+                        "id": "defaultFileLocation",
+                        "optional": false,
+                        "value": "File will be saved in Default download directory if not specified."
+                    },
+                    {
+                        "type": "checkbox",
+                        "id": "authentication",
+                        "optional": true,
+                        "label": "Authentication required"
+                    },
+                    {
+                        "type": "text",
+                        "id": "userName",
+                        "optional": false,
+                        "label": "User Name"
+                    },
+                    {
+                        "type": "password",
+                        "id": "ftpPassword",
+                        "optional": false,
+                        "label": "Password (Ignore if not needed)"
                     }
                 ],
                 "permission": "/device-mgt/devices/owning-device/operations/android/file-transfer"
