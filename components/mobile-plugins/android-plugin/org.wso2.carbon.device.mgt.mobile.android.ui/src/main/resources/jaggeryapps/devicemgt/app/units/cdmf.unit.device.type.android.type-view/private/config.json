@@ -144,8 +144,8 @@
                         "name": "selection",
                         "id": "upload",
                         "optional": false,
-                        "yesValue": "FILE DOWNLOAD",
-                        "noValue": "FILE UPLOAD"
+                        "yesValue": "From device",
+                        "noValue": "To device"
                     },
                     {
                         "type": "text",
