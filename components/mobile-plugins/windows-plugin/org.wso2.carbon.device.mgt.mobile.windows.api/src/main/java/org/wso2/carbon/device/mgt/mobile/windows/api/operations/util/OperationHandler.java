@@ -573,11 +573,11 @@ public class OperationHandler {
             }
             if (OperationCode.Info.IMSI.getCode().equals(source)) {
                 imsi = item.getData();
-                deviceInfo.setIMSI(imsi);
+                deviceInfo.getDeviceDetailsMap().put("IMSI", imsi);
             }
             if (OperationCode.Info.IMEI.getCode().equals(source)) {
                 imei = item.getData();
-                deviceInfo.setIMEI(imei);
+                deviceInfo.getDeviceDetailsMap().put("IMEI", imei);
             }
             if (OperationCode.Info.DEVICE_MODEL.getCode().equals(source)) {
                 model = item.getData();

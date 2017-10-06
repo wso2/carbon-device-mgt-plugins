@@ -48,15 +48,14 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 import org.wso2.carbon.device.mgt.core.app.mgt.ApplicationManagementProviderService;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
-import org.wso2.carbon.device.mgt.core.search.mgt.impl.Utils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
-import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.ws.rs.core.MediaType;
@@ -385,95 +384,91 @@ public class AndroidAPIUtils {
         org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo =
                 new org.wso2.carbon.device.mgt.common.device.details.DeviceInfo();
         if (deviceInfo.getDeviceDetailsMap() == null) {
-            deviceInfo.setDeviceDetailsMap(new HashMap<String, String>());
+            deviceInfo.setDeviceDetailsMap(new HashMap<>());
         }
         List<Device.Property> props = device.getProperties();
 
         for (Device.Property prop : props) {
-            if (Utils.getDeviceDetailsColumnNames().containsValue(prop.getName())) {
-                if (prop.getName().equalsIgnoreCase("DEVICE_MODEL")) {
-                    deviceInfo.setDeviceModel(prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("VENDOR")) {
-                    deviceInfo.setVendor(prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("OS_VERSION")) {
-                    deviceInfo.setOsVersion(prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("IMEI")) {
-                    deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("IMSI")) {
-                    deviceInfo.getDeviceDetailsMap().put("IMSI", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("MAC")) {
-                    deviceInfo.getDeviceDetailsMap().put("mac", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("SERIAL")) {
-                    deviceInfo.getDeviceDetailsMap().put("serial", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("OS_BUILD_DATE")) {
-                    deviceInfo.setOsBuildDate(prop.getValue());
-                }
-            } else {
-                if (prop.getName().equalsIgnoreCase("CPU_INFO")) {
-                    deviceInfo.getDeviceDetailsMap().put("cpuUser",
-                            getProperty(prop.getValue(), "User"));
-                    deviceInfo.getDeviceDetailsMap().put("cpuSystem",
-                            getProperty(prop.getValue(), "System"));
-                    deviceInfo.getDeviceDetailsMap().put("IOW",
-                            getProperty(prop.getValue(), "IOW"));
-                    deviceInfo.getDeviceDetailsMap().put("IRQ",
-                            getProperty(prop.getValue(), "IRQ"));
-                } else if (prop.getName().equalsIgnoreCase("RAM_INFO")) {
-                    deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "TOTAL_MEMORY")));
-                    deviceInfo.setAvailableRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "AVAILABLE_MEMORY")));
+            if (prop.getName().equalsIgnoreCase("DEVICE_MODEL")) {
+                deviceInfo.setDeviceModel(prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("VENDOR")) {
+                deviceInfo.setVendor(prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("OS_VERSION")) {
+                deviceInfo.setOsVersion(prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("IMEI")) {
+                deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("IMSI")) {
+                deviceInfo.getDeviceDetailsMap().put("IMSI", prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("MAC")) {
+                deviceInfo.getDeviceDetailsMap().put("mac", prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("SERIAL")) {
+                deviceInfo.getDeviceDetailsMap().put("serial", prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("OS_BUILD_DATE")) {
+                deviceInfo.setOsBuildDate(prop.getValue());
+            } else if (prop.getName().equalsIgnoreCase("CPU_INFO")) {
+                deviceInfo.getDeviceDetailsMap().put("cpuUser",
+                                                     getProperty(prop.getValue(), "User"));
+                deviceInfo.getDeviceDetailsMap().put("cpuSystem",
+                                                     getProperty(prop.getValue(), "System"));
+                deviceInfo.getDeviceDetailsMap().put("IOW",
+                                                     getProperty(prop.getValue(), "IOW"));
+                deviceInfo.getDeviceDetailsMap().put("IRQ",
+                                                     getProperty(prop.getValue(), "IRQ"));
+            } else if (prop.getName().equalsIgnoreCase("RAM_INFO")) {
+                deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "TOTAL_MEMORY")));
+                deviceInfo.setAvailableRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "AVAILABLE_MEMORY")));
 
-                    deviceInfo.getDeviceDetailsMap().put("ramThreshold",
-                            getProperty(prop.getValue(), "THRESHOLD"));
-                    deviceInfo.getDeviceDetailsMap().put("ramLowMemory",
-                            getProperty(prop.getValue(), "LOW_MEMORY"));
-                } else if (prop.getName().equalsIgnoreCase("BATTERY_INFO")) {
-                    deviceInfo.setPluggedIn(Boolean.parseBoolean(getProperty(prop.getValue(), "PLUGGED")));
+                deviceInfo.getDeviceDetailsMap().put("ramThreshold",
+                                                     getProperty(prop.getValue(), "THRESHOLD"));
+                deviceInfo.getDeviceDetailsMap().put("ramLowMemory",
+                                                     getProperty(prop.getValue(), "LOW_MEMORY"));
+            } else if (prop.getName().equalsIgnoreCase("BATTERY_INFO")) {
+                deviceInfo.setPluggedIn("AC".equals(getProperty(prop.getValue(), "PLUGGED")));
 
-                    deviceInfo.getDeviceDetailsMap().put("batteryLevel",
-                            getProperty(prop.getValue(), "BATTERY_LEVEL"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryScale",
-                            getProperty(prop.getValue(), "SCALE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryVoltage",
-                            getProperty(prop.getValue(), "BATTERY_VOLTAGE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryTemperature",
-                            getProperty(prop.getValue(), "TEMPERATURE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryCurrentTemperature",
-                            getProperty(prop.getValue(), "CURRENT_AVERAGE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryTechnology",
-                            getProperty(prop.getValue(), "TECHNOLOGY"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryHealth",
-                            getProperty(prop.getValue(), "HEALTH"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryStatus",
-                            getProperty(prop.getValue(), "STATUS"));
-                } else if (prop.getName().equalsIgnoreCase("NETWORK_INFO")) {
-                    deviceInfo.setSsid(getProperty(prop.getValue(), "WIFI_SSID"));
-                    deviceInfo.setConnectionType(getProperty(prop.getValue(), "CONNECTION_TYPE"));
+                deviceInfo.getDeviceDetailsMap().put("batteryLevel",
+                                                     getProperty(prop.getValue(), "BATTERY_LEVEL"));
+                deviceInfo.getDeviceDetailsMap().put("batteryScale",
+                                                     getProperty(prop.getValue(), "SCALE"));
+                deviceInfo.getDeviceDetailsMap().put("batteryVoltage",
+                                                     getProperty(prop.getValue(), "BATTERY_VOLTAGE"));
+                deviceInfo.getDeviceDetailsMap().put("batteryTemperature",
+                                                     getProperty(prop.getValue(), "TEMPERATURE"));
+                deviceInfo.getDeviceDetailsMap().put("batteryCurrentTemperature",
+                                                     getProperty(prop.getValue(), "CURRENT_AVERAGE"));
+                deviceInfo.getDeviceDetailsMap().put("batteryTechnology",
+                                                     getProperty(prop.getValue(), "TECHNOLOGY"));
+                deviceInfo.getDeviceDetailsMap().put("batteryHealth",
+                                                     getProperty(prop.getValue(), "HEALTH"));
+                deviceInfo.getDeviceDetailsMap().put("batteryStatus",
+                                                     getProperty(prop.getValue(), "STATUS"));
+            } else if (prop.getName().equalsIgnoreCase("NETWORK_INFO")) {
+                deviceInfo.setSsid(getProperty(prop.getValue(), "WIFI_SSID"));
+                deviceInfo.setConnectionType(getProperty(prop.getValue(), "CONNECTION_TYPE"));
 
-                    deviceInfo.getDeviceDetailsMap().put("mobileSignalStrength",
-                            getProperty(prop.getValue(), "MOBILE_SIGNAL_STRENGTH"));
-                    deviceInfo.getDeviceDetailsMap().put("wifiSignalStrength",
-                            getProperty(prop.getValue(), "WIFI_SIGNAL_STRENGTH"));
-                } else if (prop.getName().equalsIgnoreCase("DEVICE_INFO")) {
-                    deviceInfo.setBatteryLevel(Double.parseDouble(
-                            getProperty(prop.getValue(), "BATTERY_LEVEL")));
-                    deviceInfo.setInternalTotalMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY")));
-                    deviceInfo.setInternalAvailableMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY")));
-                    deviceInfo.setExternalTotalMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY")));
-                    deviceInfo.setExternalAvailableMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY")));
+                deviceInfo.getDeviceDetailsMap().put("mobileSignalStrength",
+                                                     getProperty(prop.getValue(), "MOBILE_SIGNAL_STRENGTH"));
+                deviceInfo.getDeviceDetailsMap().put("wifiSignalStrength",
+                                                     getProperty(prop.getValue(), "WIFI_SIGNAL_STRENGTH"));
+            } else if (prop.getName().equalsIgnoreCase("DEVICE_INFO")) {
+                deviceInfo.setBatteryLevel(Double.parseDouble(
+                        getProperty(prop.getValue(), "BATTERY_LEVEL")));
+                deviceInfo.setInternalTotalMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY")));
+                deviceInfo.setInternalAvailableMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY")));
+                deviceInfo.setExternalTotalMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY")));
+                deviceInfo.setExternalAvailableMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY")));
 
-                    deviceInfo.getDeviceDetailsMap().put("encryptionEnabled",
-                            getProperty(prop.getValue(), "ENCRYPTION_ENABLED"));
-                    deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
-                            getProperty(prop.getValue(), "PASSCODE_ENABLED"));
-                    deviceInfo.getDeviceDetailsMap().put("operator",
-                            getProperty(prop.getValue(), "OPERATOR"));
-		    deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
-                            getProperty(prop.getValue(), "PHONE_NUMBER"));
-                }
+                deviceInfo.getDeviceDetailsMap().put("encryptionEnabled",
+                                                     getProperty(prop.getValue(), "ENCRYPTION_ENABLED"));
+                deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
+                                                     getProperty(prop.getValue(), "PASSCODE_ENABLED"));
+                deviceInfo.getDeviceDetailsMap().put("operator",
+                                                     getProperty(prop.getValue(), "OPERATOR"));
+                deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
+                                                     getProperty(prop.getValue(), "PHONE_NUMBER"));
             }
         }
         return deviceInfo;

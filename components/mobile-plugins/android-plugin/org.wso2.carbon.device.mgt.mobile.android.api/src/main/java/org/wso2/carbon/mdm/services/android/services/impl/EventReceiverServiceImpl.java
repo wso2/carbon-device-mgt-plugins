@@ -24,6 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.core.util.DeviceManagerUtil;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
@@ -32,6 +34,7 @@ import org.wso2.carbon.mdm.services.android.exception.NotFoundException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.EventReceiverService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
 import javax.validation.Valid;
@@ -60,7 +63,15 @@ public class EventReceiverServiceImpl implements EventReceiverService {
     @Override
     public Response publishEvents(@Valid EventBeanWrapper eventBeanWrapper) {
         if (log.isDebugEnabled()) {
-            log.debug("Invoking Android device even logging.");
+            log.debug("Invoking Android device event logging.");
+        }
+        try {
+            if (!DeviceManagerUtil.isOperationAnalyticsEnabled()) {
+                return Response.status(Response.Status.ACCEPTED).entity("Event is publishing has not enabled.").build();
+            }
+        } catch (DeviceManagementException e) {
+            log.error("Error occurred while checking Operation Analytics is Enabled.", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
         String eventType = eventBeanWrapper.getType();
         if (!LOCATION_EVENT_TYPE.equals(eventType)) {
@@ -69,10 +80,10 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
         }
         Message message = new Message();
-        Object metaData[] = {eventBeanWrapper.getDeviceIdentifier(), eventType};
+        Object[] metaData = {eventBeanWrapper.getDeviceIdentifier(), AndroidConstants.DEVICE_TYPE_ANDROID};
         String eventPayload = eventBeanWrapper.getPayload();
         JsonObject jsonObject = gson.fromJson(eventPayload, JsonObject.class);
-        Object payload[] = {
+        Object[] payload = {
                 jsonObject.get(TIME_STAMP).getAsLong(),
                 jsonObject.get(LATITUDE).getAsDouble(),
                 jsonObject.get(LONGITUDE).getAsDouble()
