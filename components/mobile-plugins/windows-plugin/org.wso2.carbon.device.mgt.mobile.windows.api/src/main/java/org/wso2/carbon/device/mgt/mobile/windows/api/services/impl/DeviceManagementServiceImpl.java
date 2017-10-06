@@ -87,39 +87,54 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
 
                 if ((PluginConstants.SyncML.SYNCML_FIRST_MESSAGE_ID == msgId) &&
                         (PluginConstants.SyncML.SYNCML_FIRST_SESSION_ID == sessionId)) {
-                    token = syncmlHeader.getCredential().getData();
-                    MobileCacheEntry cacheToken = DeviceUtil.getTokenEntry(token);
-                    DeviceUtil.persistChallengeToken(token, deviceIdentifier.getId(), user);
-                    PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-                    carbonCtx.setTenantId(cacheToken.getTenanatID(), true);
-
-                    if ((cacheToken.getUsername() != null) && (cacheToken.getUsername().equals(user))) {
-
-                        if (modifyEnrollWithMoreDetail(request, cacheToken.getTenantDomain(), cacheToken.getTenanatID())) {
-                            pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
-                            response = operationReply.generateReply(syncmlDocument, pendingOperations);
-                            return Response.status(Response.Status.OK).entity(response).build();
+                    if (syncmlHeader.getCredential() != null) {
+                        token = syncmlHeader.getCredential().getData();
+                        MobileCacheEntry cacheToken = DeviceUtil.getTokenEntry(token);
+                        DeviceUtil.persistChallengeToken(token, deviceIdentifier.getId(), user);
+                        PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                        carbonCtx.setTenantId(cacheToken.getTenanatID(), true);
+                        if ((cacheToken.getUsername() != null) && (cacheToken.getUsername().equals(user))) {
+                            if (modifyEnrollWithMoreDetail(request, cacheToken.getTenantDomain(), cacheToken.getTenanatID())) {
+                                pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
+                                operationHandler.checkForDeviceWipe(pendingOperations, deviceIdentifier);
+                                response = operationReply.generateReply(syncmlDocument, pendingOperations);
+                                return Response.status(Response.Status.OK).entity(response).build();
+                            } else {
+                                String msg = "Error occurred in while modify the enrollment.";
+                                log.error(msg);
+                                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+                            }
                         } else {
-                            String msg = "Error occurred in while modify the enrollment.";
+                            String msg = "Authentication failure due to incorrect credentials.";
                             log.error(msg);
-                            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+                            return Response.status(Response.Status.UNAUTHORIZED).entity(msg).build();
                         }
                     } else {
-                        String msg = "Authentication failure due to incorrect credentials.";
-                        log.error(msg);
-                        return Response.status(Response.Status.UNAUTHORIZED).entity(msg).build();
+                        return Response.ok().entity(operationReply.generateReply(syncmlDocument, null)).build();
                     }
                 } else {
-                    MobileCacheEntry cacheToken = DeviceUtil.getTokenEntryFromDeviceId(deviceIdentifier.getId());
-                    PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-                    carbonCtx.setTenantId(cacheToken.getTenanatID());
+                    if (DeviceUtil.getTokenEntryFromDeviceId(deviceIdentifier.getId()) == null) {
+                        if (syncmlHeader.getCredential() != null) {
+                            token = syncmlHeader.getCredential().getData();
+                            MobileCacheEntry cacheToken = DeviceUtil.getTokenEntry(token);
+                            DeviceUtil.persistChallengeToken(token, deviceIdentifier.getId(), user);
+                            PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                            carbonCtx.setTenantId(cacheToken.getTenanatID(), true);
+                        }
+                    } else {
+                        MobileCacheEntry cacheToken = DeviceUtil.getTokenEntryFromDeviceId(deviceIdentifier.getId());
+                        PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                        carbonCtx.setTenantId(cacheToken.getTenanatID());
+                    }
                     if ((syncmlDocument.getBody().getAlert() != null)) {
                         if (!syncmlDocument.getBody().getAlert().getData().equals(Constants.DISENROLL_ALERT_DATA)) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
+                            operationHandler.checkForDeviceWipe(pendingOperations, deviceIdentifier);
                             return Response.ok().entity(operationReply.generateReply(
                                     syncmlDocument, pendingOperations)).build();
                         } else {
                             if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier, false) != null) {
+                                operationHandler.updateDisenrollOperationStatus(deviceIdentifier);
                                 WindowsAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
                                 return Response.ok().entity(operationReply.generateReply(syncmlDocument, null)).build();
                             } else {
@@ -130,6 +145,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                         }
                     } else {
                         pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
+                        operationHandler.checkForDeviceWipe(pendingOperations, deviceIdentifier);
                         return Response.ok().entity(operationReply.generateReply(
                                 syncmlDocument, pendingOperations)).build();
                     }
@@ -171,7 +187,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         boolean status = false;
         String user;
         SyncmlDocument syncmlDocument;
-
         try {
             syncmlDocument = SyncmlParser.parseSyncmlPayload(request);
             ReplaceTag replace = syncmlDocument.getBody().getReplace();
@@ -196,7 +211,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             Device existingDevice = WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
             if (!existingDevice.getProperties().isEmpty()) {
                 List<Device.Property> existingProperties = new ArrayList<>();
-
+                
                 Device.Property vendorProperty = new Device.Property();
                 vendorProperty.setName(PluginConstants.SyncML.VENDOR);
                 vendorProperty.setValue(devMan);

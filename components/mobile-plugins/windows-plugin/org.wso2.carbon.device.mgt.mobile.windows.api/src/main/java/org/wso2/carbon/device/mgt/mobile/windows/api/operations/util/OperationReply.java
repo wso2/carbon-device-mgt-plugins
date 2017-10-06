@@ -21,6 +21,8 @@ package org.wso2.carbon.device.mgt.mobile.windows.api.operations.util;
 import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
@@ -162,22 +164,27 @@ public class OperationReply {
         SyncmlBody sourceSyncmlBody = syncmlDocument.getBody();
         SyncmlHeader sourceHeader = syncmlDocument.getHeader();
         StatusTag headerStatus;
+        ChallengeTag challengeTag = new ChallengeTag();
+        MetaTag metaTag = new MetaTag();
+        metaTag.setFormat(Constants.CRED_FORMAT);
+        metaTag.setType(Constants.CRED_TYPE);
+        metaTag.setNextNonce(Constants.INITIAL_NONCE);
+        challengeTag.setMeta(metaTag);
         SyncmlBody syncmlBodyReply = new SyncmlBody();
         List<StatusTag> statuses = new ArrayList<>();
         List<StatusTag> sourceStatuses = sourceSyncmlBody.getStatus();
         if (sourceStatuses.isEmpty()) {
             headerStatus =
                     new StatusTag(headerCommandId, sourceHeader.getMsgID(), HEADER_STATUS_ID,
-                            HEADER_COMMAND_TEXT, sourceHeader.getSource().getLocURI(),
-                            String.valueOf(Constants.SyncMLResponseCodes.AUTHENTICATION_ACCEPTED));
+                            HEADER_COMMAND_TEXT, challengeTag,sourceHeader.getSource().getLocURI(),
+                            String.valueOf(Constants.SyncMLResponseCodes.UNAUTHORIZED));
             statuses.add(headerStatus);
         } else {
             for (StatusTag sourceStatus : sourceStatuses) {
                 if (sourceStatus.getChallenge() != null && HEADER_COMMAND_TEXT.equals(sourceStatus.getCommand())) {
-
                     headerStatus =
                             new StatusTag(headerCommandId, sourceHeader.getMsgID(), HEADER_STATUS_ID,
-                                    HEADER_COMMAND_TEXT, sourceHeader.getSource().getLocURI(),
+                                    HEADER_COMMAND_TEXT, challengeTag, sourceHeader.getSource().getLocURI(),
                                     String.valueOf(Constants.SyncMLResponseCodes.AUTHENTICATION_ACCEPTED));
                     statuses.add(headerStatus);
                 }
@@ -230,7 +237,6 @@ public class OperationReply {
 
     private void appendOperations(SyncmlBody syncmlBody) throws PolicyManagementException,
             FeatureManagementException, JSONException, SyncmlOperationException {
-
         GetTag getElement = new GetTag();
         List<ItemTag> getElements = new ArrayList<>();
         List<ExecuteTag> executeElements = new ArrayList<>();
