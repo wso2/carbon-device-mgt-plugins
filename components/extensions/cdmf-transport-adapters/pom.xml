@@ -38,6 +38,7 @@
         <module>input/org.wso2.carbon.device.mgt.input.adapter.mqtt</module>
         <module>input/org.wso2.carbon.device.mgt.input.adapter.xmpp</module>
 		<module>input/org.wso2.carbon.device.mgt.input.adapter.thrift</module>
+        <module>output/org.wso2.carbon.device.mgt.output.adapter.http</module>
         <module>output/org.wso2.carbon.device.mgt.output.adapter.mqtt</module>
         <module>output/org.wso2.carbon.device.mgt.output.adapter.xmpp</module>
         <module>output/org.wso2.carbon.device.mgt.output.adapter.websocket</module>

@@ -21,7 +21,6 @@
     <artifact name="org.wso2.carbon.iot.geo.dashboard" version="1.0.0" type="carbon/application">
         <!-- CEP Artifacts -->
         <dependency artifact="WSO2IoT-Geo-Event-Receiver" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="WSO2IoT-DeviceInfo-Receiver" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="WSO2IoT-EventSink-FusedStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-EventsFusionGenerateNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-Pass_through" version="1.0.0" include="true" serverRole="GeoDashboard"/>
@@ -32,7 +31,6 @@
         <dependency artifact="iot.per.device.stream.geo.AlertNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="iot.per.device.stream.geo.FusedSpatialEvent" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="org.wso2.iot.LocationStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="org.wso2.iot.DeviceInfoStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="org.wso2.geo.ProcessedSpatialEvents" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="org.wso2.geo.StandardSpatialEvents" version="1.0.0" include="true" serverRole="GeoDashboard"/>
     </artifact>

@@ -24,7 +24,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.core.util.DeviceManagerUtil;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
@@ -68,6 +71,14 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         try {
             if (!DeviceManagerUtil.isOperationAnalyticsEnabled()) {
                 return Response.status(Response.Status.ACCEPTED).entity("Event is publishing has not enabled.").build();
+            }
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier(eventBeanWrapper.getDeviceIdentifier(),
+                                                                     AndroidConstants.DEVICE_TYPE_ANDROID);
+            Device device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+            if (device != null && EnrolmentInfo.Status.ACTIVE != device.getEnrolmentInfo().getStatus()){
+                return Response.status(Response.Status.ACCEPTED).entity("Device is not in Active state.").build();
+            } else if (device == null){
+                return Response.status(Response.Status.ACCEPTED).entity("Device is not enrolled yet.").build();
             }
         } catch (DeviceManagementException e) {
             log.error("Error occurred while checking Operation Analytics is Enabled.", e);
