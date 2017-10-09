@@ -31,6 +31,10 @@ public class RemoteSessionConstants {
     public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
     public static final int MAX_BUFFER_SIZE = 640 * 1024;
 
+    public enum CONNECTION_TYPE {
+        CLIENT, DEVICE
+    }
+
     public static final String QUERY_STRING = "queryString";
     public static final String MAXIMUM_TOTAL_HTTP_CONNECTION = "maximumTotalHttpConnection";
     public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";

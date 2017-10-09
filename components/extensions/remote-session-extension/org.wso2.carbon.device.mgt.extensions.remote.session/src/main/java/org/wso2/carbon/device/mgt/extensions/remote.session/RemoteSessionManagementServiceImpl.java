@@ -100,104 +100,13 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
 
                         // if session initiated using operation id means request came from device
                         if (operationId != null) {
-                            RemoteSession activeSession = RemoteSessionManagementDataHolder.getInstance()
-                                    .getActiveDeviceClientSessionMap().get((authenticationInfo.getTenantDomain() + "/" +
-                                            deviceType + "/" + deviceId));
-                            if (activeSession != null) {
-                                RemoteSession clientRemote = RemoteSessionManagementDataHolder.getInstance()
-                                        .getSessionMap().get(activeSession.getMySession().getId());
-                                if (clientRemote != null) {
-                                    if (clientRemote.getOperationId().equals(operationId)) {
-                                        RemoteSession deviceRemote = new RemoteSession(session, authenticationInfo
-                                                .getTenantDomain(), deviceType, deviceId);
-                                        deviceRemote.setOperationId(operationId);
-                                        deviceRemote.setPeerSession(clientRemote);
-                                        clientRemote.setPeerSession(deviceRemote);
-                                        RemoteSessionManagementDataHolder.getInstance().getSessionMap().put(session
-                                                .getId(), deviceRemote);
-                                        // Send Remote connect response
-                                        JSONObject message = new JSONObject();
-                                        message.put(RemoteSessionConstants.REMOTE_CONNECT_CODE, RemoteSessionConstants
-                                                .REMOTE_CONNECT);
-                                        deviceRemote.sendMessageToPeer(message.toString());
-                                        log.info("Device session opened for session id: " + session.getId() +
-                                                " device Type : " + deviceType + " , " + "deviceId : " + deviceId);
-                                    } else {
-                                        throw new RemoteSessionManagementException("Device and Operation information " +
-                                                "does not matched with client information for operation id: " +
-                                                operationId + " device Type : " + deviceType + " , " + "deviceId : " +
-                                                deviceId);
-                                    }
-                                } else {
-                                    throw new RemoteSessionManagementException("Device session is inactive for " +
-                                            "operation id: " + operationId + " device Type : " + deviceType + " , " +
-                                            "deviceId : " + deviceId);
-                                }
-
-
-                            } else {
-                                throw new RemoteSessionManagementException("Device session is inactive for operation " +
-                                        "id: " + operationId + " device Type : " + deviceType + " , " + "deviceId : " +
-                                        deviceId);
-                            }
+                            // create new device session
+                            initializeDeviceSession(session, authenticationInfo.getTenantDomain(), deviceType, deviceId,
+                                    operationId);
                         } else {
-                            RemoteSession clientRemote = new RemoteSession(session, authenticationInfo
-                                    .getTenantDomain(), deviceType, deviceId);
-                            // Create new remote control operation to start the session
-                            RemoteSession activeSession = RemoteSessionManagementDataHolder.getInstance()
-                                    .getActiveDeviceClientSessionMap().putIfAbsent((authenticationInfo
-                                                    .getTenantDomain() + "/" + deviceType + "/" + deviceId),
-                                            clientRemote);
-                            if (activeSession != null && activeSession.getMySession().isOpen() && activeSession
-                                    .getPeerSession() == null) {
-                                throw new RemoteSessionManagementException("Another client session waiting on device " +
-                                        "to connect.");
-                            } else {
-                                // if there is pending session exists but already closed, then we need to remove it.
-                                if (activeSession != null) {
-                                    endSession(activeSession.getMySession(), "Remote session closed due to new session" +
-                                            " request");
-                                    // Use put if absent for adding session to waiting list since we need to overcome
-                                    // multithreaded session requests.
-                                    activeSession = RemoteSessionManagementDataHolder.getInstance()
-                                            .getActiveDeviceClientSessionMap().putIfAbsent((authenticationInfo
-                                                    .getTenantDomain() + "/" + deviceType + "/" +
-                                                    deviceId), clientRemote);
-                                }
-
-                                // If another client tried to start session same time then active session will be
-                                // exist. So we are adding session request only no parallel sessions added to map
-                                if (activeSession == null) {
-
-                                    // Create operation if session initiated by client
-                                    Operation operation = new ConfigOperation();
-                                    operation.setCode(RemoteSessionConstants.REMOTE_CONNECT);
-                                    operation.setEnabled(true);
-                                    operation.setControl(Operation.Control.NO_REPEAT);
-                                    JSONObject payload = new JSONObject();
-                                    payload.put("serverUrl", RemoteSessionManagementDataHolder.getInstance()
-                                            .getServerUrl());
-                                    operation.setPayLoad(payload.toString());
-                                    String date = new SimpleDateFormat(RemoteSessionConstants.DATE_FORMAT_NOW).format
-                                            (new Date());
-                                    operation.setCreatedTimeStamp(date);
-                                    List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-                                    deviceIdentifiers.add(new DeviceIdentifier(deviceId, deviceType));
-                                    Activity activity = RemoteSessionManagementDataHolder.getInstance()
-                                            .getDeviceManagementProviderService().addOperation(deviceType, operation,
-                                                    deviceIdentifiers);
-                                    clientRemote.setOperationId(activity.getActivityId()
-                                            .replace(DeviceManagementConstants.OperationAttributes.ACTIVITY, ""));
-                                    RemoteSessionManagementDataHolder.getInstance().getSessionMap().put(session.getId
-                                            (), clientRemote);
-                                    log.info("Client remote session opened for session id: " + session.getId() +
-                                            " device Type : " + deviceType + " , " + "deviceId : " + deviceId);
-
-                                } else {
-                                    throw new RemoteSessionManagementException("Another client session waiting on " +
-                                            "device to connect.");
-                                }
-                            }
+                            // create new client session
+                            initializeClientSession(session, authenticationInfo.getTenantDomain(), deviceType,
+                                    deviceId);
                         }
                         log.info("Current remote sessions count: " + RemoteSessionManagementDataHolder.getInstance()
                                 .getSessionMap().size());
@@ -278,15 +187,28 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
      */
     @Override
     public void endSession(Session session, String closeReason) {
-        log.info("Closing session: "+session.getId()+" due to:"+ closeReason);
+
+        log.info("Closing session: " + session.getId() + " due to:" + closeReason);
         RemoteSession remoteSession = RemoteSessionManagementDataHolder.getInstance().getSessionMap().remove(session
                 .getId());
         if (remoteSession != null) {
-            String operationId = remoteSession.getOperationId();
+            //String operationId = remoteSession.getOperationId();
+            String deviceKey = remoteSession.getTenantDomain() + "/" + remoteSession.getDeviceType() + "/" +
+                    remoteSession.getDeviceId();
+            RemoteSession lastSession = RemoteSessionManagementDataHolder.getInstance()
+                    .getActiveDeviceClientSessionMap().get(deviceKey);
+            if (lastSession != null && lastSession.getMySession().getId().equals(session.getId())) {
+                RemoteSessionManagementDataHolder.getInstance().getActiveDeviceClientSessionMap().remove
+                        (deviceKey);
+            }
             if (remoteSession.getPeerSession() != null) {
                 Session peerSession = remoteSession.getPeerSession().getMySession();
                 if (peerSession != null) {
                     RemoteSessionManagementDataHolder.getInstance().getSessionMap().remove(peerSession.getId());
+                    if (lastSession != null && lastSession.getMySession().getId().equals(peerSession.getId())) {
+                        RemoteSessionManagementDataHolder.getInstance().getActiveDeviceClientSessionMap().remove
+                                (deviceKey);
+                    }
                     if (peerSession.isOpen()) {
                         try {
                             peerSession.close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, closeReason));
@@ -298,28 +220,125 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                     }
                 }
             }
-            if (remoteSession.getMySession() != null) {
-                Session mySession = remoteSession.getMySession();
-                if (mySession.isOpen()) {
-                    try {
-                        mySession.close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, closeReason));
-                    } catch (IOException ex) {
-                        if (log.isDebugEnabled()) {
-                            log.error("Failed to disconnect the client.", ex);
-                        }
+        }
+    }
+
+
+    /**
+     * Starting new client session
+     *
+     * @param session      Web socket Session
+     * @param tenantDomain Tenant domain
+     * @param deviceType   Device Type
+     * @param deviceId     Device Id
+     * @throws RemoteSessionManagementException throws when session has errors with accessing device resources
+     * @throws OperationManagementException     throws when error occured during new operation
+     * @throws InvalidDeviceException           throws when incorrect device identifier
+     */
+    private void initializeClientSession(Session session, String tenantDomain, String deviceType, String deviceId) throws RemoteSessionManagementException,
+            OperationManagementException, InvalidDeviceException {
+
+        RemoteSession clientRemote = new RemoteSession(session, tenantDomain, deviceType, deviceId, RemoteSessionConstants
+                .CONNECTION_TYPE.CLIENT);
+        String deviceKey = tenantDomain + "/" + deviceType + "/" + deviceId;
+        // Create new remote control operation to start the session
+        RemoteSession activeSession = RemoteSessionManagementDataHolder.getInstance().getActiveDeviceClientSessionMap
+                ().putIfAbsent(deviceKey, clientRemote);
+        if (activeSession != null && activeSession.getMySession().isOpen() && activeSession
+                .getPeerSession() == null) {
+            throw new RemoteSessionManagementException("Another client session waiting on device to connect.");
+        } else {
+            // if there is pending session exists but already closed, then we need to remove it.
+            if (activeSession != null) {
+                RemoteSessionManagementDataHolder.getInstance().getActiveDeviceClientSessionMap().remove
+                        (deviceKey);
+                try {
+                    activeSession.getMySession().close(new CloseReason(CloseReason.CloseCodes.GOING_AWAY, "Remote " +
+                            "session closed due to new session request"));
+                } catch (IOException ex) {
+                    if (log.isDebugEnabled()) {
+                        log.error("Failed to disconnect the client.", ex);
                     }
                 }
+                // Use put if absent for adding session to waiting list since we need to overcome
+                // multithreaded session requests.
+                activeSession = RemoteSessionManagementDataHolder.getInstance().getActiveDeviceClientSessionMap()
+                        .putIfAbsent(deviceKey, clientRemote);
             }
-            if (operationId != null) {
-                String deviceIdentifier = remoteSession.getTenantDomain() + "/" + remoteSession
-                        .getDeviceType() + "/" + remoteSession.getDeviceId();
-                RemoteSession lastSession = RemoteSessionManagementDataHolder.getInstance()
-                        .getActiveDeviceClientSessionMap().get(deviceIdentifier);
-                if (lastSession != null && lastSession.getMySession().getId().equals(session.getId())) {
-                    RemoteSessionManagementDataHolder.getInstance().getActiveDeviceClientSessionMap().remove
-                            (deviceIdentifier);
+            // If another client tried to start session same time then active session will be
+            // exist. So we are adding session request only no parallel sessions added to map
+            if (activeSession == null) {
+
+                // Create operation if session initiated by client
+                Operation operation = new ConfigOperation();
+                operation.setCode(RemoteSessionConstants.REMOTE_CONNECT);
+                operation.setEnabled(true);
+                operation.setControl(Operation.Control.NO_REPEAT);
+                JSONObject payload = new JSONObject();
+                payload.put("serverUrl", RemoteSessionManagementDataHolder.getInstance().getServerUrl());
+                operation.setPayLoad(payload.toString());
+                String date = new SimpleDateFormat(RemoteSessionConstants.DATE_FORMAT_NOW).format(new Date());
+                operation.setCreatedTimeStamp(date);
+                List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+                deviceIdentifiers.add(new DeviceIdentifier(deviceId, deviceType));
+                Activity activity = RemoteSessionManagementDataHolder.getInstance().
+                        getDeviceManagementProviderService().addOperation(deviceType, operation, deviceIdentifiers);
+                clientRemote.setOperationId(activity.getActivityId().replace(DeviceManagementConstants
+                        .OperationAttributes.ACTIVITY, ""));
+                RemoteSessionManagementDataHolder.getInstance().getSessionMap().put(session.getId(), clientRemote);
+                log.info("Client remote session opened for session id: " + session.getId() + " device Type : " +
+                        deviceType + " , " + "deviceId : " + deviceId);
+            } else {
+                throw new RemoteSessionManagementException("Another client session waiting on " +
+                        "device to connect.");
+            }
+        }
+    }
+
+    /**
+     * Starting new device session
+     *
+     * @param session      Web socket Session
+     * @param tenantDomain Tenant domain
+     * @param deviceType   Device Type
+     * @param deviceId     Device Id
+     * @param operationId  Operation id
+     * @throws RemoteSessionManagementException throws when session has errors with accessing device resources
+     */
+    private void initializeDeviceSession(Session session, String tenantDomain, String deviceType, String deviceId,
+                                         String operationId) throws RemoteSessionManagementException {
+        String deviceKey = tenantDomain + "/" + deviceType + "/" + deviceId;
+        RemoteSession activeSession = RemoteSessionManagementDataHolder.getInstance()
+                .getActiveDeviceClientSessionMap().get(deviceKey);
+        if (activeSession != null) {
+            RemoteSession clientRemote = RemoteSessionManagementDataHolder.getInstance().getSessionMap().get
+                    (activeSession.getMySession().getId());
+            if (clientRemote != null) {
+                if (clientRemote.getOperationId().equals(operationId)) {
+                    RemoteSession deviceRemote = new RemoteSession(session, tenantDomain, deviceType, deviceId,
+                            RemoteSessionConstants.CONNECTION_TYPE.DEVICE);
+                    deviceRemote.setOperationId(operationId);
+                    deviceRemote.setPeerSession(clientRemote);
+                    clientRemote.setPeerSession(deviceRemote);
+                    RemoteSessionManagementDataHolder.getInstance().getSessionMap().put(session.getId(), deviceRemote);
+                    // Send Remote connect response
+                    JSONObject message = new JSONObject();
+                    message.put(RemoteSessionConstants.REMOTE_CONNECT_CODE, RemoteSessionConstants.REMOTE_CONNECT);
+                    deviceRemote.sendMessageToPeer(message.toString());
+                    log.info("Device session opened for session id: " + session.getId() + " device Type : " +
+                            deviceType + " , " + "deviceId : " + deviceId);
+                } else {
+                    throw new RemoteSessionManagementException("Device and Operation information " +
+                            "does not matched with client information for operation id: " + operationId + " device " +
+                            "Type : " + deviceType + " , " + "deviceId : " + deviceId);
                 }
+            } else {
+                throw new RemoteSessionManagementException("Device session is inactive for " + "operation id: " +
+                        operationId + " device Type : " + deviceType + " , " + "deviceId : " + deviceId);
             }
+        } else {
+            throw new RemoteSessionManagementException("Device session is inactive for operation " + "id: " +
+                    operationId + " device Type : " + deviceType + " , " + "deviceId : " + deviceId);
         }
 
     }

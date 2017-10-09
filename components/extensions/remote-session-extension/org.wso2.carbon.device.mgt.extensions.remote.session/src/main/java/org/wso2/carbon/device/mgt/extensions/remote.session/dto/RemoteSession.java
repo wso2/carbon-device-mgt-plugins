@@ -19,6 +19,7 @@ package org.wso2.carbon.device.mgt.extensions.remote.session.dto;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.extensions.remote.session.constants.RemoteSessionConstants;
 import org.wso2.carbon.device.mgt.extensions.remote.session.exception.RemoteSessionManagementException;
 import org.wso2.carbon.device.mgt.extensions.remote.session.internal.RemoteSessionManagementDataHolder;
 
@@ -41,12 +42,15 @@ public class RemoteSession {
     private int maxMessagesPerSecond;
     private int messageAllowance;
     private double messageRatePerSecond;
+    private RemoteSessionConstants.CONNECTION_TYPE connectionType;
 
-    public RemoteSession(Session session, String tenantDomain, String deviceType, String deviceId) {
+    public RemoteSession(Session session, String tenantDomain, String deviceType, String deviceId,
+                         RemoteSessionConstants.CONNECTION_TYPE connectionType) {
         this.mySession = session;
         this.deviceType = deviceType;
         this.deviceId = deviceId;
         this.tenantDomain = tenantDomain;
+        this.connectionType = connectionType;
         maxMessagesPerSecond = RemoteSessionManagementDataHolder.getInstance().getMaxMessagesPerSecond();
         messageAllowance = maxMessagesPerSecond;
         messageRatePerSecond = (double) maxMessagesPerSecond / 1000;
@@ -135,5 +139,9 @@ public class RemoteSession {
 
     public String getDeviceId() {
         return deviceId;
+    }
+
+    public RemoteSessionConstants.CONNECTION_TYPE getConnectionType() {
+        return connectionType;
     }
 }
