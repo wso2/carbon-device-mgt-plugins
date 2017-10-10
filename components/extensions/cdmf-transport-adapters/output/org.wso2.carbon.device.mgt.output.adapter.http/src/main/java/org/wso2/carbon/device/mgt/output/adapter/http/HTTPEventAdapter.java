@@ -27,10 +27,8 @@ import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
@@ -70,9 +68,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class HTTPEventAdapter implements OutputEventAdapter {
+
     private static final Log log = LogFactory.getLog(OutputEventAdapter.class);
-    private static ExecutorService executorService;
-    private static HttpConnectionManager connectionManager;
+
+    private ExecutorService executorService;
+    private HttpConnectionManager connectionManager;
     private OutputEventAdapterConfiguration eventAdapterConfiguration;
     private Map<String, String> globalProperties;
     private String clientMethod;
@@ -81,7 +81,8 @@ public class HTTPEventAdapter implements OutputEventAdapter {
     private String contentType;
     private HttpClient httpClient = null;
     private HostConfiguration hostConfiguration = null;
-    private String clientId, clientSecret;
+    private String clientId;
+    private String clientSecret;
 
 
     public HTTPEventAdapter(OutputEventAdapterConfiguration eventAdapterConfiguration,
@@ -166,7 +167,7 @@ public class HTTPEventAdapter implements OutputEventAdapter {
 
     @Override
     public void connect() {
-        this.checkHTTPClientInit(eventAdapterConfiguration.getStaticProperties());
+        this.checkHTTPClientInit();
         httpConnectionConfiguration =
                 new HTTPConnectionConfiguration(eventAdapterConfiguration, globalProperties);
         generateToken();
@@ -185,8 +186,6 @@ public class HTTPEventAdapter implements OutputEventAdapter {
         } catch (RejectedExecutionException e) {
             EventAdapterUtil
                     .logAndDrop(eventAdapterConfiguration.getName(), message, "Job queue is full", e, log, tenantId);
-        } catch (MalformedURLException e) {
-            log.error("Malformed url: '" + url + "'", e);
         }
     }
 
@@ -205,7 +204,7 @@ public class HTTPEventAdapter implements OutputEventAdapter {
         return false;
     }
 
-    private void checkHTTPClientInit(Map<String, String> staticProperties) {
+    private void checkHTTPClientInit() {
 
         if (this.httpClient != null) {
             return;
@@ -321,38 +320,27 @@ public class HTTPEventAdapter implements OutputEventAdapter {
 
         private HttpClient httpClient;
 
-        public HTTPSender(String url, String payload, Map<String, String> headers,
-                          HttpClient httpClient) throws MalformedURLException {
-
-            if (tenantId == -1234) {
-                this.url = url;
-            } else {
-                URL urlObj = new URL(url);
-                String protocol = urlObj.getProtocol();
-                String host = urlObj.getHost();
-                int port = urlObj.getPort();
-                String path = "t/" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
-                        .getTenantDomain(true) + "/" + urlObj.getPath();
-                this.url = protocol + "://" + host + ":" + port + "/" + path;
-            }
+        HTTPSender(String url, String payload, Map<String, String> headers,
+                   HttpClient httpClient) {
+            this.url = url;
             this.payload = payload;
             this.headers = headers;
             this.httpClient = httpClient;
         }
 
-        public String getUrl() {
+        String getUrl() {
             return url;
         }
 
-        public String getPayload() {
+        String getPayload() {
             return payload;
         }
 
-        public Map<String, String> getHeaders() {
+        Map<String, String> getHeaders() {
             return headers;
         }
 
-        public HttpClient getHttpClient() {
+        HttpClient getHttpClient() {
             return httpClient;
         }
 
