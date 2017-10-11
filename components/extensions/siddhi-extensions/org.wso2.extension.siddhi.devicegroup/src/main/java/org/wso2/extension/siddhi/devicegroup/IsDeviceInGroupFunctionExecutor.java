@@ -31,6 +31,7 @@ import org.wso2.siddhi.core.executor.function.FunctionExecutor;
 import org.wso2.siddhi.query.api.definition.Attribute;
 import org.wso2.siddhi.query.api.exception.ExecutionPlanValidationException;
 
+
 /**
  * isDeviceInGroup(deviceId , groupId)
  * Returns true if device belongs to group, otherwise false.
@@ -50,10 +51,10 @@ public class IsDeviceInGroupFunctionExecutor extends FunctionExecutor {
                     "Invalid no of arguments passed to group:isDeviceInGroup() function, required 3, but found "
                             + attributeExpressionExecutors.length);
         }
-        if (attributeExpressionExecutors[0].getReturnType() != Attribute.Type.INT) {
+        if (attributeExpressionExecutors[0].getReturnType()!= Attribute.Type.INT) {
             throw new ExecutionPlanValidationException(
                     "Invalid parameter type found for the first argument (group id) of group:isDeviceInGroup() " +
-                    "function, required " + Attribute.Type.INT + ", but found " +
+                    "function, required " + org.wso2.siddhi.query.api.definition.Attribute.Type.INT + ", but found " +
                     attributeExpressionExecutors[0].getReturnType().toString());
         }
         if (attributeExpressionExecutors[1].getReturnType() != Attribute.Type.STRING) {
