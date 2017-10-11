@@ -54,7 +54,7 @@ public class IsDeviceInGroupFunctionExecutor extends FunctionExecutor {
         if (attributeExpressionExecutors[0].getReturnType()!= Attribute.Type.INT) {
             throw new ExecutionPlanValidationException(
                     "Invalid parameter type found for the first argument (group id) of group:isDeviceInGroup() " +
-                    "function, required " + org.wso2.siddhi.query.api.definition.Attribute.Type.INT + ", but found " +
+                    "function, required " + Attribute.Type.INT + ", but found " +
                     attributeExpressionExecutors[0].getReturnType().toString());
         }
         if (attributeExpressionExecutors[1].getReturnType() != Attribute.Type.STRING) {
