@@ -147,6 +147,9 @@
                                                 <fileset dir="${siddhi.extensions}/${target}/${coverge-report}">
                                                     <include name="${individual.test.report.name}" />
                                                 </fileset>
+                                                <fileset dir="${android.api}/${target}/${coverge-report}">
+                                                    <include name="${individual.test.report.name}" />
+                                                </fileset>
 
                                                 <!-- Need to list the newly added exec files here -->
                                             </executiondata>
