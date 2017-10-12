@@ -123,7 +123,7 @@ public class AndroidAPIUtils {
         return responseMediaType;
     }
 
-    public static Response getOperationResponse(List<String> deviceIDs, Operation operation)
+    public static Activity getOperationResponse(List<String> deviceIDs, Operation operation)
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
         if (deviceIDs == null || deviceIDs.size() == 0) {
             String errorMessage = "Device identifier list is empty";
@@ -139,20 +139,8 @@ public class AndroidAPIUtils {
             deviceIdentifier.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
             deviceIdentifiers.add(deviceIdentifier);
         }
-        Activity activity = getDeviceManagementService().addOperation(
-                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, deviceIdentifiers);
-//        if (activity != null) {
-//            GCMService gcmService = getGCMService();
-//            if (gcmService.isFCMEnabled()) {
-//                List<DeviceIdentifier> deviceIDList = deviceIDHolder.getValidDeviceIDList();
-//                List<Device> devices = new ArrayList<Device>(deviceIDList.size());
-//                for (DeviceIdentifier deviceIdentifier : deviceIDList) {
-//                    devices.add(getDeviceManagementService().getDevice(deviceIdentifier));
-//                }
-//                getGCMService().sendNotification(operation.getCode(), devices);
-//            }
-//        }
-        return Response.status(Response.Status.CREATED).entity(activity).build();
+        return getDeviceManagementService().addOperation(
+                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, deviceIdentifiers);
     }
 
 
