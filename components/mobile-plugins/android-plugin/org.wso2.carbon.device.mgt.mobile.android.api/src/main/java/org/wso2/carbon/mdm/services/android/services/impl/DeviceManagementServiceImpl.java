@@ -20,7 +20,6 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
@@ -126,7 +125,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             log.error(msg);
             return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
         }
-        DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
+        DeviceIdentifier deviceIdentifier = AndroidDeviceUtils.convertToDeviceIdentifierObject(id);
         try {
             if (!AndroidDeviceUtils.isValidDeviceIdentifier(deviceIdentifier)) {
                 String msg = "Device not found for identifier '" + id + "'";
@@ -168,7 +167,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
 
         List<? extends Operation> pendingOperations;
         try {
-            pendingOperations = AndroidAPIUtils.getPendingOperations(deviceIdentifier);
+            pendingOperations = AndroidDeviceUtils.getPendingOperations(deviceIdentifier);
         } catch (OperationManagementException e) {
             String msg = "Issue in retrieving operation management service instance";
             log.error(msg, e);
@@ -182,7 +181,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             throws OperationManagementException, PolicyComplianceException,
             ApplicationManagementException, NotificationManagementException, DeviceManagementException {
         for (org.wso2.carbon.device.mgt.common.operation.mgt.Operation operation : operations) {
-            AndroidAPIUtils.updateOperation(deviceId, operation);
+            AndroidDeviceUtils.updateOperation(deviceId, operation);
             if (OPERATION_ERROR_STATUS.equals(operation.getStatus().toString())) {
                 org.wso2.carbon.device.mgt.common.notification.mgt.Notification notification = new
                         org.wso2.carbon.device.mgt.common.notification.mgt.Notification();
@@ -233,10 +232,8 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 DeviceLocation deviceLocation = extractLocation(deviceIdentifier, androidDevice.getProperties());
                 if (deviceLocation != null) {
                     try {
-                        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-                        DeviceInformationManager informationManager =
-                                (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
-
+                        DeviceInformationManager informationManager = AndroidAPIUtils
+                                .getDeviceInformationManagerService();
                         informationManager.addDeviceLocation(deviceLocation);
                     } catch (DeviceDetailsMgtException e) {
                         String msg = "Error occurred while updating the device location upon android " +
@@ -265,10 +262,9 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                             addOperation(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID,
                                     operation, deviceIdentifiers);
                 }
-            }
-            PolicyManagerService policyManagerService = AndroidAPIUtils.getPolicyManagerService();
-            policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
-            if (status) {
+                PolicyManagerService policyManagerService = AndroidAPIUtils.getPolicyManagerService();
+                policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
+
                 Message responseMessage = new Message();
                 responseMessage.setResponseCode(Response.Status.OK.toString());
                 responseMessage.setResponseMessage("Android device, which carries the id '" +
@@ -316,7 +312,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @Path("/{id}/status")
     @Override
     public Response isEnrolled(@PathParam("id") String id, @HeaderParam("If-Modified-Since") String ifModifiedSince) {
-        DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
+        DeviceIdentifier deviceIdentifier = AndroidDeviceUtils.convertToDeviceIdentifierObject(id);
         try {
             Device device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
             if (device != null) {
@@ -421,7 +417,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @Override
     public Response disEnrollDevice(@PathParam("id") String id) {
         boolean result;
-        DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
+        DeviceIdentifier deviceIdentifier = AndroidDeviceUtils.convertToDeviceIdentifierObject(id);
         try {
             result = AndroidAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
             if (result) {
