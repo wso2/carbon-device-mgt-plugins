@@ -31,10 +31,14 @@ import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorExcep
 import org.wso2.carbon.mdm.services.android.services.DeviceTypeConfigurationService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
-import org.wso2.carbon.mdm.services.android.util.Message;
 
 import javax.validation.Valid;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
