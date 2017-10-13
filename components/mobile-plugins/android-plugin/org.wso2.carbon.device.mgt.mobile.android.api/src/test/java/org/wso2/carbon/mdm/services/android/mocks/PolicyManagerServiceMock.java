@@ -1,20 +1,3 @@
-package org.wso2.carbon.mdm.services.android.mocks;
-
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.Feature;
-import org.wso2.carbon.device.mgt.common.policy.mgt.Policy;
-import org.wso2.carbon.device.mgt.common.policy.mgt.Profile;
-import org.wso2.carbon.device.mgt.common.policy.mgt.ProfileFeature;
-import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
-import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.NonComplianceData;
-import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
-import org.wso2.carbon.policy.mgt.common.FeatureManagementException;
-import org.wso2.carbon.policy.mgt.common.PolicyAdministratorPoint;
-import org.wso2.carbon.policy.mgt.common.PolicyEvaluationPoint;
-import org.wso2.carbon.policy.mgt.common.PolicyInformationPoint;
-import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
-import org.wso2.carbon.policy.mgt.common.PolicyMonitoringTaskException;
-import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -32,6 +15,23 @@ import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.mdm.services.android.mocks;
+
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.Feature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.Policy;
+import org.wso2.carbon.device.mgt.common.policy.mgt.Profile;
+import org.wso2.carbon.device.mgt.common.policy.mgt.ProfileFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.NonComplianceData;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
+import org.wso2.carbon.policy.mgt.common.FeatureManagementException;
+import org.wso2.carbon.policy.mgt.common.PolicyAdministratorPoint;
+import org.wso2.carbon.policy.mgt.common.PolicyEvaluationPoint;
+import org.wso2.carbon.policy.mgt.common.PolicyInformationPoint;
+import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
+import org.wso2.carbon.policy.mgt.common.PolicyMonitoringTaskException;
+import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 import org.wso2.carbon.policy.mgt.core.task.TaskScheduleService;
 
 import java.util.List;

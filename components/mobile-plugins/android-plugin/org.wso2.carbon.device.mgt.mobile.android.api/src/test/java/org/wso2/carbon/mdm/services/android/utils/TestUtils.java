@@ -276,7 +276,26 @@ public class TestUtils {
         operation.setActivityId(getActivity().getActivityId());
         operation.setCode(AndroidConstants.OperationCodes.APPLICATION_LIST);
         operation.setId(1);
-        operation.setOperationResponse("[{\"name\":\"Widget%20Preview\",\"package\":\"com.android.widgetpreview\",\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false},{\"name\":\"com.android.gesture.builder\",\"package\":\"com.android.gesture.builder\",\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false},{\"name\":\"API%20Demos\",\"package\":\"com.example.android.apis\",\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false},{\"name\":\"WSO2%20Device%20Management%20Agent\",\"package\":\"org.wso2.iot.agent\",\"version\":\"3.1.21\",\"isSystemApp\":false,\"isActive\":true},{\"name\":\"com.android.smoketest.tests\",\"package\":\"com.android.smoketest.tests\",\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false},{\"name\":\"Sample%20Soft%20Keyboard\",\"package\":\"com.example.android.softkeyboard\",\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false},{\"name\":\"Example%20Wallpapers\",\"package\":\"com.example.android.livecubes\",\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false},{\"name\":\"com.android.smoketest\",\"package\":\"com.android.smoketest\",\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false}]");
+        operation.setOperationResponse("[{\"name\":\"Widget%20Preview\",\"package\":\"com.android.widgetpreview\"," +
+                                       "\"version\":\"7.1.1\",\"isSystemApp\":false,\"isActive\":false}," +
+                                       "{\"name\":\"com.android.gesture.builder\"," +
+                                       "\"package\":\"com.android.gesture.builder\",\"version\":\"7.1.1\"," +
+                                       "\"isSystemApp\":false,\"isActive\":false},{\"name\":\"API%20Demos\"," +
+                                       "\"package\":\"com.example.android.apis\",\"version\":\"7.1.1\"," +
+                                       "\"isSystemApp\":false,\"isActive\":false}," +
+                                       "{\"name\":\"WSO2%20Device%20Management%20Agent\"," +
+                                       "\"package\":\"org.wso2.iot.agent\",\"version\":\"3.1.21\"," +
+                                       "\"isSystemApp\":false,\"isActive\":true}," +
+                                       "{\"name\":\"com.android.smoketest.tests\"," +
+                                       "\"package\":\"com.android.smoketest.tests\",\"version\":\"7.1.1\"," +
+                                       "\"isSystemApp\":false,\"isActive\":false}," +
+                                       "{\"name\":\"Sample%20Soft%20Keyboard\"," +
+                                       "\"package\":\"com.example.android.softkeyboard\",\"version\":\"7.1.1\"," +
+                                       "\"isSystemApp\":false,\"isActive\":false},{\"name\":\"Example%20Wallpapers\"," +
+                                       "\"package\":\"com.example.android.livecubes\",\"version\":\"7.1.1\"," +
+                                       "\"isSystemApp\":false,\"isActive\":false},{\"name\":\"com.android.smoketest\"," +
+                                       "\"package\":\"com.android.smoketest\",\"version\":\"7.1.1\"," +
+                                       "\"isSystemApp\":false,\"isActive\":false}]");
         operation.setStatus(Operation.Status.COMPLETED);
         operations.add(operation);
         return operations;
@@ -288,7 +307,45 @@ public class TestUtils {
         operation.setActivityId(getActivity().getActivityId());
         operation.setCode(AndroidConstants.OperationCodes.DEVICE_INFO);
         operation.setId(1);
-        operation.setOperationResponse("{\"description\":\"generic_x86\",\"deviceIdentifier\":\"1d9612def9d205f9\",\"enrolmentInfo\":null,\"name\":\"generic_x86\",\"properties\":[{\"name\":\"SERIAL\",\"value\":\"unknown\"},{\"name\":\"IMEI\",\"value\":null},{\"name\":\"IMSI\",\"value\":\"310260000000000\"},{\"name\":\"MAC\",\"value\":\"02:00:00:00:00:00\"},{\"name\":\"DEVICE_MODEL\",\"value\":\"Android SDK built for x86\"},{\"name\":\"VENDOR\",\"value\":\"unknown\"},{\"name\":\"OS_VERSION\",\"value\":\"7.1.1\"},{\"name\":\"OS_BUILD_DATE\",\"value\":\"1487782847000\"},{\"name\":\"DEVICE_NAME\",\"value\":\"generic_x86\"},{\"name\":\"LATITUDE\",\"value\":\"6.90988\"},{\"name\":\"LONGITUDE\",\"value\":\"79.85249999999999\"},{\"name\":\"NETWORK_INFO\",\"value\":\"[{\\\"name\\\":\\\"CONNECTION_TYPE\\\",\\\"value\\\":\\\"MOBILE\\\"},{\\\"name\\\":\\\"MOBILE_CONNECTION_TYPE\\\",\\\"value\\\":\\\"LTE\\\"},{\\\"name\\\":\\\"MOBILE_SIGNAL_STRENGTH\\\",\\\"value\\\":\\\"-89\\\"}]\"},{\"name\":\"CPU_INFO\",\"value\":\"[]\"},{\"name\":\"RAM_INFO\",\"value\":\"[{\\\"name\\\":\\\"TOTAL_MEMORY\\\",\\\"value\\\":\\\"1055113216\\\"},{\\\"name\\\":\\\"AVAILABLE_MEMORY\\\",\\\"value\\\":\\\"708997120\\\"},{\\\"name\\\":\\\"THRESHOLD\\\",\\\"value\\\":\\\"150994944\\\"},{\\\"name\\\":\\\"LOW_MEMORY\\\",\\\"value\\\":\\\"false\\\"}]\"},{\"name\":\"BATTERY_INFO\",\"value\":\"[{\\\"name\\\":\\\"BATTERY_LEVEL\\\",\\\"value\\\":\\\"100\\\"},{\\\"name\\\":\\\"SCALE\\\",\\\"value\\\":\\\"100\\\"},{\\\"name\\\":\\\"BATTERY_VOLTAGE\\\",\\\"value\\\":\\\"0\\\"},{\\\"name\\\":\\\"HEALTH\\\",\\\"value\\\":\\\"GOOD_CONDITION\\\"},{\\\"name\\\":\\\"STATUS\\\",\\\"value\\\":\\\"null\\\"},{\\\"name\\\":\\\"PLUGGED\\\",\\\"value\\\":\\\"AC\\\"}]\"},{\"name\":\"DEVICE_INFO\",\"value\":\"[{\\\"name\\\":\\\"ENCRYPTION_ENABLED\\\",\\\"value\\\":\\\"false\\\"},{\\\"name\\\":\\\"PASSCODE_ENABLED\\\",\\\"value\\\":\\\"true\\\"},{\\\"name\\\":\\\"BATTERY_LEVEL\\\",\\\"value\\\":\\\"100\\\"},{\\\"name\\\":\\\"INTERNAL_TOTAL_MEMORY\\\",\\\"value\\\":\\\"0.76\\\"},{\\\"name\\\":\\\"INTERNAL_AVAILABLE_MEMORY\\\",\\\"value\\\":\\\"0.67\\\"},{\\\"name\\\":\\\"EXTERNAL_TOTAL_MEMORY\\\",\\\"value\\\":\\\"0.1\\\"},{\\\"name\\\":\\\"EXTERNAL_AVAILABLE_MEMORY\\\",\\\"value\\\":\\\"0.1\\\"},{\\\"name\\\":\\\"OPERATOR\\\",\\\"value\\\":\\\"Android\\\"},{\\\"name\\\":\\\"PHONE_NUMBER\\\",\\\"value\\\":\\\"15555215554\\\"}]\"}]}");
+        operation.setOperationResponse("{\"description\":\"generic_x86\",\"deviceIdentifier\":\"1d9612def9d205f9\"," +
+                                       "\"enrolmentInfo\":null,\"name\":\"generic_x86\",\"properties\":[" +
+                                       "{\"name\":\"SERIAL\",\"value\":\"unknown\"}," +
+                                       "{\"name\":\"IMEI\",\"value\":null}," +
+                                       "{\"name\":\"IMSI\",\"value\":\"310260000000000\"}," +
+                                       "{\"name\":\"MAC\",\"value\":\"02:00:00:00:00:00\"}," +
+                                       "{\"name\":\"DEVICE_MODEL\",\"value\":\"Android SDK built for x86\"}," +
+                                       "{\"name\":\"VENDOR\",\"value\":\"unknown\"}," +
+                                       "{\"name\":\"OS_VERSION\",\"value\":\"7.1.1\"}," +
+                                       "{\"name\":\"OS_BUILD_DATE\",\"value\":\"1487782847000\"}," +
+                                       "{\"name\":\"DEVICE_NAME\",\"value\":\"generic_x86\"}," +
+                                       "{\"name\":\"LATITUDE\",\"value\":\"6.90988\"}," +
+                                       "{\"name\":\"LONGITUDE\",\"value\":\"79.85249999999999\"}," +
+                                       "{\"name\":\"NETWORK_INFO\",\"value\":\"[" +
+                                       "{\\\"name\\\":\\\"CONNECTION_TYPE\\\",\\\"value\\\":\\\"MOBILE\\\"}," +
+                                       "{\\\"name\\\":\\\"MOBILE_CONNECTION_TYPE\\\",\\\"value\\\":\\\"LTE\\\"}," +
+                                       "{\\\"name\\\":\\\"MOBILE_SIGNAL_STRENGTH\\\",\\\"value\\\":\\\"-89\\\"}]\"}," +
+                                       "{\"name\":\"CPU_INFO\",\"value\":\"[]\"},{\"name\":\"RAM_INFO\",\"value\":\"[" +
+                                       "{\\\"name\\\":\\\"TOTAL_MEMORY\\\",\\\"value\\\":\\\"1055113216\\\"}," +
+                                       "{\\\"name\\\":\\\"AVAILABLE_MEMORY\\\",\\\"value\\\":\\\"708997120\\\"}," +
+                                       "{\\\"name\\\":\\\"THRESHOLD\\\",\\\"value\\\":\\\"150994944\\\"}," +
+                                       "{\\\"name\\\":\\\"LOW_MEMORY\\\",\\\"value\\\":\\\"false\\\"}]\"}," +
+                                       "{\"name\":\"BATTERY_INFO\",\"value\":\"[" +
+                                       "{\\\"name\\\":\\\"BATTERY_LEVEL\\\",\\\"value\\\":\\\"100\\\"}," +
+                                       "{\\\"name\\\":\\\"SCALE\\\",\\\"value\\\":\\\"100\\\"}," +
+                                       "{\\\"BATTERY_VOLTAGE\\\":\\\"0\\\"}," +
+                                       "{\\\"name\\\":\\\"HEALTH\\\",\\\"value\\\":\\\"GOOD_CONDITION\\\"}," +
+                                       "{\\\"name\\\":\\\"STATUS\\\"}," +
+                                       "{\\\"name\\\":\\\"PLUGGED\\\",\\\"value\\\":\\\"AC\\\"}]\"}," +
+                                       "{\"name\":\"DEVICE_INFO\",\"value\":\"[" +
+                                       "{\\\"name\\\":\\\"ENCRYPTION_ENABLED\\\",\\\"value\\\":\\\"false\\\"}," +
+                                       "{\\\"name\\\":\\\"PASSCODE_ENABLED\\\",\\\"value\\\":\\\"true\\\"}," +
+                                       "{\\\"name\\\":\\\"BATTERY_LEVEL\\\",\\\"value\\\":\\\"100\\\"}," +
+                                       "{\\\"name\\\":\\\"INTERNAL_TOTAL_MEMORY\\\",\\\"value\\\":\\\"0.76\\\"}," +
+                                       "{\\\"name\\\":\\\"INTERNAL_AVAILABLE_MEMORY\\\",\\\"value\\\":\\\"0.67\\\"}," +
+                                       "{\\\"name\\\":\\\"EXTERNAL_TOTAL_MEMORY\\\",\\\"value\\\":\\\"0.1\\\"}," +
+                                       "{\\\"name\\\":\\\"EXTERNAL_AVAILABLE_MEMORY\\\",\\\"value\\\":\\\"0.1\\\"}," +
+                                       "{\\\"name\\\":\\\"OPERATOR\\\",\\\"value\\\":\\\"Android\\\"}," +
+                                       "{\\\"name\\\":\\\"PHONE_NUMBER\\\",\\\"value\\\":\\\"15555215554\\\"}]\"}]}");
         operation.setStatus(Operation.Status.COMPLETED);
         operations.add(operation);
         return operations;

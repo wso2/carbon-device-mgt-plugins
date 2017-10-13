@@ -70,7 +70,7 @@ public class AndroidDeviceUtils {
 
     private static Log log = LogFactory.getLog(AndroidDeviceUtils.class);
 
-    private AndroidDeviceUtils(){
+    private AndroidDeviceUtils() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -78,9 +78,9 @@ public class AndroidDeviceUtils {
         Device device = AndroidAPIUtils.getDeviceManagementService().
                 getDevice(deviceIdentifier, false);
         return !(device == null || device.getDeviceIdentifier() == null ||
-            device.getDeviceIdentifier().isEmpty() ||
-            device.getEnrolmentInfo() == null ||
-            EnrolmentInfo.Status.REMOVED.equals(device.getEnrolmentInfo().getStatus()));
+                 device.getDeviceIdentifier().isEmpty() ||
+                 device.getEnrolmentInfo() == null ||
+                 EnrolmentInfo.Status.REMOVED.equals(device.getEnrolmentInfo().getStatus()));
     }
 
     public static DeviceIdentifier convertToDeviceIdentifierObject(String deviceId) {
@@ -167,14 +167,14 @@ public class AndroidDeviceUtils {
         if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
             AndroidConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
-                log.info("Received compliance status from MONITOR operation ID: " + operation.getId());
+                log.debug("Received compliance status from MONITOR operation ID: " + operation.getId());
             }
             AndroidAPIUtils.getPolicyManagerService().checkPolicyCompliance(deviceIdentifier,
-                                                            getComplianceFeatures(operation.getPayLoad()));
+                                                                            getComplianceFeatures(operation.getPayLoad()));
         } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
                 OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
-                log.info("Received applications list from device '" + deviceId + "'");
+                log.debug("Received applications list from device '" + deviceId + "'");
             }
             updateApplicationList(operation, deviceIdentifier);
 
@@ -182,7 +182,7 @@ public class AndroidDeviceUtils {
                 OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
 
             try {
-                if (log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("Operation response: " + operation.getOperationResponse());
                 }
                 Device device = new Gson().fromJson(operation.getOperationResponse(), Device.class);
@@ -191,7 +191,6 @@ public class AndroidDeviceUtils {
             } catch (DeviceDetailsMgtException e) {
                 throw new OperationManagementException("Error occurred while updating the device information.", e);
             }
-
 
         } else if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
                    AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
@@ -247,7 +246,9 @@ public class AndroidDeviceUtils {
             }
             AndroidAPIUtils.getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
         } else {
-            log.error("Operation Response is null.");
+            if (log.isDebugEnabled()) {
+                log.debug("Operation Response is null.");
+            }
         }
 
     }
@@ -277,108 +278,109 @@ public class AndroidDeviceUtils {
 
         for (Device.Property prop : props) {
             if (Utils.getDeviceDetailsColumnNames().containsValue(prop.getName())) {
-                if (prop.getName().equalsIgnoreCase("DEVICE_MODEL")) {
-                    deviceInfo.setDeviceModel(prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("VENDOR")) {
-                    deviceInfo.setVendor(prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("OS_VERSION")) {
-                    deviceInfo.setOsVersion(prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("IMEI")) {
-                    deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("IMSI")) {
-                    deviceInfo.getDeviceDetailsMap().put("IMSI", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("MAC")) {
-                    deviceInfo.getDeviceDetailsMap().put("mac", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("SERIAL")) {
-                    deviceInfo.getDeviceDetailsMap().put("serial", prop.getValue());
-                } else if (prop.getName().equalsIgnoreCase("OS_BUILD_DATE")) {
-                    deviceInfo.setOsBuildDate(prop.getValue());
-                }
+                extractDefinedProperties(deviceInfo, prop);
             } else {
-                if (prop.getName().equalsIgnoreCase("CPU_INFO")) {
-                    deviceInfo.getDeviceDetailsMap().put("cpuUser",
-                                                         getProperty(prop.getValue(), "User"));
-                    deviceInfo.getDeviceDetailsMap().put("cpuSystem",
-                                                         getProperty(prop.getValue(), "System"));
-                    deviceInfo.getDeviceDetailsMap().put("IOW",
-                                                         getProperty(prop.getValue(), "IOW"));
-                    deviceInfo.getDeviceDetailsMap().put("IRQ",
-                                                         getProperty(prop.getValue(), "IRQ"));
-                } else if (prop.getName().equalsIgnoreCase("RAM_INFO")) {
-                    deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "TOTAL_MEMORY")));
-                    deviceInfo.setAvailableRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "AVAILABLE_MEMORY")));
-
-                    deviceInfo.getDeviceDetailsMap().put("ramThreshold",
-                                                         getProperty(prop.getValue(), "THRESHOLD"));
-                    deviceInfo.getDeviceDetailsMap().put("ramLowMemory",
-                                                         getProperty(prop.getValue(), "LOW_MEMORY"));
-                } else if (prop.getName().equalsIgnoreCase("BATTERY_INFO")) {
-                    deviceInfo.setPluggedIn(Boolean.parseBoolean(getProperty(prop.getValue(), "PLUGGED")));
-
-                    deviceInfo.getDeviceDetailsMap().put("batteryLevel",
-                                                         getProperty(prop.getValue(), "BATTERY_LEVEL"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryScale",
-                                                         getProperty(prop.getValue(), "SCALE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryVoltage",
-                                                         getProperty(prop.getValue(), "BATTERY_VOLTAGE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryTemperature",
-                                                         getProperty(prop.getValue(), "TEMPERATURE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryCurrentTemperature",
-                                                         getProperty(prop.getValue(), "CURRENT_AVERAGE"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryTechnology",
-                                                         getProperty(prop.getValue(), "TECHNOLOGY"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryHealth",
-                                                         getProperty(prop.getValue(), "HEALTH"));
-                    deviceInfo.getDeviceDetailsMap().put("batteryStatus",
-                                                         getProperty(prop.getValue(), "STATUS"));
-                } else if (prop.getName().equalsIgnoreCase("NETWORK_INFO")) {
-                    deviceInfo.setSsid(getProperty(prop.getValue(), "WIFI_SSID"));
-                    deviceInfo.setConnectionType(getProperty(prop.getValue(), "CONNECTION_TYPE"));
-
-                    deviceInfo.getDeviceDetailsMap().put("mobileSignalStrength",
-                                                         getProperty(prop.getValue(), "MOBILE_SIGNAL_STRENGTH"));
-                    deviceInfo.getDeviceDetailsMap().put("wifiSignalStrength",
-                                                         getProperty(prop.getValue(), "WIFI_SIGNAL_STRENGTH"));
-                } else if (prop.getName().equalsIgnoreCase("DEVICE_INFO")) {
-                    deviceInfo.setBatteryLevel(Double.parseDouble(
-                            getProperty(prop.getValue(), "BATTERY_LEVEL")));
-                    deviceInfo.setInternalTotalMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY")));
-                    deviceInfo.setInternalAvailableMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY")));
-                    deviceInfo.setExternalTotalMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY")));
-                    deviceInfo.setExternalAvailableMemory(Double.parseDouble(
-                            getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY")));
-
-                    deviceInfo.getDeviceDetailsMap().put("encryptionEnabled",
-                                                         getProperty(prop.getValue(), "ENCRYPTION_ENABLED"));
-                    deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
-                                                         getProperty(prop.getValue(), "PASSCODE_ENABLED"));
-                    deviceInfo.getDeviceDetailsMap().put("operator",
-                                                         getProperty(prop.getValue(), "OPERATOR"));
-                    deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
-                                                         getProperty(prop.getValue(), "PHONE_NUMBER"));
-                }
+                extractMapProperties(deviceInfo, prop);
             }
         }
         return deviceInfo;
     }
 
-    private static String getProperty(String a, String needed) {
+    private static void extractMapProperties(DeviceInfo deviceInfo, Device.Property prop) {
+        if (prop.getName().equalsIgnoreCase("CPU_INFO")) {
+            deviceInfo.getDeviceDetailsMap().put("cpuUser", getProperty(prop.getValue(), "User"));
+            deviceInfo.getDeviceDetailsMap().put("cpuSystem", getProperty(prop.getValue(), "System"));
+            deviceInfo.getDeviceDetailsMap().put("IOW", getProperty(prop.getValue(), "IOW"));
+            deviceInfo.getDeviceDetailsMap().put("IRQ", getProperty(prop.getValue(), "IRQ"));
+        } else if (prop.getName().equalsIgnoreCase("RAM_INFO")) {
+            deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "TOTAL_MEMORY")));
+            deviceInfo.setAvailableRAMMemory(Double.parseDouble(
+                    getProperty(prop.getValue(), "AVAILABLE_MEMORY")));
+            deviceInfo.getDeviceDetailsMap().put("ramThreshold", getProperty(prop.getValue(), "THRESHOLD"));
+            deviceInfo.getDeviceDetailsMap().put("ramLowMemory", getProperty(prop.getValue(), "LOW_MEMORY"));
+        } else if (prop.getName().equalsIgnoreCase("BATTERY_INFO")) {
+            deviceInfo.setPluggedIn(Boolean.parseBoolean(getProperty(prop.getValue(), "PLUGGED")));
 
-        JsonElement jsonElement = new JsonParser().parse(a);
+            deviceInfo.getDeviceDetailsMap().put("batteryLevel", getProperty(prop.getValue(), "BATTERY_LEVEL"));
+            deviceInfo.getDeviceDetailsMap().put("batteryScale", getProperty(prop.getValue(), "SCALE"));
+            deviceInfo.getDeviceDetailsMap().put("batteryVoltage",
+                                                 getProperty(prop.getValue(), "BATTERY_VOLTAGE"));
+            deviceInfo.getDeviceDetailsMap().put("batteryTemperature",
+                                                 getProperty(prop.getValue(), "TEMPERATURE"));
+            deviceInfo.getDeviceDetailsMap().put("batteryCurrentTemperature",
+                                                 getProperty(prop.getValue(), "CURRENT_AVERAGE"));
+            deviceInfo.getDeviceDetailsMap().put("batteryTechnology",
+                                                 getProperty(prop.getValue(), "TECHNOLOGY"));
+            deviceInfo.getDeviceDetailsMap().put("batteryHealth", getProperty(prop.getValue(), "HEALTH"));
+            deviceInfo.getDeviceDetailsMap().put("batteryStatus", getProperty(prop.getValue(), "STATUS"));
+        } else if (prop.getName().equalsIgnoreCase("NETWORK_INFO")) {
+            deviceInfo.setSsid(getProperty(prop.getValue(), "WIFI_SSID"));
+            deviceInfo.setConnectionType(getProperty(prop.getValue(), "CONNECTION_TYPE"));
+
+            deviceInfo.getDeviceDetailsMap().put("mobileSignalStrength",
+                                                 getProperty(prop.getValue(), "MOBILE_SIGNAL_STRENGTH"));
+            deviceInfo.getDeviceDetailsMap().put("wifiSignalStrength",
+                                                 getProperty(prop.getValue(), "WIFI_SIGNAL_STRENGTH"));
+        } else if (prop.getName().equalsIgnoreCase("DEVICE_INFO")) {
+            deviceInfo.setBatteryLevel(Double.parseDouble(
+                    getProperty(prop.getValue(), "BATTERY_LEVEL")));
+            deviceInfo.setInternalTotalMemory(Double.parseDouble(
+                    getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY")));
+            deviceInfo.setInternalAvailableMemory(Double.parseDouble(
+                    getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY")));
+            deviceInfo.setExternalTotalMemory(Double.parseDouble(
+                    getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY")));
+            deviceInfo.setExternalAvailableMemory(Double.parseDouble(
+                    getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY")));
+
+            deviceInfo.getDeviceDetailsMap().put("encryptionEnabled",
+                                                 getProperty(prop.getValue(), "ENCRYPTION_ENABLED"));
+            deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
+                                                 getProperty(prop.getValue(), "PASSCODE_ENABLED"));
+            deviceInfo.getDeviceDetailsMap().put("operator",
+                                                 getProperty(prop.getValue(), "OPERATOR"));
+            deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
+                                                 getProperty(prop.getValue(), "PHONE_NUMBER"));
+        } else if (prop.getName().equalsIgnoreCase("IMEI")) {
+            deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
+        } else if (prop.getName().equalsIgnoreCase("IMSI")) {
+            deviceInfo.getDeviceDetailsMap().put("IMSI", prop.getValue());
+        } else if (prop.getName().equalsIgnoreCase("MAC")) {
+            deviceInfo.getDeviceDetailsMap().put("mac", prop.getValue());
+        } else if (prop.getName().equalsIgnoreCase("SERIAL")) {
+            deviceInfo.getDeviceDetailsMap().put("serial", prop.getValue());
+        }
+    }
+
+    private static void extractDefinedProperties(DeviceInfo deviceInfo, Device.Property prop) {
+        if (prop.getName().equalsIgnoreCase("DEVICE_MODEL")) {
+            deviceInfo.setDeviceModel(prop.getValue());
+        } else if (prop.getName().equalsIgnoreCase("VENDOR")) {
+            deviceInfo.setVendor(prop.getValue());
+        } else if (prop.getName().equalsIgnoreCase("OS_VERSION")) {
+            deviceInfo.setOsVersion(prop.getValue());
+        } else if (prop.getName().equalsIgnoreCase("OS_BUILD_DATE")) {
+            deviceInfo.setOsBuildDate(prop.getValue());
+        }
+    }
+
+    private static String getProperty(String properties, String needed) {
+        // This is not a key value pair. value is the immediate element to its filed name.
+        // Ex:
+        // [{"name":"ENCRYPTION_ENABLED","value":"false"},{"name":"PASSCODE_ENABLED","value":"true"},
+        // {"name":"BATTERY_LEVEL","value":"100"},{"name":"INTERNAL_TOTAL_MEMORY","value":"0.76"}]
+        JsonElement jsonElement = new JsonParser().parse(properties);
         JsonArray jsonArray = jsonElement.getAsJsonArray();
         boolean exist = false;
         for (JsonElement element : jsonArray) {
-            for (Map.Entry<String, JsonElement> ob : ((JsonObject) element).entrySet()) {
-                JsonElement val = ob.getValue();
-                if (val != null && !val.isJsonNull()) {
-                    if (exist) {
-                        return val.getAsString().replace("%", "");
-                    }
-                    if (val.getAsString().equalsIgnoreCase(needed)) {
-                        exist = true;
+            if (element.isJsonObject()) {
+                JsonObject jsonObject = element.getAsJsonObject();
+                if (jsonObject.has("name")
+                    && jsonObject.get("name").getAsString().equalsIgnoreCase(needed)) {
+                    if (jsonObject.has("value")) {
+                        return jsonObject.get("value").getAsString().replace("%", "");
+                    } else {
+                        return "";
                     }
                 }
             }
@@ -386,7 +388,8 @@ public class AndroidDeviceUtils {
         return "";
     }
 
-    private static List<ComplianceFeature> getComplianceFeatures(Object compliancePayload) throws PolicyComplianceException {
+    private static List<ComplianceFeature> getComplianceFeatures(Object compliancePayload)
+            throws PolicyComplianceException {
         String compliancePayloadString = new Gson().toJson(compliancePayload);
         if (compliancePayload == null) {
             return null;
@@ -419,15 +422,15 @@ public class AndroidDeviceUtils {
      */
     public static BadRequestException buildBadRequestException(String description) {
         ErrorResponse errorResponse = getErrorResponse(AndroidConstants.
-                ErrorMessages.STATUS_BAD_REQUEST_MESSAGE_DEFAULT,400l, description);
+                                                               ErrorMessages.STATUS_BAD_REQUEST_MESSAGE_DEFAULT, 400l, description);
         return new BadRequestException(errorResponse);
     }
 
     /**
      * Returns generic ErrorResponse.
      *
-     * @param message specific error message
-     * @param code error code
+     * @param message     specific error message
+     * @param code        error code
      * @param description error description
      * @return generic Response with error specific details.
      */

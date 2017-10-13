@@ -57,7 +57,6 @@ public class DeviceManagementAdminServiceTests {
 
     private void mockDeviceManagementService()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-
         PowerMockito.stub(PowerMockito.method(AndroidAPIUtils.class, "getDeviceManagementService"))
                 .toReturn(new DeviceManagementProviderServiceMock());
     }
