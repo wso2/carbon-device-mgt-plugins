@@ -45,7 +45,6 @@ import org.wso2.carbon.mdm.services.android.utils.TestUtils;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @PowerMockIgnore({"javax.ws.rs.*", "org.apache.log4j.*"})
 @PrepareForTest(AndroidAPIUtils.class)
@@ -244,6 +243,75 @@ public class DeviceManagementServiceTests {
         Response response = deviceManagementService.enrollDevice(androidDevice);
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+    }
+
+    @Test
+    public void testIsEnrolledExists()
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        mockDeviceManagementService();
+        Response response = deviceManagementService.isEnrolled(TestUtils.getDeviceId(), null);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void testIsEnrolledNonExist()
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        mockDeviceManagementService();
+        Response response = deviceManagementService.isEnrolled("1234", null);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testIsEnrolledNull()
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        mockDeviceManagementService();
+        Response response = deviceManagementService.isEnrolled(null, null);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testModifyEnrollmentSuccess()
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        mockDeviceManagementService();
+        mockUser();
+        Response response = deviceManagementService
+                .modifyEnrollment(TestUtils.getDeviceId(), TestUtils.getBasicAndroidDevice());
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatus(), Response.Status.ACCEPTED.getStatusCode());
+    }
+
+    @Test
+    public void testModifyEnrollmentUnSuccess()
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        mockDeviceManagementService();
+        mockUser();
+        AndroidDevice androidDevice = TestUtils.getBasicAndroidDevice();
+        androidDevice.setDeviceIdentifier("1234");
+        Response response = deviceManagementService
+                .modifyEnrollment(TestUtils.getDeviceId(), androidDevice);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatus(), Response.Status.NOT_MODIFIED.getStatusCode());
+    }
+
+    @Test
+    public void testDisEnrollDeviceSuccess()
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        mockDeviceManagementService();
+        Response response = deviceManagementService.disEnrollDevice(TestUtils.getDeviceId());
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatus(), Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void testDisenrollUnSuccess()
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        mockDeviceManagementService();
+        Response response = deviceManagementService.disEnrollDevice("1234");
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getStatus(), Response.Status.NOT_FOUND.getStatusCode());
     }
 
 }
