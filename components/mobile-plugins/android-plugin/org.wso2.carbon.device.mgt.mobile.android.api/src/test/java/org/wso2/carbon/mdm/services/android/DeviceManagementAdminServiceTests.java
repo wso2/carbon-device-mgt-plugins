@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.mdm.services.android;
 
-import org.mockito.Matchers;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -31,16 +30,15 @@ import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
-import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
-import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.mdm.services.android.mocks.DeviceManagementProviderServiceMock;
 import org.wso2.carbon.mdm.services.android.services.impl.DeviceManagementAdminServiceImpl;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.utils.TestUtils;
 
 import javax.ws.rs.core.Response;
 
-@PowerMockIgnore({"javax.ws.rs.*"})
+@PowerMockIgnore({"javax.ws.rs.*", "org.apache.log4j.*"})
 @PrepareForTest(AndroidAPIUtils.class)
 public class DeviceManagementAdminServiceTests {
 
@@ -57,23 +55,17 @@ public class DeviceManagementAdminServiceTests {
         deviceManagementAdminService = new DeviceManagementAdminServiceImpl();
     }
 
-    private void mockAndroidAPIUtils()
+    private void mockDeviceManagementService()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        Activity activity = TestUtils.getActivity();
-        PowerMockito.mockStatic(AndroidAPIUtils.class);
 
-        try {
-            PowerMockito.when(AndroidAPIUtils.class, "getOperationResponse", Matchers.anyList(), Matchers.any(Operation.class))
-                    .thenReturn(activity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        PowerMockito.stub(PowerMockito.method(AndroidAPIUtils.class, "getDeviceManagementService"))
+                .toReturn(new DeviceManagementProviderServiceMock());
     }
 
     @Test
     public void testConfigureDeviceLock()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.configureDeviceLock(TestUtils.getDeviceLockBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -82,7 +74,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testConfigureDeviceUnlock()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.configureDeviceUnlock(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -91,7 +83,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testGetDeviceLocation()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.getDeviceLocation(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -100,7 +92,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testRemovePassword()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.removePassword(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -109,7 +101,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testConfigureCamera()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.configureCamera(TestUtils.getCamerabeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -118,7 +110,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testGetDeviceInformation()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.getDeviceInformation(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -127,7 +119,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testGetDeviceLogcat()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.getDeviceLogcat(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -136,7 +128,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testWipeDevice()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.wipeDevice(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -145,7 +137,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testWipeData()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.wipeData(TestUtils.getWipeDataBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -154,7 +146,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testGetApplications()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.getApplications(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -163,7 +155,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testRingDevice()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.ringDevice(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -172,7 +164,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testRebootDevice()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.rebootDevice(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -181,7 +173,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testMuteDevice()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.muteDevice(TestUtils.getDeviceIds());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -190,7 +182,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testInstallApplication()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService
                 .installApplication(TestUtils.getApplicationInstallationBeanWrapper());
         Assert.assertNotNull(response);
@@ -200,7 +192,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testUpdateApplication()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.updateApplication(TestUtils.getApplicationUpdateBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -209,7 +201,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testUninstallApplicationPublic()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService
                 .uninstallApplication(TestUtils.getApplicationUninstallationBeanWrapperPublic());
         Assert.assertNotNull(response);
@@ -219,7 +211,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testUninstallApplicationWebApp()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService
                 .uninstallApplication(TestUtils.getApplicationUninstallationBeanWrapperWebApp());
         Assert.assertNotNull(response);
@@ -229,7 +221,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testBlacklistApplications()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService
                 .blacklistApplications(TestUtils.getBlacklistApplicationsBeanWrapper());
         Assert.assertNotNull(response);
@@ -239,7 +231,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testUpgradeFirmware()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.upgradeFirmware(TestUtils.getUpgradeFirmwareBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -248,7 +240,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testConfigureVPN()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.configureVPN(TestUtils.getVpnBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -257,7 +249,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testSendNotification()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.sendNotification(TestUtils.getNotificationBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -266,7 +258,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testConfigureWifi()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.configureWifi(TestUtils.getWifiBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -275,7 +267,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testEncryptStorage()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.encryptStorage(TestUtils.getEncryptionBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -284,7 +276,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testChangeLockCode()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.changeLockCode(TestUtils.getLockCodeBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -293,7 +285,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testSetPasswordPolicy()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.setPasswordPolicy(TestUtils.getPasswordPolicyBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());
@@ -302,7 +294,7 @@ public class DeviceManagementAdminServiceTests {
     @Test
     public void testSetWebClip()
             throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
-        mockAndroidAPIUtils();
+        mockDeviceManagementService();
         Response response = deviceManagementAdminService.setWebClip(TestUtils.getWebClipBeanWrapper());
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getStatus(), Response.Status.CREATED.getStatusCode());

@@ -24,6 +24,7 @@
     <test name="API Tests" preserve-order="true">
         <classes>
             <class name="org.wso2.carbon.mdm.services.android.DeviceManagementAdminServiceTests" />
+            <class name="org.wso2.carbon.mdm.services.android.DeviceManagementServiceTests" />
         </classes>
     </test>
 </suite>
