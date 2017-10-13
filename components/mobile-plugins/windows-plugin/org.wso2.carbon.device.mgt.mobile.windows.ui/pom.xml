@@ -23,13 +23,13 @@
     <parent>
         <artifactId>windows-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.88-SNAPSHOT</version>
+        <version>4.0.88</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.windows.ui</artifactId>
-    <version>4.0.88-SNAPSHOT</version>
+    <version>4.0.88</version>
     <name>WSO2 Carbon - Mobile Windows UI</name>
     <packaging>pom</packaging>
 
