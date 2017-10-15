@@ -188,7 +188,6 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
     @Override
     public void endSession(Session session, String closeReason) {
 
-        log.info("Closing session: " + session.getId() + " due to:" + closeReason);
         RemoteSession remoteSession = RemoteSessionManagementDataHolder.getInstance().getSessionMap().remove(session
                 .getId());
         if (remoteSession != null) {
