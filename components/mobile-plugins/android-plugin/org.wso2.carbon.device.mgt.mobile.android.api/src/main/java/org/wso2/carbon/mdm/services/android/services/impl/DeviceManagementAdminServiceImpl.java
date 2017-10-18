@@ -36,6 +36,7 @@ import org.wso2.carbon.mdm.services.android.bean.Camera;
 import org.wso2.carbon.mdm.services.android.bean.DeviceEncryption;
 import org.wso2.carbon.mdm.services.android.bean.DeviceLock;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.bean.FileTransfer;
 import org.wso2.carbon.mdm.services.android.bean.LockCode;
 import org.wso2.carbon.mdm.services.android.bean.Notification;
 import org.wso2.carbon.mdm.services.android.bean.PasscodePolicy;
@@ -51,6 +52,7 @@ import org.wso2.carbon.mdm.services.android.bean.wrapper.BlacklistApplicationsBe
 import org.wso2.carbon.mdm.services.android.bean.wrapper.CameraBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.DeviceLockBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EncryptionBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.FileTransferBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.LockCodeBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.NotificationBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.PasswordPolicyBeanWrapper;
@@ -90,6 +92,46 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     @POST
+    @Path("/file-transfer")
+    @Override
+    public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
+        try {
+            if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null
+                    || fileTransferBeanWrapper.getDeviceIDs() == null) {
+                String errorMessage = "The payload of the file transfer operation is incorrect.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Invoking Android file transfer operation for " + fileTransferBeanWrapper.getDeviceIDs());
+            }
+            FileTransfer file = fileTransferBeanWrapper.getOperation();
+            ProfileOperation operation = new ProfileOperation();
+            if (fileTransferBeanWrapper.isUpload()) {
+                operation.setCode(AndroidConstants.OperationCodes.FILE_DOWNLOAD);
+            } else {
+                operation.setCode(AndroidConstants.OperationCodes.FILE_UPLOAD);
+            }
+            operation.setType(Operation.Type.PROFILE);
+            operation.setEnabled(true);
+            operation.setPayLoad(file.toJSON());
+            Activity activity = AndroidDeviceUtils.getOperationResponse(fileTransferBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers ( " + fileTransferBeanWrapper.getDeviceIDs() + " ) found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        } catch (OperationManagementException e) {
+            String errorMessage = "Issue in retrieving operation management service instance for file transfer operation";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }
+    }
+
+    @POST
     @Path("/lock-devices")
     @Override
     public Response configureDeviceLock(DeviceLockBeanWrapper deviceLockBeanWrapper) {
@@ -113,10 +155,10 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             Activity activity = AndroidDeviceUtils.getOperationResponse(deviceLockBeanWrapper.getDeviceIDs(), operation);
             return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
-                String errorMessage = "Invalid Device Identifiers found.";
-                log.error(errorMessage, e);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             log.error(errorMessage, e);
@@ -475,7 +517,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
 
         try {
             if (applicationInstallationBeanWrapper == null || applicationInstallationBeanWrapper.getOperation() ==
-                                                              null) {
+                    null) {
                 String errorMessage = "The payload of the application installing operation is incorrect";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -920,7 +962,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         try {
             URL url = new URL(apkUrl);
             URLConnection conn = url.openConnection();
-            if(((HttpURLConnection) conn).getResponseCode() != HttpURLConnection.HTTP_OK) {
+            if (((HttpURLConnection) conn).getResponseCode() != HttpURLConnection.HTTP_OK) {
                 String errorMessage = "URL is not pointed to a downloadable file.";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -942,8 +984,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     private static void validateApplicationType(String type) {
         if (type != null) {
             if (!"enterprise".equalsIgnoreCase(type)
-                && !"public".equalsIgnoreCase(type)
-                && !"webapp".equalsIgnoreCase(type)) {
+                    && !"public".equalsIgnoreCase(type)
+                    && !"webapp".equalsIgnoreCase(type)) {
                 String errorMessage = "Invalid application type.";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -957,7 +999,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
     }
 
-    private static void validateScheduleDate(String dateString){
+    private static void validateScheduleDate(String dateString) {
         try {
             if (dateString != null && !dateString.isEmpty()) {
                 SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
