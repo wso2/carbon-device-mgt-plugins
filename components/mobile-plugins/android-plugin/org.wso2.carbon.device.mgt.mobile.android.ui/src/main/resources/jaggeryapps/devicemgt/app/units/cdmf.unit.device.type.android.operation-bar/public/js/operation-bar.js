@@ -25,7 +25,7 @@ function operationSelect(selection) {
     $(modalPopupContent).html($(" .operation[data-operation-code=" + selection + "]").html());
     $(modalPopupContent).data("operation-code", selection);
     if (selection === "FILE_TRANSFER") {
-        fillUserName();
+        fileTransferSelection();
     }
     showPopup();
 }
@@ -35,6 +35,63 @@ var resetLoader = function () {
     $('#lbl-execution').addClass("hidden");
 };
 
+/**
+ * This function changes/hide/show field respective to the selection.
+ */
+function fileTransferSelection() {
+    var userName = document.getElementById('userName');
+    var password = document.getElementById('ftpPassword');
+    var infoTxt = document.getElementById('defaultFileLocation');
+    $(userName).hide();
+    $(password).hide();
+    $(infoTxt).hide();
+    fillUserName();
+    checkAuth();
+    changeLabels();
+}
+
+/**
+ * This changes the text box label when the operation is toggled between To device and From device
+ * and shows an info label for FILE UPLOAD regarding saving location.
+ */
+function changeLabels() {
+    var upload = document.getElementById('upload');
+    var download = document.getElementById('download');
+    var infoTxt = document.getElementById('defaultFileLocation');
+    console.log("info text " + infoTxt.value);
+    jQuery(upload).change(function () {
+        document.getElementById('fileURL').placeholder = "File URL";
+        document.getElementById('fileLocation').placeholder = "Location to save file in device";
+        $(infoTxt).show();
+    });
+    jQuery(download).change(function () {
+        document.getElementById('fileURL').placeholder = "URL to upload file from device";
+        document.getElementById('fileLocation').placeholder = "File location in the device";
+        $(infoTxt).hide();
+    });
+}
+
+/**
+ * This function show/hide username and password text boxes when authentication is toggled.
+ */
+function checkAuth() {
+    var auth = document.getElementById('authentication');
+    var userName = document.getElementById('userName');
+    var password = document.getElementById('ftpPassword');
+    jQuery(auth).click(function () {
+        if (this.checked) {
+            $(userName).show();
+            $(password).show();
+        } else {
+            $(userName).hide();
+            $(password).hide();
+        }
+    });
+}
+
+/**
+ * This function extracts the user name from the file url and fills it in the user name field.
+ */
 function fillUserName() {
     var inputBox = document.getElementById('fileURL');
     var regexp = ':\/\/[^\/]*@';
@@ -51,26 +108,6 @@ function fillUserName() {
             }
         }
     );
-}
-
-/**
- * This changes the text box label when the operation is toggled between FILE UPLOAD and FILE DOWNLOAD
- * and shows an info label for FILE UPLOAD regarding saving location.
- * @param type
- */
-function changeLabel(type) {
-    $(".modal #operation-error-msg").addClass("hidden");
-    if (type == "no") {
-        $(".modal #operation-warn-msg span").text("File will be saved in default location if not specified.");
-        $(".modal #operation-warn-msg").removeClass("hidden");
-        document.getElementById('fileURL').placeholder = "File URL";
-        document.getElementById('fileLocation').placeholder = "Location to save file in device";
-    } else {
-        $(".modal #operation-warn-msg").addClass("hidden");
-        document.getElementById('fileURL').placeholder = "URL for file upload";
-        document.getElementById('fileLocation').placeholder = "File location in the device";
-    }
-    fillUserName();
 }
 
 function submitForm(formId) {
@@ -223,18 +260,38 @@ function validatePayload(operationCode, payload) {
             }
             break;
         case "FILE_TRANSFER":
-            if (payload.upload && !payload.fileURL) {
-                returnVal = "Please enter the URL of the file";
-            } else if (!payload.upload && !payload.fileURL) {
-                returnVal = "Please enter the FTP URL of the folder to upload file";
-            }
-            else if (!payload.upload && !payload.fileLocation) {
-                returnVal = "Please specify the file location in device";
-            }
+            returnVal = validateFileTransferParameters(payload);
             break;
         default:
             break;
 
+    }
+    return returnVal;
+}
+
+/**
+ * This function validates all the parameters that are entered related to the file transfer operation.
+ * @param payload
+ * @returns {string}
+ */
+function validateFileTransferParameters(payload) {
+    var returnVal = "OK";
+    var auth = document.getElementById('authentication');
+    var protocol = $(document.getElementById('protocol')).find("option:selected").text();
+    if (payload.upload && !payload.fileURL) {
+        returnVal = "Please enter File URL";
+    } else if (!payload.upload && !payload.fileURL) {
+        returnVal = "Please enter the URL to upload file from device";
+    } else if (protocol === "HTTP" && !(payload.fileURL).startsWith("http:")) {
+        returnVal = "Please enter HTTP URL"
+    } else if (protocol === "FTP" && !(payload.fileURL).startsWith("ftp:")) {
+        returnVal = "Please enter FTP URL"
+    } else if (protocol === "SFTP" && !(payload.fileURL).startsWith("sftp:")) {
+        returnVal = "Please enter SFTP URL"
+    } else if (!payload.upload && !payload.fileLocation) {
+        returnVal = "Please specify the file location in device";
+    } else if (auth.checked && !payload.userName) {
+        returnVal = "Please enter the user name if authentication required"
     }
     return returnVal;
 }

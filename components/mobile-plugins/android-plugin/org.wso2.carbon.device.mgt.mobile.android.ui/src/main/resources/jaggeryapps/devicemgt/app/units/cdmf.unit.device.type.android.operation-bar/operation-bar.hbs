@@ -98,23 +98,23 @@
                                         <br/>
                                     {{/each}}
                                     {{#each uiParams}}
-                                        {{#equal this.type "bi-radio"}}
+                                        {{#equal this.type "select"}}
+                                            <div class="form-group">
+                                                <select class="form-control" id="{{this.id}}">
+                                                    <option>{{this.valueOne}}</option>
+                                                    <option>{{this.valueTwo}}</option>
+                                                    <option>{{this.valueThree}}</option>
+                                                </select>
+                                            </div>
+                                        {{/equal}}
+                                        {{#equal this.type "radio"}}
                                             <input type="radio" id="{{this.id}}"
                                                    name="{{this.name}}"
-                                                   value="{{this.yesValue}}"
+                                                   value="{{this.value}}"
+                                                   class="radio"
                                                    checked="checked"
-                                                   class="radio"
-                                                   onclick="changeLabel('yes')"
                                                    data-param-type="form"/>
-                                            {{this.yesValue}}
-                                            <input type="radio" id="{{this.id}}"
-                                                   name="{{this.name}}"
-                                                   value="{{this.noValue}}"
-                                                   class="radio"
-                                                   onclick="changeLabel('no')"
-                                                   data-param-type="form"/>
-                                            {{this.noValue}}
-                                            <br/> <br/>
+                                            {{this.value}}
                                         {{/equal}}
                                         {{#equal this.type "checkbox"}}
                                             <input type="{{this.type}}" id="{{this.id}}"
@@ -135,6 +135,13 @@
                                                    placeholder="{{this.label}}" class="form-control"
                                                    data-param-type="form" value=""/>
                                             <br/>
+                                        {{/equal}}
+                                        {{#equal this.type "info"}}
+                                            <div class="form-group" id="{{this.id}}">
+                                                <span class="help-block">
+ +                                               {{this.value}}
+                                                </span>
+                                            </div>
                                         {{/equal}}
                                     {{/each}}
                                     <button id="btnSend" type="button" onclick="submitForm('form-{{operation}}')"
