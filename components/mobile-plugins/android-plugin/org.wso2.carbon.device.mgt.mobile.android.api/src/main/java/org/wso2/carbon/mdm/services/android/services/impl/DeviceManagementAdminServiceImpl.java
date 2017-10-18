@@ -316,7 +316,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     public Response getDeviceLogcat(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking get Android device logcat operation");
-        }g
+        }
 
         try {
             CommandOperation operation = new CommandOperation();
