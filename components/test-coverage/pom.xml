@@ -22,7 +22,7 @@
     <parent>
         <artifactId>carbon-device-mgt-plugins-parent</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.87-SNAPSHOT</version>
+        <version>4.0.89-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -145,6 +145,9 @@
                                         <report>
                                             <executiondata>
                                                 <fileset dir="${siddhi.extensions}/${target}/${coverge-report}">
+                                                    <include name="${individual.test.report.name}" />
+                                                </fileset>
+                                                <fileset dir="${android.api}/${target}/${coverge-report}">
                                                     <include name="${individual.test.report.name}" />
                                                 </fileset>
 
