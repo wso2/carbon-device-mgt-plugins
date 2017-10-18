@@ -87,12 +87,6 @@
     </DataSource>
 
     <Features>
-        <Feature code="FILE_TRANSFER">
-            <Name>File Transfer</Name>
-            <Description>Transfer file to the device</Description>
-            <Operation context="/api/device-mgt/android/v1.0/admin/devices/file-transfer" method="POST" type="application/json">
-            </Operation>
-        </Feature>
         <Feature code="DEVICE_RING">
             <Name>Ring</Name>
             <Description>Ring the device</Description>
@@ -145,6 +139,13 @@
             <Name>Change Lock-code</Name>
             <Description>Change current lock code</Description>
             <Operation context="/api/device-mgt/android/v1.0/admin/devices/change-lock-code" method="POST" type="application/json">
+            </Operation>
+        </Feature>
+        <Feature code="FILE_TRANSFER">
+            <Name>File Transfer</Name>
+            <Description>Transfer file to the device</Description>
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/file-transfer" method="POST"
+                       type="application/json">
             </Operation>
         </Feature>
         <Feature code="ENTERPRISE_WIPE">
