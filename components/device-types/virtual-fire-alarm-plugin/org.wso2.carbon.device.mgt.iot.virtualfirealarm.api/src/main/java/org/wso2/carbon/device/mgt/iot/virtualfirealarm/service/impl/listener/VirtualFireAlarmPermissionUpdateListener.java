@@ -35,7 +35,6 @@ public class VirtualFireAlarmPermissionUpdateListener implements ServletContextL
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
         UserStoreManager userStoreManager = getUserStoreManager();
         try {
             if (userStoreManager != null) {
@@ -47,7 +46,8 @@ public class VirtualFireAlarmPermissionUpdateListener implements ServletContextL
                     getAuthorizationManager().authorizeRole(VirtualFireAlarmConstants.ROLE_NAME,
                             VirtualFireAlarmConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants.UI_PERMISSION_ACTION);
                 }
-            } } catch (UserStoreException e) {
+            }
+        } catch (UserStoreException e) {
             log.error("Error while creating a role and adding a user for Raspberry PI.", e);
         }
     }
@@ -101,13 +101,11 @@ public class VirtualFireAlarmPermissionUpdateListener implements ServletContextL
     }
 
     private Permission[] getPermissions() {
-
-            Permission androidSense = new Permission(VirtualFireAlarmConstants.PERM_ENROLL_FIRE_ALARM,
-                    CarbonConstants.UI_PERMISSION_ACTION);
-            Permission view = new Permission(VirtualFireAlarmConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
-                    .UI_PERMISSION_ACTION);
-
-            return new Permission[]{androidSense, view};
+        Permission androidSense = new Permission(VirtualFireAlarmConstants.PERM_ENROLL_FIRE_ALARM,
+                CarbonConstants.UI_PERMISSION_ACTION);
+        Permission view = new Permission(VirtualFireAlarmConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
+                .UI_PERMISSION_ACTION);
+        return new Permission[]{androidSense, view};
     }
 
 }

@@ -35,7 +35,6 @@ public class RaspberryPIPermissionUpdateListener implements ServletContextListen
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
         UserStoreManager userStoreManager = getUserStoreManager();
         try {
             if (userStoreManager != null) {
@@ -47,7 +46,8 @@ public class RaspberryPIPermissionUpdateListener implements ServletContextListen
                     getAuthorizationManager().authorizeRole(RaspberrypiConstants.ROLE_NAME,
                             RaspberrypiConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants.UI_PERMISSION_ACTION);
                 }
-            } } catch (UserStoreException e) {
+            }
+        } catch (UserStoreException e) {
             log.error("Error while creating a role and adding a user for Raspberry PI.", e);
         }
     }
@@ -101,13 +101,11 @@ public class RaspberryPIPermissionUpdateListener implements ServletContextListen
     }
 
     private Permission[] getPermissions() {
-
-            Permission androidSense = new Permission(RaspberrypiConstants.PERM_ENROLL_RASPBERRYPI,
-                    CarbonConstants.UI_PERMISSION_ACTION);
-            Permission view = new Permission(RaspberrypiConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
-                    .UI_PERMISSION_ACTION);
-
-            return new Permission[]{androidSense, view};
+        Permission androidSense = new Permission(RaspberrypiConstants.PERM_ENROLL_RASPBERRYPI,
+                CarbonConstants.UI_PERMISSION_ACTION);
+        Permission view = new Permission(RaspberrypiConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
+                .UI_PERMISSION_ACTION);
+        return new Permission[]{androidSense, view};
     }
 
 }

@@ -35,7 +35,6 @@ public class ArduinoPermissionUpdateListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
         UserStoreManager userStoreManager = getUserStoreManager();
         try {
             if (userStoreManager != null) {
@@ -47,7 +46,8 @@ public class ArduinoPermissionUpdateListener implements ServletContextListener {
                     getAuthorizationManager().authorizeRole(ArduinoConstants.ROLE_NAME,
                             ArduinoConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants.UI_PERMISSION_ACTION);
                 }
-            } } catch (UserStoreException e) {
+            }
+        } catch (UserStoreException e) {
             log.error("Error while creating a role and adding a user for Arduino.", e);
         }
     }
@@ -101,13 +101,12 @@ public class ArduinoPermissionUpdateListener implements ServletContextListener {
     }
 
     private Permission[] getPermissions() {
+        Permission androidSense = new Permission(ArduinoConstants.PERM_ENROLL_ARDUINO,
+                CarbonConstants.UI_PERMISSION_ACTION);
+        Permission view = new Permission(ArduinoConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
+                .UI_PERMISSION_ACTION);
 
-            Permission androidSense = new Permission(ArduinoConstants.PERM_ENROLL_ARDUINO,
-                    CarbonConstants.UI_PERMISSION_ACTION);
-            Permission view = new Permission(ArduinoConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
-                    .UI_PERMISSION_ACTION);
-
-            return new Permission[]{androidSense, view};
+        return new Permission[]{androidSense, view};
     }
 
 }
