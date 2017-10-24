@@ -33,9 +33,9 @@ import org.wso2.siddhi.query.api.exception.ExecutionPlanValidationException;
  * Accept Type(s): (STRING, STRING)
  * Return Type(s): (STRING|INT|DOUBLE|FLOAT|OBJECT)
  */
-public class getPropertyFunctionExtension extends FunctionExecutor {
+public class GetPropertyFunctionExtension extends FunctionExecutor {
 
-    Attribute.Type returnType = Attribute.Type.STRING;
+    private Attribute.Type returnType = Attribute.Type.STRING;
 
     @Override
     protected void init(ExpressionExecutor[] attributeExpressionExecutors,
@@ -47,32 +47,34 @@ public class getPropertyFunctionExtension extends FunctionExecutor {
         }
         if (attributeExpressionExecutors[0].getReturnType() != Attribute.Type.STRING) {
             throw new ExecutionPlanValidationException(
-                    "Invalid parameter type found for the first argument of json:getProperty() function, " + "required "
+                    "Invalid parameter type found for the first argument of json:getProperty() function, required "
                             + Attribute.Type.STRING + ", but found " + attributeExpressionExecutors[0].getReturnType()
                             .toString());
         }
         if (attributeExpressionExecutors[1].getReturnType() != Attribute.Type.STRING) {
             throw new ExecutionPlanValidationException(
-                    "Invalid parameter type found for the second argument of json:getProperty() function, " + "required "
-                            + Attribute.Type.STRING + ", but found " + attributeExpressionExecutors[1].getReturnType()
-                            .toString());
+                    "Invalid parameter type found for the second argument of json:getProperty() function, required "
+                            + Attribute.Type.STRING + ", but found "
+                            + attributeExpressionExecutors[1].getReturnType().toString());
         }
     }
 
     @Override
     protected Object execute(Object[] data) {
         if (data[0] == null) {
-            throw new ExecutionPlanRuntimeException("Invalid input given to json:getProperty() function. First argument cannot be null");
+            throw new ExecutionPlanRuntimeException("Invalid input given to json:getProperty() function." +
+                    " First argument cannot be null");
         }
         if (data[1] == null) {
-            throw new ExecutionPlanRuntimeException("Invalid input given to json:getProperty() function. Second argument cannot be null");
+            throw new ExecutionPlanRuntimeException("Invalid input given to json:getProperty() function. " +
+                    "Second argument cannot be null");
         }
         String jsonString = (String) data[0];
         String property = (String) data[1];
-        JSONObject jsonObject = null;
+        Object jsonObject;
         try {
-            jsonObject = new JSONObject(jsonString);
-            return jsonObject.get(property).toString();
+            jsonObject = new JSONObject(jsonString).get(property);
+            return jsonObject == null ? null : jsonObject.toString();
         } catch (JSONException e) {
             throw new ExecutionPlanRuntimeException("Cannot parse JSON String in json:getPeroperty() function. " + e);
         }
@@ -80,7 +82,8 @@ public class getPropertyFunctionExtension extends FunctionExecutor {
 
     @Override
     protected Object execute(Object data) {
-        return null;  //Since the getProperty function takes in 2 parameters, this method does not get called. Hence,not implemented.
+        return null;  //Since the getProperty function takes in 2 parameters, this method does not get called.
+                     // Hence,not implemented.
     }
 
     @Override
