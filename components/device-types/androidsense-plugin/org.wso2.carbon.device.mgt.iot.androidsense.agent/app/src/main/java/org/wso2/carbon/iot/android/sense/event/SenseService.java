@@ -59,7 +59,6 @@ public class SenseService extends Service {
         SenseDataReceiverManager.registerNetworkDataReader(this);
         //service will not be stopped until we manually stop the service
         return Service.START_NOT_STICKY;
-
     }
 
     @Override

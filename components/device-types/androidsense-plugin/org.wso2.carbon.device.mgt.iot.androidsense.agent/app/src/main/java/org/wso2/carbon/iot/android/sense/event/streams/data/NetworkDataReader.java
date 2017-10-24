@@ -25,7 +25,6 @@ import android.net.TrafficStats;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
-
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 
 import java.util.Date;

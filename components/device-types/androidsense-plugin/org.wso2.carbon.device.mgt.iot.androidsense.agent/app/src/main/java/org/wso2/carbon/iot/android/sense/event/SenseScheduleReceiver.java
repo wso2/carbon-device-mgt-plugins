@@ -38,5 +38,4 @@ public class SenseScheduleReceiver extends BroadcastReceiver {
         cal.add(Calendar.SECOND, 10);
         service.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), ALARM_INTERVAL, pending);
     }
-
 }

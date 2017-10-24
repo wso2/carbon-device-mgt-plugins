@@ -43,7 +43,6 @@ import org.wso2.carbon.iot.android.sense.util.dto.RegisterInfo;
 
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
 
-
 /**
  * A login screen that offers to register the device.
  */
@@ -159,7 +158,6 @@ public class RegisterActivity extends Activity {
                                 startActivity(intent);
                             }
                         });
-
                     }
                     mUiHandler.post(new Runnable() {
                         @Override
@@ -167,11 +165,9 @@ public class RegisterActivity extends Activity {
                             showProgress(false);
                         }
                     });
-
                 }
             });
             myThread.start();
-
         }
     }
 
@@ -208,6 +204,4 @@ public class RegisterActivity extends Activity {
             deviceRegisterButton.setVisibility(show? View.VISIBLE : View.GONE);
         }
     }
-
 }
-
