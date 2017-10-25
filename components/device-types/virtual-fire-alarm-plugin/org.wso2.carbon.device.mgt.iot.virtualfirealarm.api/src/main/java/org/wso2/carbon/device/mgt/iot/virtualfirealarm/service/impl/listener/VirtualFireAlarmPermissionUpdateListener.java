@@ -32,9 +32,13 @@ import javax.servlet.ServletContextListener;
 public class VirtualFireAlarmPermissionUpdateListener implements ServletContextListener {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmPermissionUpdateListener.class);
+    private static PrivilegedCarbonContext threadLocalCarbonContext;
+    private static RealmService realmService;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+        threadLocalCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        realmService = (RealmService) threadLocalCarbonContext.getOSGiService(RealmService.class, null);
         UserStoreManager userStoreManager = getUserStoreManager();
         try {
             if (userStoreManager != null) {
@@ -57,44 +61,34 @@ public class VirtualFireAlarmPermissionUpdateListener implements ServletContextL
 
     }
 
-    public static UserStoreManager getUserStoreManager() {
-        RealmService realmService;
+    private UserStoreManager getUserStoreManager() {
         UserStoreManager userStoreManager;
         try {
-            PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-            realmService = (RealmService) ctx.getOSGiService(RealmService.class, null);
             if (realmService == null) {
                 String msg = "Realm service has not initialized.";
-                log.error(msg);
                 throw new IllegalStateException(msg);
             }
-            int tenantId = ctx.getTenantId();
+            int tenantId = threadLocalCarbonContext.getTenantId();
             userStoreManager = realmService.getTenantUserRealm(tenantId).getUserStoreManager();
             realmService.getTenantUserRealm(tenantId).getAuthorizationManager();
         } catch (UserStoreException e) {
             String msg = "Error occurred while retrieving current user store manager";
-            log.error(msg, e);
             throw new IllegalStateException(msg);
         }
         return userStoreManager;
     }
 
-    public static AuthorizationManager getAuthorizationManager() {
-        RealmService realmService;
+    private AuthorizationManager getAuthorizationManager() {
         AuthorizationManager authorizationManager;
         try {
-            PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-            realmService = (RealmService) ctx.getOSGiService(RealmService.class, null);
             if (realmService == null) {
                 String msg = "Realm service has not initialized.";
-                log.error(msg);
                 throw new IllegalStateException(msg);
             }
-            int tenantId = ctx.getTenantId();
+            int tenantId = threadLocalCarbonContext.getTenantId();
             authorizationManager = realmService.getTenantUserRealm(tenantId).getAuthorizationManager();
         } catch (UserStoreException e) {
             String msg = "Error occurred while retrieving current user store manager";
-            log.error(msg, e);
             throw new IllegalStateException(msg);
         }
         return authorizationManager;
@@ -103,9 +97,8 @@ public class VirtualFireAlarmPermissionUpdateListener implements ServletContextL
     private Permission[] getPermissions() {
         Permission androidSense = new Permission(VirtualFireAlarmConstants.PERM_ENROLL_FIRE_ALARM,
                 CarbonConstants.UI_PERMISSION_ACTION);
-        Permission view = new Permission(VirtualFireAlarmConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
-                .UI_PERMISSION_ACTION);
+        Permission view = new Permission(VirtualFireAlarmConstants.PERM_OWNING_DEVICE_VIEW,
+                CarbonConstants.UI_PERMISSION_ACTION);
         return new Permission[]{androidSense, view};
     }
-
 }
