@@ -37,7 +37,7 @@ import org.wso2.carbon.mdm.services.android.exception.NotFoundException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.EventReceiverService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
-import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
+import org.wso2.carbon.mdm.services.android.util.AndroidDeviceUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
 import javax.validation.Valid;
@@ -149,7 +149,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         String query = "deviceIdentifier:" + deviceId;
         List<DeviceState> deviceStates;
         try {
-            deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
+            deviceStates = AndroidDeviceUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
                 throw new NotFoundException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage("No any alerts are " +
@@ -175,7 +175,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         String query = "deviceIdentifier:" + deviceId + " AND _timestamp: [" + fromDate + " TO " + toDate + "]";
         List<DeviceState> deviceStates;
         try {
-            deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
+            deviceStates = AndroidDeviceUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
                 throw new NotFoundException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage("No any alerts are " +
@@ -200,7 +200,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         String query = "deviceIdentifier:" + deviceId + " AND type:" + type;
         List<DeviceState> deviceStates;
         try {
-            deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
+            deviceStates = AndroidDeviceUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
                 throw new NotFoundException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage("No any alerts are " +

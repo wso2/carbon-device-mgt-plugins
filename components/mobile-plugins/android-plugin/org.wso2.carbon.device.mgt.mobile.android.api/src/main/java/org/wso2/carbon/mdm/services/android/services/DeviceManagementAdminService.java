@@ -216,10 +216,77 @@ import java.util.List;
                         description = "Setting a Web Clip on Android Devices",
                         key = "perm:android:set-webclip",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/webclip"}
+                ),
+                @Scope(
+                        name = "File Transfer",
+                        description = "Transferring a file to android devices",
+                        key = "perm:android:file-transfer",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/file-transfer"}
                 )
         }
 )
 public interface DeviceManagementAdminService {
+
+    @POST
+    @Path("/file-transfer")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Transferring file to the device.",
+            notes = "Using this API you have the option to transfer a file from SFTP/FTP server or using an " +
+                    "HTTP link to the device or retrieve file from the device to FTP/SFTP server .",
+            response = Activity.class,
+            tags = "Android Device Management Administrative Service",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:file-transfer")
+                    })
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 201,
+                    message = "File transferred.",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource was last modified. \n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while file transfer operation.")
+    })
+    Response fileTransfer(
+            @ApiParam(
+                    name = "fileTransfer",
+                    value = "Provide the ID of the Android device. Multiple device IDs can be added by using " +
+                            "comma separated values.",
+                    required = true) FileTransferBeanWrapper fileTransferBeanWrapper);
 
     @POST
     @Path("/lock-devices")
@@ -343,7 +410,7 @@ public interface DeviceManagementAdminService {
                     name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
 
     @POST
@@ -405,7 +472,7 @@ public interface DeviceManagementAdminService {
                     name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
     @POST
     @Path("/clear-password")
@@ -463,7 +530,7 @@ public interface DeviceManagementAdminService {
     Response removePassword(
             @ApiParam(name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
-                    required = true)  List<String> deviceIDs);
+                    required = true) List<String> deviceIDs);
 
     @POST
     @Path("/control-camera")
@@ -478,7 +545,7 @@ public interface DeviceManagementAdminService {
                     @Extension(properties = {
                             @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:control-camera")
                     })
-            }    )
+            })
     @ApiResponses(value = {
             @ApiResponse(
                     code = 201,
@@ -525,7 +592,7 @@ public interface DeviceManagementAdminService {
                             "camera on the device to function by defining false as the value and the ID of the Android device. " +
                             "Multiple device IDs can be added by using comma separated values. ",
                     required = true)
-            CameraBeanWrapper cameraBeanWrapper);
+                    CameraBeanWrapper cameraBeanWrapper);
 
     @POST
     @Path("/info")
@@ -588,7 +655,7 @@ public interface DeviceManagementAdminService {
                     name = "deviceIds",
                     value = "Provide the device ID of the Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
     @POST
     @Path("/logcat")
@@ -623,11 +690,11 @@ public interface DeviceManagementAdminService {
                             @ResponseHeader(
                                     name = "ETag",
                                     description = "Entity Tag of the response resource.\n" +
-                                                  "Used by caches, or in conditional requests."),
+                                            "Used by caches, or in conditional requests."),
                             @ResponseHeader(
                                     name = "Last-Modified",
                                     description = "Date and time the resource was last modified.\n" +
-                                                  "Used by caches, or in conditional requests.")}),
+                                            "Used by caches, or in conditional requests.")}),
             @ApiResponse(
                     code = 303,
                     message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
@@ -644,7 +711,7 @@ public interface DeviceManagementAdminService {
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
-                              "Server error occurred while adding a new device logcat operation.")
+                            "Server error occurred while adding a new device logcat operation.")
     })
     Response getDeviceLogcat(
             @ApiParam(
@@ -712,7 +779,7 @@ public interface DeviceManagementAdminService {
                     name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
     @POST
     @Path("/wipe")
@@ -773,7 +840,7 @@ public interface DeviceManagementAdminService {
                     value = "Provide the the passcode, which is the passcode that the Android agent prompts the device owner to set at the time of device enrollment, " +
                             "to enable the factory reset operation, and the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
                     required = true)
-            WipeDataBeanWrapper wipeDataBeanWrapper);
+                    WipeDataBeanWrapper wipeDataBeanWrapper);
 
     @POST
     @Path("/applications")
@@ -835,9 +902,9 @@ public interface DeviceManagementAdminService {
     Response getApplications(
             @ApiParam(
                     name = "deviceIDs",
-                    value = "Provide the ID of the Android device. Multiple device IDs can be added using comma separated values." ,
+                    value = "Provide the ID of the Android device. Multiple device IDs can be added using comma separated values.",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
     @POST
     @Path("/ring")
@@ -897,7 +964,7 @@ public interface DeviceManagementAdminService {
                     name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added using comma separated values.",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
     @POST
     @Path("/reboot")
@@ -957,7 +1024,7 @@ public interface DeviceManagementAdminService {
                     name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added using comma separated values. ",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
     @POST
     @Path("/mute")
@@ -1017,7 +1084,7 @@ public interface DeviceManagementAdminService {
                     name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added using comma separated values. ",
                     required = true)
-            List<String> deviceIDs);
+                    List<String> deviceIDs);
 
     @POST
     @Path("/install-application")
@@ -1081,7 +1148,7 @@ public interface DeviceManagementAdminService {
                             " URL and name of the application, the date and time for the scheduled installation, and the ID of the " +
                             "Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            ApplicationInstallationBeanWrapper applicationInstallationBeanWrapper);
+                    ApplicationInstallationBeanWrapper applicationInstallationBeanWrapper);
 
     @POST
     @Path("/update-application")
@@ -1146,7 +1213,7 @@ public interface DeviceManagementAdminService {
                             "URL and name of the application, the date and time for the scheduled installation, and the ID of the" +
                             "Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            ApplicationUpdateBeanWrapper applicationUpdateBeanWrapper);
+                    ApplicationUpdateBeanWrapper applicationUpdateBeanWrapper);
 
     @POST
     @Path("/uninstall-application")
@@ -1208,7 +1275,7 @@ public interface DeviceManagementAdminService {
                             "URL and name of the application, the date and time for the scheduled installation, and the ID of the" +
                             "Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            ApplicationUninstallationBeanWrapper applicationUninstallationBeanWrapper);
+                    ApplicationUninstallationBeanWrapper applicationUninstallationBeanWrapper);
 
     @POST
     @Path("/blacklist-applications")
@@ -1337,7 +1404,7 @@ public interface DeviceManagementAdminService {
                             "(example: http//abc.com, http://abc.com/ota), " +
                             "and the ID of the Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            UpgradeFirmwareBeanWrapper upgradeFirmwareBeanWrapper);
+                    UpgradeFirmwareBeanWrapper upgradeFirmwareBeanWrapper);
 
     @POST
     @Path("/configure-vpn")
@@ -1398,7 +1465,7 @@ public interface DeviceManagementAdminService {
                     name = "vpnBean",
                     value = "VPN configuration and DeviceIds",
                     required = true)
-            VpnBeanWrapper vpnBeanWrapper);
+                    VpnBeanWrapper vpnBeanWrapper);
 
     @POST
     @Path("/send-notification")
@@ -1459,7 +1526,7 @@ public interface DeviceManagementAdminService {
                     value = "The properties required to send a notification. Provide the message you wish to send and the ID of the " +
                             "Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            NotificationBeanWrapper notificationBeanWrapper);
+                    NotificationBeanWrapper notificationBeanWrapper);
 
     @POST
     @Path("/configure-wifi")
@@ -1521,7 +1588,7 @@ public interface DeviceManagementAdminService {
                             "the ssid or the name of the Wi-Fi network that you wish to configure and the ID of the Android device." +
                             " Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            WifiBeanWrapper wifiBeanWrapper);
+                    WifiBeanWrapper wifiBeanWrapper);
 
     @POST
     @Path("/encrypt-storage")
@@ -1583,7 +1650,7 @@ public interface DeviceManagementAdminService {
                             "true as the value or do not encrypt the storage on the device by assigning false as the value and " +
                             "provide the ID of the Android device. Multiple device IDs can be added by using comma separated values.",
                     required = true)
-            EncryptionBeanWrapper encryptionBeanWrapper);
+                    EncryptionBeanWrapper encryptionBeanWrapper);
 
     @POST
     @Path("/change-lock-code")
@@ -1645,7 +1712,7 @@ public interface DeviceManagementAdminService {
                             "the ID of the Android device. Multiple device IDs can be added by using comma separated values. " +
                             "If a passcode policy has been set in EMM, the lock code should comply to the passcode policy.\t",
                     required = true)
-            LockCodeBeanWrapper lockCodeBeanWrapper);
+                    LockCodeBeanWrapper lockCodeBeanWrapper);
 
     @POST
     @Path("/set-password-policy")
@@ -1705,7 +1772,7 @@ public interface DeviceManagementAdminService {
                     name = "passwordPolicy",
                     value = "The properties required to set a password policy.",
                     required = true)
-            PasswordPolicyBeanWrapper passwordPolicyBeanWrapper);
+                    PasswordPolicyBeanWrapper passwordPolicyBeanWrapper);
 
     @POST
     @Path("/set-webclip")
@@ -1765,7 +1832,7 @@ public interface DeviceManagementAdminService {
                     name = "webClip",
                     value = "The properties to set the web clip.",
                     required = true)
-            WebClipBeanWrapper webClipBeanWrapper);
+                    WebClipBeanWrapper webClipBeanWrapper);
 
 
 }

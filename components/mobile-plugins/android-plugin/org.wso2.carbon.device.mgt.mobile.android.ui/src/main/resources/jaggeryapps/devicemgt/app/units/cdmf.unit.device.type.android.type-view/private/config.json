@@ -6,6 +6,7 @@
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
         "scopes" : [
+            "perm:android:file-transfer",
             "perm:android:enroll",
             "perm:android:wipe",
             "perm:android:ring",
@@ -134,6 +135,72 @@
             "ENTERPRISE_WIPE": {
                 "icon": "fw-block",
                 "permission": "/device-mgt/devices/owning-device/operations/android/enterprise-wipe"
+            },
+            "FILE_TRANSFER": {
+                "icon": "fw-save",
+                "formParams": [
+                    {
+                        "type": "radio",
+                        "name": "directionSelection",
+                        "id": "upload",
+                        "optional": false,
+                        "value": "To device"
+                    },
+                    {
+                        "type": "radio",
+                        "name": "directionSelection",
+                        "id": "download",
+                        "optional": false,
+                        "value": "From device"
+                    },
+                    {
+                        "type": "select",
+                        "name": "protocolSelection",
+                        "id": "protocol",
+                        "optional": false,
+                        "valueOne": "HTTP",
+                        "valueTwo": "FTP",
+                        "valueThree": "SFTP",
+                        "label": "Protocol"
+                    },
+                    {
+                        "type": "text",
+                        "id": "fileURL",
+                        "optional": false,
+                        "label": "URL to upload file from device"
+                    },
+                    {
+                        "type": "text",
+                        "id": "fileLocation",
+                        "optional": false,
+                        "label": "File location in the device"
+                    },
+                    {
+                        "type": "info",
+                        "id": "defaultFileLocation",
+                        "optional": false,
+                        "value": "File will be saved in Default download directory if not specified."
+                    },
+                    {
+                        "type": "checkbox",
+                        "id": "authentication",
+                        "optional": true,
+                        "label": "Authentication required"
+                    },
+                    {
+                        "type": "text",
+                        "id": "userName",
+                        "optional": false,
+                        "label": "User Name"
+                    },
+                    {
+                        "type": "password",
+                        "id": "ftpPassword",
+                        "optional": false,
+                        "label": "Password (Ignore if not needed)"
+                    }
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/file-transfer"
             },
             "WIPE_DATA": {
                 "icon": "fw-delete",

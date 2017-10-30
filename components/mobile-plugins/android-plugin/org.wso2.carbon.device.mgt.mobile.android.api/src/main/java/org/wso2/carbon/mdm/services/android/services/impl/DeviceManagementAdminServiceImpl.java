@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
@@ -35,6 +36,7 @@ import org.wso2.carbon.mdm.services.android.bean.Camera;
 import org.wso2.carbon.mdm.services.android.bean.DeviceEncryption;
 import org.wso2.carbon.mdm.services.android.bean.DeviceLock;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.bean.FileTransfer;
 import org.wso2.carbon.mdm.services.android.bean.LockCode;
 import org.wso2.carbon.mdm.services.android.bean.Notification;
 import org.wso2.carbon.mdm.services.android.bean.PasscodePolicy;
@@ -50,6 +52,7 @@ import org.wso2.carbon.mdm.services.android.bean.wrapper.BlacklistApplicationsBe
 import org.wso2.carbon.mdm.services.android.bean.wrapper.CameraBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.DeviceLockBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EncryptionBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.FileTransferBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.LockCodeBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.NotificationBeanWrapper;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.PasswordPolicyBeanWrapper;
@@ -61,8 +64,8 @@ import org.wso2.carbon.mdm.services.android.bean.wrapper.WipeDataBeanWrapper;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementAdminService;
-import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
+import org.wso2.carbon.mdm.services.android.util.AndroidDeviceUtils;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -89,6 +92,46 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     @POST
+    @Path("/file-transfer")
+    @Override
+    public Response fileTransfer(FileTransferBeanWrapper fileTransferBeanWrapper) {
+        try {
+            if (fileTransferBeanWrapper == null || fileTransferBeanWrapper.getOperation() == null
+                    || fileTransferBeanWrapper.getDeviceIDs() == null) {
+                String errorMessage = "The payload of the file transfer operation is incorrect.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("Invoking Android file transfer operation for " + fileTransferBeanWrapper.getDeviceIDs());
+            }
+            FileTransfer file = fileTransferBeanWrapper.getOperation();
+            ProfileOperation operation = new ProfileOperation();
+            if (fileTransferBeanWrapper.isUpload()) {
+                operation.setCode(AndroidConstants.OperationCodes.FILE_DOWNLOAD);
+            } else {
+                operation.setCode(AndroidConstants.OperationCodes.FILE_UPLOAD);
+            }
+            operation.setType(Operation.Type.PROFILE);
+            operation.setEnabled(true);
+            operation.setPayLoad(file.toJSON());
+            Activity activity = AndroidDeviceUtils.getOperationResponse(fileTransferBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers ( " + fileTransferBeanWrapper.getDeviceIDs() + " ) found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        } catch (OperationManagementException e) {
+            String errorMessage = "Issue in retrieving operation management service instance for file transfer operation";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }
+    }
+
+    @POST
     @Path("/lock-devices")
     @Override
     public Response configureDeviceLock(DeviceLockBeanWrapper deviceLockBeanWrapper) {
@@ -109,19 +152,15 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setType(Operation.Type.PROFILE);
             operation.setEnabled(true);
             operation.setPayLoad(lock.toJSON());
-            return AndroidAPIUtils.getOperationResponse(deviceLockBeanWrapper.getDeviceIDs(), operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceLockBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
-                String errorMessage = "Invalid Device Identifiers found.";
-                log.error(errorMessage, e);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -141,7 +180,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_UNLOCK);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(true);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -149,11 +189,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -172,7 +207,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_LOCATION);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -180,11 +216,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -203,7 +234,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.CLEAR_PASSWORD);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -211,11 +243,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance.";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -242,7 +269,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.CAMERA);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(camera.isEnabled());
-            return AndroidAPIUtils.getOperationResponse(cameraBeanWrapper.getDeviceIDs(), operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(cameraBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -250,11 +278,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -273,7 +296,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_INFO);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -283,11 +307,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             String errorMessage = "Issue in retrieving operation management service instance";
             log.error(errorMessage, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
         }
     }
 
@@ -303,7 +322,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.LOGCAT);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -313,11 +333,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             String errorMessage = "Issue in retrieving operation management service instance";
             log.error(errorMessage, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
         }
     }
 
@@ -333,7 +348,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.ENTERPRISE_WIPE);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -341,11 +357,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -372,7 +383,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.WIPE_DATA);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(wipeData.toJSON());
-            return AndroidAPIUtils.getOperationResponse(wipeDataBeanWrapper.getDeviceIDs(), operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(wipeDataBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -380,11 +392,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -403,7 +410,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.APPLICATION_LIST);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -411,11 +419,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -434,7 +437,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_RING);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -442,11 +446,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -465,7 +464,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_REBOOT);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -473,11 +473,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -497,7 +492,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_MUTE);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(true);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(deviceIDs, operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -505,11 +501,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -526,7 +517,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
 
         try {
             if (applicationInstallationBeanWrapper == null || applicationInstallationBeanWrapper.getOperation() ==
-                                                              null) {
+                    null) {
                 String errorMessage = "The payload of the application installing operation is incorrect";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -542,8 +533,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.INSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(applicationInstallation.toJSON());
-            return AndroidAPIUtils.getOperationResponse(applicationInstallationBeanWrapper.getDeviceIDs(),
-                                                        operation);
+            Activity activity = AndroidDeviceUtils
+                    .getOperationResponse(applicationInstallationBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (JSONException e) {
             String errorMessage = "Invalid payload for the operation.";
             log.error(errorMessage);
@@ -556,11 +548,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -592,8 +579,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(applicationUpdate.toJSON());
 
-            return AndroidAPIUtils.getOperationResponse(applicationUpdateBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils
+                    .getOperationResponse(applicationUpdateBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -601,11 +589,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -635,9 +618,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.UNINSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(applicationUninstallation.toJSON());
-
-            return AndroidAPIUtils.getOperationResponse(applicationUninstallationBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils
+                    .getOperationResponse(applicationUninstallationBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -645,11 +628,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -676,8 +654,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.BLACKLIST_APPLICATIONS);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(blacklistApplications.toJSON());
-            return AndroidAPIUtils.getOperationResponse(blacklistApplicationsBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils
+                    .getOperationResponse(blacklistApplicationsBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -685,11 +664,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -718,7 +692,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.UPGRADE_FIRMWARE);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(upgradeFirmware.toJSON());
-            return AndroidAPIUtils.getOperationResponse(upgradeFirmwareBeanWrapper.getDeviceIDs(), operation);
+            Activity activity = AndroidDeviceUtils
+                    .getOperationResponse(upgradeFirmwareBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -726,11 +702,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -757,8 +728,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.VPN);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(vpn.toJSON());
-            return AndroidAPIUtils.getOperationResponse(vpnConfiguration.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(vpnConfiguration.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -766,11 +737,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -797,8 +763,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.NOTIFICATION);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(notification.toJSON());
-            return AndroidAPIUtils.getOperationResponse(notificationBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(notificationBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -806,11 +772,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -838,8 +799,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(wifi.toJSON());
 
-            return AndroidAPIUtils.getOperationResponse(wifiBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(wifiBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -847,11 +808,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -878,8 +834,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.ENCRYPT_STORAGE);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(deviceEncryption.isEncrypted());
-            return AndroidAPIUtils.getOperationResponse(encryptionBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(encryptionBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -887,11 +843,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -918,8 +869,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.CHANGE_LOCK_CODE);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(lockCode.toJSON());
-            return AndroidAPIUtils.getOperationResponse(lockCodeBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils.getOperationResponse(lockCodeBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -927,11 +878,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -959,8 +905,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(passcodePolicy.toJSON());
 
-            return AndroidAPIUtils.getOperationResponse(passwordPolicyBeanWrapper.getDeviceIDs(),
-                    operation);
+            Activity activity = AndroidDeviceUtils
+                    .getOperationResponse(passwordPolicyBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -968,11 +915,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
@@ -1000,7 +942,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.WEBCLIP);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(webClip.toJSON());
-            return AndroidAPIUtils.getOperationResponse(webClipBeanWrapper.getDeviceIDs(), operation);
+
+            Activity activity = AndroidDeviceUtils.getOperationResponse(webClipBeanWrapper.getDeviceIDs(), operation);
+            return Response.status(Response.Status.CREATED).entity(activity).build();
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -1011,11 +955,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
         }
     }
 
@@ -1023,7 +962,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         try {
             URL url = new URL(apkUrl);
             URLConnection conn = url.openConnection();
-            if(((HttpURLConnection) conn).getResponseCode() != HttpURLConnection.HTTP_OK) {
+            if (((HttpURLConnection) conn).getResponseCode() != HttpURLConnection.HTTP_OK) {
                 String errorMessage = "URL is not pointed to a downloadable file.";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -1045,8 +984,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     private static void validateApplicationType(String type) {
         if (type != null) {
             if (!"enterprise".equalsIgnoreCase(type)
-                && !"public".equalsIgnoreCase(type)
-                && !"webapp".equalsIgnoreCase(type)) {
+                    && !"public".equalsIgnoreCase(type)
+                    && !"webapp".equalsIgnoreCase(type)) {
                 String errorMessage = "Invalid application type.";
                 log.error(errorMessage);
                 throw new BadRequestException(
@@ -1060,7 +999,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
     }
 
-    private static void validateScheduleDate(String dateString){
+    private static void validateScheduleDate(String dateString) {
         try {
             if (dateString != null && !dateString.isEmpty()) {
                 SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);

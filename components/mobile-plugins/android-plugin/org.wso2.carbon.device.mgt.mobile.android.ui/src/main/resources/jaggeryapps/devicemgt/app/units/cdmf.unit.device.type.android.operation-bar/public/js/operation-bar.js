@@ -24,6 +24,9 @@ function operationSelect(selection) {
     $(modalPopupContent).addClass("operation-data");
     $(modalPopupContent).html($(" .operation[data-operation-code=" + selection + "]").html());
     $(modalPopupContent).data("operation-code", selection);
+    if (selection === "FILE_TRANSFER") {
+        fileTransferSelection();
+    }
     showPopup();
 }
 
@@ -31,6 +34,81 @@ var resetLoader = function () {
     $("#btnSend").removeClass("hidden");
     $('#lbl-execution').addClass("hidden");
 };
+
+/**
+ * This function changes/hide/show field respective to the selection.
+ */
+function fileTransferSelection() {
+    var userName = document.getElementById('userName');
+    var password = document.getElementById('ftpPassword');
+    var infoTxt = document.getElementById('defaultFileLocation');
+    $(userName).hide();
+    $(password).hide();
+    $(infoTxt).hide();
+    fillUserName();
+    checkAuth();
+    changeLabels();
+}
+
+/**
+ * This changes the text box label when the operation is toggled between To device and From device
+ * and shows an info label for FILE UPLOAD regarding saving location.
+ */
+function changeLabels() {
+    var upload = document.getElementById('upload');
+    var download = document.getElementById('download');
+    var infoTxt = document.getElementById('defaultFileLocation');
+    console.log("info text " + infoTxt.value);
+    jQuery(upload).change(function () {
+        document.getElementById('fileURL').placeholder = "File URL";
+        document.getElementById('fileLocation').placeholder = "Location to save file in device";
+        $(infoTxt).show();
+    });
+    jQuery(download).change(function () {
+        document.getElementById('fileURL').placeholder = "URL to upload file from device";
+        document.getElementById('fileLocation').placeholder = "File location in the device";
+        $(infoTxt).hide();
+    });
+}
+
+/**
+ * This function show/hide username and password text boxes when authentication is toggled.
+ */
+function checkAuth() {
+    var auth = document.getElementById('authentication');
+    var userName = document.getElementById('userName');
+    var password = document.getElementById('ftpPassword');
+    jQuery(auth).click(function () {
+        if (this.checked) {
+            $(userName).show();
+            $(password).show();
+        } else {
+            $(userName).hide();
+            $(password).hide();
+        }
+    });
+}
+
+/**
+ * This function extracts the user name from the file url and fills it in the user name field.
+ */
+function fillUserName() {
+    var inputBox = document.getElementById('fileURL');
+    var regexp = ':\/\/[^\/]*@';
+    var pattern = new RegExp(regexp);
+    jQuery(inputBox).on('input', function () {
+            var fileUrl = inputBox.value;
+            var res = pattern.test(fileUrl);
+            if (res) {
+                var name = fileUrl.match(regexp).toString();
+                document.getElementById('userName').value = name.substring(3, name.length - 1);
+            } else {
+                document.getElementById('userName').value = "";
+                document.getElementById('userName').placeholder = "User Name"
+            }
+        }
+    );
+}
 
 function submitForm(formId) {
     $("#btnSend").addClass("hidden");
@@ -53,9 +131,11 @@ function submitForm(formId) {
         } else if (input.data("param-type") == "form") {
             var prefix = (uriencodedFormStr == "") ? "" : "&";
             uriencodedFormStr += prefix + input.attr("id") + "=" + input.val();
-            if (input.attr("type") == "text") {
+            if (input.attr("type") == "text" || input.attr("type") == "password") {
                 payload[input.attr("id")] = input.val();
             } else if (input.attr("type") == "checkbox") {
+                payload[input.attr("id")] = input.is(":checked");
+            } else if (input.attr("type") == "radio") {
                 payload[input.attr("id")] = input.is(":checked");
             }
         }
@@ -76,7 +156,7 @@ function submitForm(formId) {
         var defaultStatusClasses = "fw fw-stack-1x";
         var content = $("#operation-response-template").find(".content");
         var title = content.find("#title");
-        title.attr("class","center-block text-center");
+        title.attr("class", "center-block text-center");
         var statusIcon = content.find("#status-icon");
         var description = content.find("#description");
         description.html("");
@@ -179,9 +259,39 @@ function validatePayload(operationCode, payload) {
                 returnVal = "Message Body Can't be empty !";
             }
             break;
+        case "FILE_TRANSFER":
+            returnVal = validateFileTransferParameters(payload);
+            break;
         default:
             break;
 
+    }
+    return returnVal;
+}
+
+/**
+ * This function validates all the parameters that are entered related to the file transfer operation.
+ * @param payload
+ * @returns {string}
+ */
+function validateFileTransferParameters(payload) {
+    var returnVal = "OK";
+    var auth = document.getElementById('authentication');
+    var protocol = $(document.getElementById('protocol')).find("option:selected").text();
+    if (payload.upload && !payload.fileURL) {
+        returnVal = "Please enter File URL";
+    } else if (!payload.upload && !payload.fileURL) {
+        returnVal = "Please enter the URL to upload file from device";
+    } else if (protocol === "HTTP" && !(payload.fileURL).startsWith("http:")) {
+        returnVal = "Please enter HTTP URL"
+    } else if (protocol === "FTP" && !(payload.fileURL).startsWith("ftp:")) {
+        returnVal = "Please enter FTP URL"
+    } else if (protocol === "SFTP" && !(payload.fileURL).startsWith("sftp:")) {
+        returnVal = "Please enter SFTP URL"
+    } else if (!payload.upload && !payload.fileLocation) {
+        returnVal = "Please specify the file location in device";
+    } else if (auth.checked && !payload.userName) {
+        returnVal = "Please enter the user name if authentication required"
     }
     return returnVal;
 }
@@ -237,6 +347,18 @@ var generatePayload = function (operationCode, operationData, deviceList) {
                 "operation": {
                     "lockCode": operationData["lockCode"]
                 }
+            };
+            break;
+        case androidOperationConstants["FILE_TRANSFER"]:
+            operationType = operationTypeConstants["PROFILE"];
+            payload = {
+                "operation": {
+                    "fileURL": operationData["fileURL"],
+                    "userName": operationData["userName"],
+                    "ftpPassword": operationData["ftpPassword"],
+                    "fileLocation": operationData["fileLocation"]
+                },
+                "upload": operationData["upload"]
             };
             break;
         case androidOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"]:
@@ -433,5 +555,6 @@ var androidOperationConstants = {
     "SET_STATUS_BAR_DISABLED": "SET_STATUS_BAR_DISABLED",
     "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
     "SYSTEM_UPDATE_POLICY_CODE": "SYSTEM_UPDATE_POLICY",
-    "KIOSK_APPS_CODE": "KIOSK_APPS"
+    "KIOSK_APPS_CODE": "KIOSK_APPS",
+    "FILE_TRANSFER": "FILE_TRANSFER"
 };

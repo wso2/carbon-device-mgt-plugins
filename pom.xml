@@ -23,7 +23,7 @@
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.88-SNAPSHOT</version>
+    <version>4.0.91-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -282,6 +282,12 @@
                 <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.policy.mgt.core</artifactId>
                 <version>${carbon.devicemgt.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.mockito</groupId>
+                        <artifactId>mockito-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -304,6 +310,12 @@
                 <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.analytics.data.publisher</artifactId>
                 <version>${carbon.devicemgt.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jboss</groupId>
+                        <artifactId>javassist</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -1135,6 +1147,36 @@
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-testng</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.queuing</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-dbcp.wso2</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${commons.dbcp.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>${javassist.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1186,7 +1228,7 @@
         <carbon.appmgt.version>1.2.40</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>4.0.88-SNAPSHOT</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>4.0.91-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1315,6 +1357,8 @@
         <jacoco.ant.verision>0.7.5.201505241946</jacoco.ant.verision>
         <ant.contrib.version>1.0b3</ant.contrib.version>
         <commons.dbcp.version>1.4.0.wso2v1</commons.dbcp.version>
+        <javassist.version>3.12.1.GA</javassist.version>
+        <powermock.version>1.7.0</powermock.version>
     </properties>
 
     <scm>
