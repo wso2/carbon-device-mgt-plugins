@@ -129,7 +129,6 @@ public class CheckDeviceInGroupExtensionTestCase extends BaseDeviceManagementTes
 
     @Test(dependsOnMethods = {"createGroup", "enrollDevice"})
     public void addDevices() throws GroupManagementException, DeviceNotFoundException {
-
         DeviceCacheConfiguration configuration = new DeviceCacheConfiguration();
         configuration.setEnabled(false);
 

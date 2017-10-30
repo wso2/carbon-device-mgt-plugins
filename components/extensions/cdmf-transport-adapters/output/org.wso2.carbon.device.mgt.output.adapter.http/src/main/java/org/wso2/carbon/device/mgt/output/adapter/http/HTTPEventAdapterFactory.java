@@ -62,11 +62,9 @@ public class HTTPEventAdapterFactory extends OutputEventAdapterFactory {
         clientMethod.setRequired(true);
         clientMethod.setOptions(new String[]{HTTPEventAdapterConstants.CONSTANT_HTTP_POST, HTTPEventAdapterConstants.CONSTANT_HTTP_PUT});
         clientMethod.setDefaultValue(HTTPEventAdapterConstants.CONSTANT_HTTP_POST);
-
         staticPropertyList.add(clientMethod);
 
         return staticPropertyList;
-
     }
 
     @Override
