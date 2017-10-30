@@ -1,0 +1,98 @@
+{
+  "name": "org.wso2.iot.DeviceInfoStream",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "IoT Server Device Info Stream",
+  "metaData": [
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceType",
+      "type": "STRING"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "timeStamp",
+      "type": "LONG"
+    },
+    {
+      "name": "imei",
+      "type": "STRING"
+    },
+    {
+      "name": "imsi",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceModel",
+      "type": "STRING"
+    },
+    {
+      "name": "vendor",
+      "type": "STRING"
+    },
+    {
+      "name": "osVersion",
+      "type": "STRING"
+    },
+    {
+      "name": "osBuildDate",
+      "type": "STRING"
+    },
+    {
+      "name": "batteryLevel",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "totalInternalMemory",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "availableInternalMemory",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "totalExternalMemory",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "availableExternalMemory",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "operator",
+      "type": "STRING"
+    },
+    {
+      "name": "connectionType",
+      "type": "STRING"
+    },
+    {
+      "name": "mobileSignalStrength",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "ssid",
+      "type": "STRING"
+    },
+    {
+      "name": "cpuUsage",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "totalRAM",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "availableRAM",
+      "type": "DOUBLE"
+    },
+    {
+      "name": "pluggedIn",
+      "type": "BOOL"
+    }
+  ]
+}

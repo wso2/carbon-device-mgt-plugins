@@ -1,0 +1,30 @@
+{
+  "name": "org.wso2.iot.operation",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "Operation stream for WSO2 IoT Devices",
+  "metaData": [
+    {
+      "name": "deviceIdentifier",
+      "type": "STRING"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "code",
+      "type": "STRING"
+    },
+    {
+      "name": "type",
+      "type": "STRING"
+    },
+    {
+      "name": "isEnabled",
+      "type": "BOOL"
+    },
+    {
+      "name": "payLoad",
+      "type": "STRING"
+    }
+  ]
+}

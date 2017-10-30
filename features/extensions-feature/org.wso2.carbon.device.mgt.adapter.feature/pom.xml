@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!--
-  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
   ~ WSO2 Inc. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -36,6 +36,10 @@
     <description>This feature contains the adapter bundles required for IoT Server</description>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.output.adapter.http</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.output.adapter.mqtt</artifactId>
@@ -163,6 +167,9 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
+                                <bundleDef>
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.output.adapter.http:${carbon.devicemgt.plugins.version}
+                                </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.output.adapter.mqtt:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
