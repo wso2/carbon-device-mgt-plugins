@@ -21,7 +21,7 @@
     <parent>
         <artifactId>androidsense-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.94</version>
+        <version>4.0.95-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
