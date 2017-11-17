@@ -60,6 +60,4 @@ public class AvailableSensorsInDevice {
         editor.putStringSet(SupportedSensors.GET_AVAILABLE_SENSORS, sensorSet);
         editor.apply();
     }
-
-
 }

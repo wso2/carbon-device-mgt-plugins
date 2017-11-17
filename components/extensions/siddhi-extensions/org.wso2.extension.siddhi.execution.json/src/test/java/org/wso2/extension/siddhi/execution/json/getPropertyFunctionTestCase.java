@@ -45,7 +45,7 @@ public class getPropertyFunctionTestCase {
 
     @Test
     public void testGetPropertyFunctionExtension() throws InterruptedException {
-        log.info("getPropertyFunctionExtension TestCase");
+        log.info("GetPropertyFunctionExtension TestCase");
         SiddhiManager siddhiManager = new SiddhiManager();
 
         String inStreamDefinition = "define stream inputStream (payload string, id string, volume long);";

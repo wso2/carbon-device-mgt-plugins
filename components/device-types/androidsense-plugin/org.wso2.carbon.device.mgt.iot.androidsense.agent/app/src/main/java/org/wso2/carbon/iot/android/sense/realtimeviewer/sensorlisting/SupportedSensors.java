@@ -119,5 +119,4 @@ public class SupportedSensors {
     public String getType(int type) {
         return typeSensorMap.get(type);
     }
-
 }

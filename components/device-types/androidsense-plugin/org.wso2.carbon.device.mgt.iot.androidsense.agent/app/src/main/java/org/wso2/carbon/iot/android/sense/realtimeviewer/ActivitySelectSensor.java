@@ -73,7 +73,6 @@ public class ActivitySelectSensor extends AppCompatActivity
     private ListView listView;
     private SensorManager sensorManager;
     private ArrayList<Sensor> sensors = new ArrayList<>();
-//    private EditText sessionIdText;
     private RealTimeSensorReader sensorReader = null;
     private RealTimeSensorChangeReceiver realTimeSensorChangeReceiver = new RealTimeSensorChangeReceiver();
     private SupportedSensors supportedSensors = SupportedSensors.getInstance();
@@ -87,21 +86,9 @@ public class ActivitySelectSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        //sessionIdText = (EditText) findViewById(R.id.sessionId);
-//        sessionIdText.setCursorVisible(false);
-
         listView = (ListView) findViewById(R.id.senseListContainer);
-        //verifyBluetooth();
 
         registerReceiver(realTimeSensorChangeReceiver, new IntentFilter("sensorDataMap"));
-
-//        sessionIdText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                sessionIdText.setCursorVisible(true);
-//
-//            }
-//        });
 
         //Publish data
         FloatingActionButton fbtnPublishData = (FloatingActionButton) findViewById(R.id.publish);
@@ -125,35 +112,6 @@ public class ActivitySelectSensor extends AppCompatActivity
                 sensorDialog.show(getFragmentManager(), "Sensor List");
             }
         });
-
-        //FloatingActionButton fbtnSpeechRecongnizer = (FloatingActionButton) findViewById(R.id.speech);
-//        fbtnSpeechRecongnizer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String sessionId = sessionIdText.getText().toString();
-//                if (!sessionId.isEmpty()) {
-//                    Intent intent = new Intent(getApplicationContext(), WordRecognitionActivity.class);
-//                    intent.putExtra("sessionId", sessionId);
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(ActivitySelectSensor.this, "Please type a session id value", Toast.LENGTH_SHORT)
-//                            .show();
-//                }
-//
-//            }
-//        });
-
-//        FloatingActionButton fbtnBeaconMonitor = (FloatingActionButton) findViewById(R.id.beacon);
-//        fbtnBeaconMonitor.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                    Intent intent = new Intent(getApplicationContext(), BeaconMonitoringActivity.class);
-//                    startActivity(intent);
-//
-//
-//            }
-//        });
-
 
         sharedPreferences = getSharedPreferences(SupportedSensors.SELECTED_SENSORS, 0);
 
@@ -223,7 +181,6 @@ public class ActivitySelectSensor extends AppCompatActivity
             finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -272,7 +229,6 @@ public class ActivitySelectSensor extends AppCompatActivity
 
         realTimeSensorChangeReceiver.updateOnChange(adaptor1);
         listView.setAdapter(adaptor1);
-
     }
 
     public void update() {
@@ -305,51 +261,10 @@ public class ActivitySelectSensor extends AppCompatActivity
         }
     }
 
-
     /**
      * This method unregisters the real-time broadcast receiver.
      */
     public void unregisterReceivers() {
         unregisterReceiver(realTimeSensorChangeReceiver);
     }
-
-//    private void verifyBluetooth() {
-//
-//        try {
-//            if (!BeaconManager.getInstanceForApplication(this).checkAvailability()) {
-//                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setTitle("Bluetooth not enabled");
-//                builder.setMessage("Please enable bluetooth in settings and restart this application.");
-//                builder.setPositiveButton(android.R.string.ok, null);
-//                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//
-//                    @Override
-//                    public void onDismiss(DialogInterface dialog) {
-//                        finish();
-//                        System.exit(0);
-//                    }
-//
-//                });
-//                builder.show();
-//
-//            }
-//        } catch (RuntimeException e) {
-//            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setTitle("Bluetooth LE not available");
-//            builder.setMessage("Sorry, this device does not support Bluetooth LE.");
-//            builder.setPositiveButton(android.R.string.ok, null);
-//            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//
-//                @Override
-//                public void onDismiss(DialogInterface dialog) {
-//                    finish();
-//                    System.exit(0);
-//                }
-//
-//            });
-//            builder.show();
-//
-//        }
-//
-//    }
 }

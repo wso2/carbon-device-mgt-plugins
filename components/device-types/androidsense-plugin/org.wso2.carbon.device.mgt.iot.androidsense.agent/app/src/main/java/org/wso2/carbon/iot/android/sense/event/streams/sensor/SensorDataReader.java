@@ -56,7 +56,6 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
         for (Sensor sensor : sensorList) {
             mSensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
-
     }
 
     private void collectSensorData() {
@@ -112,5 +111,4 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
             }
         }
     }
-
 }

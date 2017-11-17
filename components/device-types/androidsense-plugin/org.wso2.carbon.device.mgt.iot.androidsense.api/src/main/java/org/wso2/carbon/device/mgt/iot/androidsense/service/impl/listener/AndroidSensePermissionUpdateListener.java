@@ -32,10 +32,13 @@ import javax.servlet.ServletContextListener;
 public class AndroidSensePermissionUpdateListener implements ServletContextListener {
 
     private static Log log = LogFactory.getLog(AndroidSensePermissionUpdateListener.class);
+    private static PrivilegedCarbonContext threadLocalCarbonContext;
+    private static RealmService realmService;
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-
+        threadLocalCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        realmService = (RealmService) threadLocalCarbonContext.getOSGiService(RealmService.class, null);
         UserStoreManager userStoreManager = getUserStoreManager();
         try {
             if (userStoreManager != null) {
@@ -47,7 +50,8 @@ public class AndroidSensePermissionUpdateListener implements ServletContextListe
                     getAuthorizationManager().authorizeRole(AndroidSenseConstants.ROLE_NAME,
                             AndroidSenseConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants.UI_PERMISSION_ACTION);
                 }
-            } } catch (UserStoreException e) {
+            }
+        } catch (UserStoreException e) {
             log.error("Error while creating a role and adding a user for Android Sense.", e);
         }
     }
@@ -57,57 +61,44 @@ public class AndroidSensePermissionUpdateListener implements ServletContextListe
 
     }
 
-    public static UserStoreManager getUserStoreManager() {
-        RealmService realmService;
+    private UserStoreManager getUserStoreManager() {
         UserStoreManager userStoreManager;
         try {
-            PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-            realmService = (RealmService) ctx.getOSGiService(RealmService.class, null);
             if (realmService == null) {
                 String msg = "Realm service has not initialized.";
-                log.error(msg);
                 throw new IllegalStateException(msg);
             }
-            int tenantId = ctx.getTenantId();
+            int tenantId = threadLocalCarbonContext.getTenantId();
             userStoreManager = realmService.getTenantUserRealm(tenantId).getUserStoreManager();
             realmService.getTenantUserRealm(tenantId).getAuthorizationManager();
         } catch (UserStoreException e) {
             String msg = "Error occurred while retrieving current user store manager";
-            log.error(msg, e);
             throw new IllegalStateException(msg);
         }
         return userStoreManager;
     }
 
-    public static AuthorizationManager getAuthorizationManager() {
-        RealmService realmService;
+    private AuthorizationManager getAuthorizationManager() {
         AuthorizationManager authorizationManager;
         try {
-            PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-            realmService = (RealmService) ctx.getOSGiService(RealmService.class, null);
             if (realmService == null) {
                 String msg = "Realm service has not initialized.";
-                log.error(msg);
                 throw new IllegalStateException(msg);
             }
-            int tenantId = ctx.getTenantId();
+            int tenantId = threadLocalCarbonContext.getTenantId();
             authorizationManager = realmService.getTenantUserRealm(tenantId).getAuthorizationManager();
         } catch (UserStoreException e) {
             String msg = "Error occurred while retrieving current user store manager";
-            log.error(msg, e);
             throw new IllegalStateException(msg);
         }
         return authorizationManager;
     }
 
     private Permission[] getPermissions() {
-
-            Permission androidSense = new Permission(AndroidSenseConstants.PERM_ENROLL_ANDROID_SENSE,
-                    CarbonConstants.UI_PERMISSION_ACTION);
-            Permission view = new Permission(AndroidSenseConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
-                    .UI_PERMISSION_ACTION);
-
-            return new Permission[]{androidSense, view};
+        Permission androidSense = new Permission(AndroidSenseConstants.PERM_ENROLL_ANDROID_SENSE,
+                CarbonConstants.UI_PERMISSION_ACTION);
+        Permission view = new Permission(AndroidSenseConstants.PERM_OWNING_DEVICE_VIEW,
+                CarbonConstants.UI_PERMISSION_ACTION);
+        return new Permission[]{androidSense, view};
     }
-
 }
