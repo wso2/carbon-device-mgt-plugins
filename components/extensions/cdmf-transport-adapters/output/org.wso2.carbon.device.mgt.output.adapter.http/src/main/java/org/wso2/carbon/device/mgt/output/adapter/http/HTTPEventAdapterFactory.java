@@ -76,6 +76,12 @@ public class HTTPEventAdapterFactory extends OutputEventAdapterFactory {
         urlProp.setHint(resourceBundle.getString(HTTPEventAdapterConstants.ADAPTER_MESSAGE_URL_HINT));
         urlProp.setRequired(true);
 
+        Property urlTemplateProp = new Property(HTTPEventAdapterConstants.ADAPTER_MESSAGE_URL_TEMPLATED);
+        urlTemplateProp.setDisplayName(resourceBundle.getString(HTTPEventAdapterConstants.ADAPTER_MESSAGE_URL_TEMPLATED));
+        urlTemplateProp.setHint(resourceBundle.getString(HTTPEventAdapterConstants.ADAPTER_MESSAGE_URL_TEMPLATED_HINT));
+        urlTemplateProp.setRequired(true);
+        urlTemplateProp.setOptions(new String[]{"true", "false"});
+
         Property usernameProp = new Property(HTTPEventAdapterConstants.ADAPTER_USERNAME);
         usernameProp.setDisplayName(resourceBundle.getString(HTTPEventAdapterConstants.ADAPTER_USERNAME));
         usernameProp.setHint(resourceBundle.getString(HTTPEventAdapterConstants.ADAPTER_USERNAME_HINT));
@@ -94,6 +100,7 @@ public class HTTPEventAdapterFactory extends OutputEventAdapterFactory {
         headersProp.setRequired(false);
 
         dynamicPropertyList.add(urlProp);
+        dynamicPropertyList.add(urlTemplateProp);
         dynamicPropertyList.add(usernameProp);
         dynamicPropertyList.add(passwordProp);
         dynamicPropertyList.add(headersProp);
