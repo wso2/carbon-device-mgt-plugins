@@ -186,6 +186,8 @@ public class HTTPEventAdapter implements OutputEventAdapter {
         String payload = message.toString();
 
         if ("true".equals(dynamicProperties.get(HTTPEventAdapterConstants.ADAPTER_MESSAGE_URL_TEMPLATED))) {
+            contentType = "application/json";
+            payload = payload.replace("'", "\\\"");
             try {
                 JSONParser jsonParser = new JSONParser();
                 JSONObject jsonPayload = (JSONObject) jsonParser.parse(payload);
