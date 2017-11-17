@@ -36,7 +36,6 @@ import java.util.Set;
  * Get the user selections
  * Put them in to shared preferences
  */
-
 public class SelectSensorDialog extends DialogFragment {
 
     protected boolean[] selections = new boolean[SupportedSensors.SUPPORTED_SENSOR_COUNT];
@@ -79,7 +78,6 @@ public class SelectSensorDialog extends DialogFragment {
                 Log.d("Click", "Ok");
                 //call sensorDataMap reading class
                 sensorListListener.onDialogPositiveClick(SelectSensorDialog.this);
-
             }
         });
 
@@ -96,7 +94,6 @@ public class SelectSensorDialog extends DialogFragment {
                 }
             }
         });
-
         return builder.create();
     }
 
@@ -143,5 +140,4 @@ public class SelectSensorDialog extends DialogFragment {
     public interface SensorListListener {
         void onDialogPositiveClick(SelectSensorDialog dialog);
     }
-
 }

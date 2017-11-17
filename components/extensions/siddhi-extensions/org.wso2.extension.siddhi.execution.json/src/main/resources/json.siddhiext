@@ -16,4 +16,4 @@
 # under the License.
 #
 
-getProperty=org.wso2.extension.siddhi.execution.json.getPropertyFunctionExtension
+getProperty=org.wso2.extension.siddhi.execution.json.GetPropertyFunctionExtension

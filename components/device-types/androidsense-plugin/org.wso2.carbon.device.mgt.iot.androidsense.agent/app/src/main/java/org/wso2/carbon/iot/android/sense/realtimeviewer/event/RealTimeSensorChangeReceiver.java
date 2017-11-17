@@ -37,5 +37,4 @@ public class RealTimeSensorChangeReceiver extends BroadcastReceiver {
         TempStore.sensorArrayList.clear();
         TempStore.sensorArrayList.addAll(TempStore.sensorDataMap.values());
     }
-
 }

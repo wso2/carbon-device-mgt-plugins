@@ -83,7 +83,6 @@ public class SensorViewAdaptor extends BaseAdapter {
         holder.valuesZ.setText(data.getValueZ());
 
         return view;
-
     }
 
     private class ViewHolder {

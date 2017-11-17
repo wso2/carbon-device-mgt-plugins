@@ -236,6 +236,5 @@ public class AndroidSenseMQTTHandler extends MQTTTransportHandler {
     public void processIncomingMessage(MqttMessage message) throws TransportHandlerException {
 
     }
-
 }
 
