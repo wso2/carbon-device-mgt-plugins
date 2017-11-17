@@ -43,6 +43,7 @@
         <module>org.wso2.extension.siddhi.execution.json.feature</module>
 		<module>org.wso2.carbon.device.mgt.notification.listener.feature</module>
         <module>org.wso2.gpl.siddhi.extension.geo.script.feature</module>
+        <module>org.wso2.carbon.device.mgt.remote.session.feature</module>
     </modules>
 
 </project>
