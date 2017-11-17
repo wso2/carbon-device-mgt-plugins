@@ -24,7 +24,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>org.wso2.extension.siddhi.devicegroup.feature</artifactId>
+    <artifactId>org.wso2.extension.siddhi.device.feature</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Siddhi Execution Extension - Device Group Feature</name>
     <url>http://wso2.org</url>
@@ -33,7 +33,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.extension.siddhi.devicegroup</artifactId>
+            <artifactId>org.wso2.extension.siddhi.device</artifactId>
         </dependency>
     </dependencies>
 
@@ -51,7 +51,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.extension.siddhi.devicegroup</id>
+                            <id>org.wso2.extension.siddhi.device</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -61,7 +61,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.extension.siddhi.devicegroup:${carbon.devicemgt.plugins.version}
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.extension.siddhi.device:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
                             </bundles>
                         </configuration>

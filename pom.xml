@@ -412,7 +412,7 @@
             <!--IoT Server specific dependencies-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.extension.siddhi.devicegroup</artifactId>
+                <artifactId>org.wso2.extension.siddhi.device</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <dependency>
