@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>analytics-feature</artifactId>
-        <version>4.0.94-SNAPSHOT</version>
+        <version>4.0.94</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.iot.analytics.feature</artifactId>
-    <version>4.0.94-SNAPSHOT</version>
+    <version>4.0.94</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - IoT Server Analytics Feature</name>
     <url>http://wso2.org</url>
