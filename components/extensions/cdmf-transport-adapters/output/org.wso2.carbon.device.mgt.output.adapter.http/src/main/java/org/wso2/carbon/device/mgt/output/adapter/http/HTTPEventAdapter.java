@@ -59,13 +59,17 @@ import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class HTTPEventAdapter implements OutputEventAdapter {
 
@@ -180,6 +184,32 @@ public class HTTPEventAdapter implements OutputEventAdapter {
         Map<String, String> headers = this
                 .extractHeaders(dynamicProperties.get(HTTPEventAdapterConstants.ADAPTER_HEADERS));
         String payload = message.toString();
+
+        if ("true".equals(dynamicProperties.get(HTTPEventAdapterConstants.ADAPTER_MESSAGE_URL_TEMPLATED))) {
+            try {
+                JSONParser jsonParser = new JSONParser();
+                JSONObject jsonPayload = (JSONObject) jsonParser.parse(payload);
+
+                List<String> matchList = new ArrayList<>();
+                Pattern regex = Pattern.compile("\\{(.*?)\\}");
+                Matcher regexMatcher = regex.matcher(url);
+
+                while (regexMatcher.find()) {//Finds Matching Pattern in String
+                    matchList.add(regexMatcher.group(1));//Fetching Group from String
+                }
+
+                for(String str:matchList) {
+                    if (jsonPayload.containsKey(str)) {
+                        url = url.replace("{" + str + "}", jsonPayload.get(str).toString());
+                    }
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("Modified url: " + url);
+                }
+            } catch (ParseException e) {
+                log.error("Unable to parse request body to Json.", e);
+            }
+        }
 
         try {
             executorService.submit(new HTTPSender(url, payload, headers, httpClient));

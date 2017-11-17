@@ -19,24 +19,24 @@
 
 <eventPublisher name="WSO2IoT-DeviceOperation-Publisher" xmlns="http://wso2.org/carbon/eventpublisher">
     <from streamName="org.wso2.iot.operation" version="1.0.0"/>
-    <mapping customMapping="enable" type="json">
+    <mapping customMapping="enable" type="text">
         <inline>
             {
-                "deviceIdentifiers": [
-                    {{meta_deviceIdentifier}}
-                ],
+                "deviceIdentifiers": {{meta_deviceIdentifiers}},
+                "deviceType": "{{meta_deviceType}}",
                 "operation": {
-                    "code": {{code}},
-                    "type": {{type}},
+                    "code": "{{code}}",
+                    "type": "{{type}}",
                     "status": "PENDING",
-                    "isEnabled": {{isEnabled}},
-                    "payLoad": {{payLoad}}
+                    "isEnabled": "{{isEnabled}}",
+                    "payLoad": "{{payLoad}}"
                 }
             }
         </inline>
     </mapping>
     <to eventAdapterType="oauth-http">
         <property name="http.client.method">HttpPost</property>
-        <property name="http.url">https://localhost:9443/api/device-mgt/v1.0/devices/android/operations</property>
+        <property name="http.url">https://localhost:9443/api/device-mgt/v1.0/devices/{deviceType}/operations</property>
+        <property name="http.url.templated">true</property>
     </to>
 </eventPublisher>

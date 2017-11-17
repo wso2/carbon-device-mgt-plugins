@@ -21,6 +21,8 @@ public class HTTPEventAdapterConstants {
 
     public static final String ADAPTER_TYPE_HTTP = "oauth-http";
     public static final String ADAPTER_MESSAGE_URL = "http.url";
+    public static final String ADAPTER_MESSAGE_URL_TEMPLATED = "http.url.templated";
+    public static final String ADAPTER_MESSAGE_URL_TEMPLATED_HINT = "http.url.templated.hint";
     public static final String ADAPTER_MESSAGE_URL_HINT = "http.url.hint";
     public static final String ADAPTER_CONF_DCR_URL = "dcrUrl";
     public static final String ADAPTER_CONF_TOKEN_URL = "tokenUrl";

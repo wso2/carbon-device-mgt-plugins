@@ -1,11 +1,15 @@
 {
   "name": "org.wso2.iot.operation",
   "version": "1.0.0",
-  "nickName": "",
+  "nickName": "Operation Stream",
   "description": "Operation stream for WSO2 IoT Devices",
   "metaData": [
     {
-      "name": "deviceIdentifier",
+      "name": "deviceIdentifiers",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceType",
       "type": "STRING"
     }
   ],
