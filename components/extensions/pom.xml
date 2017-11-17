@@ -38,6 +38,7 @@
         <module>mb-extensions</module>
         <module>siddhi-extensions</module>
 		<module>pull-notification-listeners</module>
+        <module>remote-session-extension</module>
     </modules>
 
     <build>
