@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<!DOCTYPE MgmtTree PUBLIC "-//OMA//DTD-DM-DDF 1.2//EN"
+        "http://www.openmobilealliance.org/tech/DTD/DM_DDF-V1_2.dtd"
+        [<?oma-dm-ddf-ver supported-versions="1.2"?>]>
+
+<MgmtTree>
+	<VerDTD>1.2</VerDTD>
+	<Node>
+		<NodeName>DevDetail</NodeName>
+		<!--The '.' shows that this node is located immediately under the root.-->
+		<Path>.</Path>
+		<DFProperties>
+			<AccessType>
+				<Get/>
+			</AccessType>
+			<DFFormat>
+				<node/>
+			</DFFormat>
+			<Scope>
+				<Permanent/>
+			</Scope>
+			<DFTitle>The interior node holding all devinfo nodes</DFTitle>
+			<DFType>
+				<DDFName></DDFName>
+			</DFType>
+		</DFProperties>
+		<Node>
+			<NodeName>Ext</NodeName>
+			<!--There are no further items here at the moment.-->
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<DFFormat>
+					<node/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The extendable DevInfo branch.</DFTitle>
+				<DFType>
+					<DDFName></DDFName>
+				</DFType>
+			</DFProperties>
+			<Node>
+				<NodeName>BatteryLevel</NodeName>
+				<!--There are no further items here at the moment.-->
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<DFFormat>
+						<node/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>The Battery Level of the Device</DFTitle>
+					<DFType>
+						<DDFName></DDFName>
+					</DFType>
+				</DFProperties>
+			</Node>
+			<Node>
+				<NodeName>Memory</NodeName>
+				<!--There are no further items here at the moment.-->
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<DFFormat>
+						<node/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>The memory related parameters the Device</DFTitle>
+					<DFType>
+						<DDFName></DDFName>
+					</DFType>
+				</DFProperties>
+				<Node>
+					<NodeName>InternalMemory</NodeName>
+					<!--There are no further items here at the moment.-->
+					<DFProperties>
+						<AccessType>
+							<Get/>
+						</AccessType>
+						<DFFormat>
+							<node/>
+						</DFFormat>
+						<Scope>
+							<Permanent/>
+						</Scope>
+						<DFTitle>The internal memory status of the Device</DFTitle>
+						<DFType>
+							<DDFName></DDFName>
+						</DFType>
+					</DFProperties>
+				</Node>
+			</Node>
+		</Node>
+		<Node>
+			<NodeName>Bearer</NodeName>
+			<!--There are no further items here at the moment.-->
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<DFFormat>
+					<node/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The bearer specific DevInfo branch.</DFTitle>
+				<DFType>
+					<DDFName></DDFName>
+				</DFType>
+			</DFProperties>
+		</Node>
+		<Node>
+			<NodeName>URI</NodeName>
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<DFFormat>
+					<node/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The tree limitations branch.</DFTitle>
+				<DFType>
+					<DDFName></DDFName>
+				</DFType>
+			</DFProperties>
+			<Node>
+				<NodeName>MaxDepth</NodeName>
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<Description>Maximum tree depth supported by the device.</Description>
+					<DFFormat>
+						<chr/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>Maximum tree depth</DFTitle>
+					<DFType>
+						<MIME>text/plain</MIME>
+					</DFType>
+				</DFProperties>
+			</Node>
+			<Node>
+				<NodeName>MaxTotLen</NodeName>
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<Description>Maximum total URI length supported by the device.</Description>
+					<DFFormat>
+						<chr/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>Maximum URI length</DFTitle>
+					<DFType>
+						<MIME>text/plain</MIME>
+					</DFType>
+				</DFProperties>
+			</Node>
+			<Node>
+				<NodeName>MaxSegLen</NodeName>
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<Description>Maximum URI segment length supported by the device.</Description>
+					<DFFormat>
+						<chr/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>Maximum URI segment length</DFTitle>
+					<DFType>
+						<MIME>text/plain</MIME>
+					</DFType>
+				</DFProperties>
+			</Node>
+		</Node>
+		<Node>
+			<NodeName>DevTyp</NodeName>
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<!--Here the manufacturer must fill in the type of the device.-->
+				<DefaultValue>MobilePhone</DefaultValue>
+				<Description>The type of the device.</Description>
+				<DFFormat>
+					<chr/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The device type.</DFTitle>
+				<DFType>
+					<MIME>text/plain</MIME>
+				</DFType>
+			</DFProperties>
+		</Node>
+		<Node>
+			<NodeName>OEM</NodeName>
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<Description>Name of OEM</Description>
+				<DFFormat>
+					<chr/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The OEM for the device.</DFTitle>
+				<DFType>
+					<MIME>text/plain</MIME>
+				</DFType>
+			</DFProperties>
+		</Node>
+		<Node>
+			<NodeName>FwV</NodeName>
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<!--Here the manufacturer must fill in the firmware revision of the device.-->
+				<Description>The firmware revision of the device.</Description>
+				<DFFormat>
+					<chr/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The current firmware revision of the device.</DFTitle>
+				<DFType>
+					<MIME>text/plain</MIME>
+				</DFType>
+			</DFProperties>
+		</Node>
+		<Node>
+			<NodeName>SwV</NodeName>
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<!--Here the manufacturer must fill in the software revision of the device.-->
+				<Description>The software revision of the device.</Description>
+				<DFFormat>
+					<chr/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The current software revision of the device.</DFTitle>
+				<DFType>
+					<MIME>text/plain</MIME>
+				</DFType>
+			</DFProperties>
+		</Node>
+		<Node>
+			<NodeName>HwV</NodeName>
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<!--Here the manufacturer must fill in the hardware revision of the device.-->
+				<DefaultValue/>
+				<Description>The hardware revision of the device.</Description>
+				<DFFormat>
+					<chr/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>The current hardware revision of the device.</DFTitle>
+				<DFType>
+					<MIME>text/plain</MIME>
+				</DFType>
+			</DFProperties>
+		</Node>
+		<Node>
+			<NodeName>LrgObj</NodeName>
+			<DFProperties>
+				<AccessType>
+					<Get/>
+				</AccessType>
+				<!--Here the manufacturer must fill in whether the device supports large object handling  Typically,
+				 this is a property of the SyncML management agent.-->
+				<DefaultValue/>
+				<Description>Large object handling supported if value is true.</Description>
+				<DFFormat>
+					<bool/>
+				</DFFormat>
+				<Scope>
+					<Permanent/>
+				</Scope>
+				<DFTitle>Large object handling flag.</DFTitle>
+				<DFType>
+					<MIME>text/plain</MIME>
+				</DFType>
+			</DFProperties>
+		</Node>
+	</Node>
+</MgmtTree>
+
+
+
