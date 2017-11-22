@@ -38,6 +38,8 @@ import org.wso2.carbon.device.mgt.common.pull.notification.PullNotificationExecu
 import org.wso2.carbon.device.mgt.common.push.notification.NotificationStrategy;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.core.dto.DeviceType;
+import org.wso2.carbon.device.mgt.core.geo.GeoCluster;
+import org.wso2.carbon.device.mgt.core.geo.geoHash.GeoCoordinate;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.core.service.EmailMetaInfo;
 import org.wso2.carbon.mdm.services.android.utils.TestUtils;
@@ -499,6 +501,11 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
 
     @Override
     public List<Integer> getDeviceEnrolledTenants() throws DeviceManagementException {
+        return null;
+    }
+
+    @Override
+    public List<GeoCluster> findGeoClusters(GeoCoordinate geoCoordinate, GeoCoordinate geoCoordinate1, int i) throws DeviceManagementException {
         return null;
     }
 }
