@@ -64,6 +64,14 @@ public class RemoteSessionManagerStartupListener implements ServerStartupObserve
             // Set max idle timeout in milliseconds
             RemoteSessionManagementDataHolder.getInstance().setMaxIdleTimeout((long) rsConfig.getSessionIdleTimeOut() *
                     60000);
+            // Set max buffer size for messages.
+            if (rsConfig.getMaxMessageBufferSize() > 0) {
+                RemoteSessionManagementDataHolder.getInstance()
+                        .setMaxMessageBufferSize(rsConfig.getMaxMessageBufferSize() * 1024);
+            } else {
+                RemoteSessionManagementDataHolder.getInstance().
+                        setMaxMessageBufferSize(RemoteSessionConstants.MAX_BUFFER_SIZE);
+            }
 
             // Set max messages per second.
             if (rsConfig.getMaxMessagesPerSession() > 0) {

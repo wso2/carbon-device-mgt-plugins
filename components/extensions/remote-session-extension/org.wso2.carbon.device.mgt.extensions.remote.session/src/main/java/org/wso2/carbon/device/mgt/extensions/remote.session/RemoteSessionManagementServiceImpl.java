@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.device.mgt.extensions.remote.session;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
@@ -43,6 +42,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +67,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
         }
 
         // Read Query Parameters for obtain the token
-        Map<String, List<String>> sessionQueryParam = new HashedMap();
+        Map<String, List<String>> sessionQueryParam = new HashMap();
         List<String> sessionQueryParamList = new LinkedList<>();
         sessionQueryParamList.add(session.getQueryString());
         sessionQueryParam.put(RemoteSessionConstants.QUERY_STRING, sessionQueryParamList);
@@ -94,8 +94,10 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                             .isUserAuthorized(deviceIdentifier, authenticationInfo.getUsername());
                     if (userAuthorized) {
                         // set common settings for session
-                        session.setMaxBinaryMessageBufferSize(RemoteSessionConstants.MAX_BUFFER_SIZE);
-                        session.setMaxTextMessageBufferSize(RemoteSessionConstants.MAX_BUFFER_SIZE);
+                        session.setMaxBinaryMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
+                                .getMaxMessageBufferSize());
+                        session.setMaxTextMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
+                                .getMaxMessageBufferSize());
                         session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
 
                         // if session initiated using operation id means request came from device

@@ -38,6 +38,7 @@ public class RemoteSessionManagementDataHolder {
     private boolean isEnabled;
     private String serverUrl;
     private long maxIdleTimeout;
+    private int maxMessageBufferSize;
     private int maxMessagesPerSecond;
     private OAuthAuthenticator oAuthAuthenticator;
     private Map<String, RemoteSession> activeDeviceClientSessionMap = new ConcurrentHashMap<String, RemoteSession>();
@@ -109,5 +110,13 @@ public class RemoteSessionManagementDataHolder {
 
     public void setMaxIdleTimeout(long maxIdleTimeout) {
         this.maxIdleTimeout = maxIdleTimeout;
+    }
+
+    public int getMaxMessageBufferSize() {
+        return maxMessageBufferSize;
+    }
+
+    public void setMaxMessageBufferSize(int MaxMessageBufferSize) {
+        this.maxMessageBufferSize = MaxMessageBufferSize;
     }
 }
