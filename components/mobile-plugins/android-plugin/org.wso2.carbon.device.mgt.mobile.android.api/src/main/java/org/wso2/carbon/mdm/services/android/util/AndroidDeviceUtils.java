@@ -21,6 +21,7 @@ package org.wso2.carbon.mdm.services.android.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
@@ -371,13 +372,12 @@ public class AndroidDeviceUtils {
         // {"name":"BATTERY_LEVEL","value":"100"},{"name":"INTERNAL_TOTAL_MEMORY","value":"0.76"}]
         JsonElement jsonElement = new JsonParser().parse(properties);
         JsonArray jsonArray = jsonElement.getAsJsonArray();
-        boolean exist = false;
         for (JsonElement element : jsonArray) {
             if (element.isJsonObject()) {
                 JsonObject jsonObject = element.getAsJsonObject();
                 if (jsonObject.has("name")
                     && jsonObject.get("name").getAsString().equalsIgnoreCase(needed)) {
-                    if (jsonObject.has("value")) {
+                    if (jsonObject.has("value") && jsonObject.get("value") != JsonNull.INSTANCE) {
                         return jsonObject.get("value").getAsString().replace("%", "");
                     } else {
                         return "";
