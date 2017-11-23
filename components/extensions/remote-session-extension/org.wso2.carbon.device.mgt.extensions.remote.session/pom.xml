@@ -39,36 +39,12 @@
             <artifactId>org.wso2.carbon.logging</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents.wso2</groupId>
-            <artifactId>httpcore</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
             <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-pool.wso2</groupId>
             <artifactId>commons-pool</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -111,7 +87,28 @@
                             org.wso2.carbon.device.mgt.extensions.remote.session.*
                         </Export-Package>
                         <Import-Package>
-                            *;resolution:=optional
+                            javax.websocket,
+                            org.apache.axis2; version="${axis2.osgi.version.range}",
+                            org.apache.axis2.client; version="${axis2.osgi.version.range}",
+                            org.apache.axis2.context; version="${axis2.osgi.version.range}",
+                            org.apache.axis2.transport.http; version="${axis2.osgi.version.range}",
+                            org.apache.commons.httpclient,
+                            org.apache.commons.httpclient.contrib.ssl,
+                            org.apache.commons.httpclient.params,
+                            org.apache.commons.httpclient.protocol,
+                            org.apache.commons.logging,
+                            org.apache.commons.pool,
+                            org.apache.commons.pool.impl,
+                            org.json,
+                            org.osgi.framework,
+                            org.osgi.service.component,
+                            org.wso2.carbon.context,
+                            org.wso2.carbon.core,
+                            org.wso2.carbon.device.mgt.common.*,
+                            org.wso2.carbon.device.mgt.core.*,
+                            org.wso2.carbon.identity.oauth2.stub,
+                            org.wso2.carbon.identity.oauth2.stub.dto,
+                            org.wso2.carbon.utils.multitenancy
                         </Import-Package>
                     </instructions>
                 </configuration>
