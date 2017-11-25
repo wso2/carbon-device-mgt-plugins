@@ -58,5 +58,4 @@ public class RealTimeSensorReader implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
-
 }

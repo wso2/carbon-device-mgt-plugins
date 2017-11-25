@@ -107,7 +107,6 @@ var generatePolicyProfile = function () {
     return windowsOperationModule.generateProfile(configuredOperations);
 };
 
-
 /**
  * Checks if provided number is valid against a range.
  *
@@ -386,7 +385,6 @@ var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
     }
 };
 // End of HTML embedded invoke methods
-
 
 // Start of functions related to grid-input-view
 /**

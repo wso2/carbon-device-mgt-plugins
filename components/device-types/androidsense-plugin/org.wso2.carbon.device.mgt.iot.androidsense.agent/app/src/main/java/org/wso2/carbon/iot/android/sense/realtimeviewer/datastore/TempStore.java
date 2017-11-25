@@ -33,5 +33,4 @@ public class TempStore {
      * Array List which is used to populate the List view.
      */
     public static ArrayList<RealTimeSensor> sensorArrayList = new ArrayList<>();
-
 }

@@ -34,5 +34,4 @@ public class DataPublisherReceiver extends BroadcastReceiver {
         PendingIntent pending = PendingIntent.getService(context, 0, i, 0);
         service.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, pending);
     }
-
 }
