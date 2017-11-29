@@ -30,13 +30,8 @@ import java.util.Properties;
 
 public class TestDataHolder {
 
-    public final static String TEST_DEVICE_TYPE = "Test";
-    public final static Integer SUPER_TENANT_ID = -1234;
-    public final static String SUPER_TENANT_DOMAIN = "carbon.super";
     public final static String initialDeviceIdentifier = "12345";
     public final static String OWNER = "admin";
-    public static Device initialTestDevice;
-    public static DeviceType initialTestDeviceType;
 
     public static Device generateDummyDeviceData(String deviceType) {
         Device device = new Device();
@@ -53,75 +48,23 @@ public class TestDataHolder {
         return device;
     }
 
-    public static Notification getNotification(int notificationId, String status, String deviceId,
-                                               String description, String deviceName, int operationId,
-                                               String deviceType) {
-        Notification notification = new Notification();
-        notification.setNotificationId(notificationId);
-        notification.setStatus(status);
-        notification.setDeviceIdentifier(deviceId);
-        notification.setDescription(description);
-        notification.setDeviceName(deviceName);
-        notification.setOperationId(operationId);
-        notification.setDeviceType(deviceType);
-        return notification;
-    }
-
-    public static Device generateDummyDeviceData(String deviceIdentifier, String deviceType,
-                                                 EnrolmentInfo enrolmentInfo) {
-        Device device = new Device();
-        device.setEnrolmentInfo(enrolmentInfo);
-        device.setDescription("Test Description");
-        device.setDeviceIdentifier(deviceIdentifier);
-        device.setType(deviceType);
-        return device;
-    }
-
-    public static List<Device> generateDummyDeviceData(List<DeviceIdentifier> deviceIds) {
-        List<Device> devices = new ArrayList<>();
-        for (DeviceIdentifier deviceId : deviceIds) {
-            Device device = new Device();
-            EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
-            enrolmentInfo.setDateOfEnrolment(new Date().getTime());
-            enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
-            enrolmentInfo.setOwner(OWNER);
-            enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
-            enrolmentInfo.setStatus(EnrolmentInfo.Status.CREATED);
-            device.setEnrolmentInfo(enrolmentInfo);
-            device.setDescription("Test Description");
-            device.setDeviceIdentifier(deviceId.getId());
-            device.setType(deviceId.getType());
-            devices.add(device);
-        }
-        return devices;
-    }
-
-    public static DeviceType generateDeviceTypeData(String devTypeName) {
-        DeviceType deviceType = new DeviceType();
-        deviceType.setName(devTypeName);
-        return deviceType;
-    }
-
-    public static Application generateApplicationDummyData(String appIdentifier) {
-        Application application = new Application();
-        Properties properties = new Properties();
-        properties.setProperty("test1", "testVal");
-        application.setName("SimpleCalculator");
-        application.setCategory("TestCategory");
-        application.setApplicationIdentifier(appIdentifier);
-        application.setType("TestType");
-        application.setVersion("1.0.0");
-        application.setImageUrl("http://test.org/image/");
-        application.setLocationUrl("http://test.org/location/");
-        application.setAppProperties(properties);
-        return application;
-    }
-
-    public static DeviceGroup generateDummyGroupData() {
+    public static DeviceGroup generateDummyGroupData(int testId) {
         DeviceGroup deviceGroup = new DeviceGroup();
-        deviceGroup.setName("Test device group");
-        deviceGroup.setDescription("Test description");
+        deviceGroup.setName("Test" + testId);
+        deviceGroup.setDescription("Test description " + testId);
         deviceGroup.setOwner(OWNER);
         return deviceGroup;
+    }
+
+    public static List<DeviceIdentifier> getDeviceIdentifiersList(String deviceType){
+        Device device = generateDummyDeviceData(deviceType);
+        DeviceIdentifier identifier = new DeviceIdentifier();
+        identifier.setId(device.getDeviceIdentifier());
+        identifier.setType(deviceType);
+
+        List<DeviceIdentifier> list = new ArrayList<>();
+        list.add(identifier);
+
+        return list;
     }
 }

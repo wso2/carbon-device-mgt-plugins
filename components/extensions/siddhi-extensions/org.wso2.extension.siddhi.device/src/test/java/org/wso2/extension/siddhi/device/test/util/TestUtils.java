@@ -58,35 +58,4 @@ public class TestUtils {
             }
         }
     }
-
-
-    public static DeviceGroup createDeviceGroup1(){
-        DeviceGroup group = new DeviceGroup();
-        group.setName("TEST_GROUP_01");
-        group.setDescription("TEST_GROUP_01 - Description");
-        group.setOwner("admin");
-        return group;
-    }
-
-
-    public static DeviceGroup createDeviceGroup2(){
-        DeviceGroup group = new DeviceGroup();
-        group.setName("TEST_GROUP_02");
-        group.setDescription("TEST_GROUP_02 - Description");
-        group.setOwner("admin");
-        return group;
-    }
-
-    public static List<DeviceIdentifier> getDeviceIdentifiersList(String deviceType){
-
-        Device device = TestDataHolder.generateDummyDeviceData(deviceType);
-        DeviceIdentifier identifier = new DeviceIdentifier();
-        identifier.setId(device.getDeviceIdentifier());
-        identifier.setType(deviceType);
-
-        List<DeviceIdentifier> list = new ArrayList<>();
-        list.add(identifier);
-
-        return list;
-    }
 }
