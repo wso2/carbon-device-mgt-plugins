@@ -49,7 +49,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.extension.siddhi.device.test.util.SiddhiTestHelper;
 import org.wso2.extension.siddhi.device.test.util.TestDataHolder;
 import org.wso2.extension.siddhi.device.test.util.TestDeviceManagementService;
-import org.wso2.extension.siddhi.device.test.util.TestUtils;
 import org.wso2.extension.siddhi.device.utils.DeviceUtils;
 import org.wso2.siddhi.core.ExecutionPlanRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
@@ -79,7 +78,7 @@ public class ExtensionTestCase extends BaseDeviceManagementTest {
         @Override
         public void receive(long timeStamp, Event[] inEvents, Event[] removeEvents) {
             EventPrinter.print(timeStamp, inEvents, removeEvents);
-            for (Event event : inEvents) {
+            for (Event ignored : inEvents) {
                 count.incrementAndGet();
                 eventArrived = true;
             }
@@ -127,8 +126,10 @@ public class ExtensionTestCase extends BaseDeviceManagementTest {
 
     @Test
     public void createGroup() throws GroupManagementException, GroupAlreadyExistException {
-        groupManagementProviderService.createGroup(TestUtils.createDeviceGroup1(), DEFAULT_ADMIN_ROLE, DEFAULT_ADMIN_PERMISSIONS);
-        groupManagementProviderService.createGroup(TestUtils.createDeviceGroup2(), DEFAULT_ADMIN_ROLE, DEFAULT_ADMIN_PERMISSIONS);
+        groupManagementProviderService.createGroup(TestDataHolder.generateDummyGroupData(1),
+                                                   DEFAULT_ADMIN_ROLE, DEFAULT_ADMIN_PERMISSIONS);
+        groupManagementProviderService.createGroup(TestDataHolder.generateDummyGroupData(2),
+                                                   DEFAULT_ADMIN_ROLE, DEFAULT_ADMIN_PERMISSIONS);
     }
 
     @Test
@@ -149,13 +150,38 @@ public class ExtensionTestCase extends BaseDeviceManagementTest {
         configuration.setEnabled(false);
 
         DeviceConfigurationManager.getInstance().getDeviceManagementConfig().setDeviceCacheConfiguration(configuration);
-        List<DeviceIdentifier> list = TestUtils.getDeviceIdentifiersList(DEVICE_TYPE);
-        DeviceGroup deviceGroup = groupManagementProviderService.getGroup(TestUtils.createDeviceGroup1().getName());
+        List<DeviceIdentifier> list = TestDataHolder.getDeviceIdentifiersList(DEVICE_TYPE);
+        DeviceGroup deviceGroup = groupManagementProviderService.getGroup(TestDataHolder.generateDummyGroupData(1).getName());
         Assert.assertNotNull(deviceGroup);
         groupManagementProviderService.addDevices(deviceGroup.getGroupId(), list);
     }
 
     @Test(dependsOnMethods = {"addDevices"})
+    public void testIsEnrolledExtension() throws InterruptedException, GroupManagementException {
+        log.info("IsEnrolled TestCase");
+        SiddhiManager siddhiManager = new SiddhiManager();
+
+        count.set(0);
+        eventArrived = false;
+
+        String inStreamDefinition = "define stream inputStream (deviceId string, deviceType string);";
+        String query = ("@info(name = 'query1') from inputStream[device:isEnrolled(deviceId, deviceType)] " +
+                        "select deviceId insert into outputStream;");
+        ExecutionPlanRuntime executionPlanRuntime = siddhiManager.createExecutionPlanRuntime(inStreamDefinition + query);
+        executionPlanRuntime.addCallback("query1", queryCallback);
+
+        InputHandler inputHandler = executionPlanRuntime.getInputHandler("inputStream");
+        executionPlanRuntime.start();
+        DeviceIdentifier deviceIdentifier = TestDataHolder.getDeviceIdentifiersList(DEVICE_TYPE).get(0);
+        inputHandler.send(new Object[]{deviceIdentifier.getId(), deviceIdentifier.getType()});
+        inputHandler.send(new Object[]{"99999", deviceIdentifier.getType()});
+        SiddhiTestHelper.waitForEvents(100, 1, count, 10000);
+        Assert.assertTrue(eventArrived);
+        Assert.assertEquals(1, count.get());
+        executionPlanRuntime.shutdown();
+    }
+
+    @Test(dependsOnMethods = {"testIsEnrolledExtension"})
     public void testIsInGroupExtension() throws InterruptedException, GroupManagementException {
         log.info("IsInGroup TestCase");
         SiddhiManager siddhiManager = new SiddhiManager();
@@ -171,11 +197,11 @@ public class ExtensionTestCase extends BaseDeviceManagementTest {
 
         InputHandler inputHandler = executionPlanRuntime.getInputHandler("inputStream");
         executionPlanRuntime.start();
-        DeviceIdentifier deviceIdentifier = TestUtils.getDeviceIdentifiersList(DEVICE_TYPE).get(0);
+        DeviceIdentifier deviceIdentifier = TestDataHolder.getDeviceIdentifiersList(DEVICE_TYPE).get(0);
         inputHandler.send(new Object[]{groupManagementProviderService.getGroup(
-                TestUtils.createDeviceGroup1().getName()).getGroupId(), deviceIdentifier.getId(), deviceIdentifier.getType()});
+                TestDataHolder.generateDummyGroupData(1).getName()).getGroupId(), deviceIdentifier.getId(), deviceIdentifier.getType()});
         inputHandler.send(new Object[]{groupManagementProviderService.getGroup(
-                TestUtils.createDeviceGroup2().getName()).getGroupId(), deviceIdentifier.getId(), deviceIdentifier.getType()});
+                TestDataHolder.generateDummyGroupData(2).getName()).getGroupId(), deviceIdentifier.getId(), deviceIdentifier.getType()});
         SiddhiTestHelper.waitForEvents(100, 1, count, 10000);
         Assert.assertTrue(eventArrived);
         Assert.assertEquals(1, count.get());

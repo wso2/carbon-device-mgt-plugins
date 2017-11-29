@@ -19,13 +19,12 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="DeviceExtensionTestSuite">
+<suite name="JsonExtensionTestSuite">
     <parameter name="useDefaultListeners" value="false"/>
 
     <test name="Extension Unit Tests" preserve-order="true">
         <classes>
-            <class name="org.wso2.extension.siddhi.device.BaseDeviceManagementTest"/>
-            <class name="org.wso2.extension.siddhi.device.ExtensionTestCase"/>
+            <class name="org.wso2.extension.siddhi.execution.json.ExtensionTestCase"/>
         </classes>
     </test>
 </suite>
