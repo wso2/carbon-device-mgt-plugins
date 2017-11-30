@@ -414,6 +414,11 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
     }
 
     @Override
+    public boolean updateProperties(DeviceIdentifier deviceIdentifier, List<Device.Property> list) throws DeviceManagementException {
+        return false;
+    }
+
+    @Override
     public Operation getOperationByDeviceAndOperationId(DeviceIdentifier deviceIdentifier, int i)
             throws OperationManagementException {
         return null;

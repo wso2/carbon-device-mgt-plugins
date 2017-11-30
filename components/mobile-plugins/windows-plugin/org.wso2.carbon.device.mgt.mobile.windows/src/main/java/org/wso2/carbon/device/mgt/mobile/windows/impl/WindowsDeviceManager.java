@@ -242,6 +242,11 @@ public class WindowsDeviceManager implements DeviceManager {
     }
 
     @Override
+    public boolean updateDeviceProperties(DeviceIdentifier deviceIdentifier, List<Device.Property> list) throws DeviceManagementException {
+        return false;
+    }
+
+    @Override
     public boolean setOwnership(DeviceIdentifier deviceId, String ownershipType)
             throws DeviceManagementException {
         return true;
