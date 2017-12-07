@@ -22,7 +22,7 @@
     <parent>
         <artifactId>carbon-device-mgt-plugins-parent</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.100-SNAPSHOT</version>
+        <version>4.0.102-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -103,9 +103,13 @@
             ${basedir}/../${extensions}/pull-notification-listeners/org.wso2.carbon.device.mgt.mqtt.notification.listener
         </pull.notification.listener>
 
-        <siddhi.extensions>
-            ${basedir}/../${extensions}/siddhi-extensions/org.wso2.extension.siddhi.execution.json
-        </siddhi.extensions>
+        <siddhi.extensions>${extensions}/siddhi-extensions</siddhi.extensions>
+        <siddhi.json.extensions>
+            ${basedir}/../${siddhi.extensions}/org.wso2.extension.siddhi.execution.json
+        </siddhi.json.extensions>
+        <siddhi.device.extensions>
+            ${basedir}/../${siddhi.extensions}/org.wso2.extension.siddhi.device
+        </siddhi.device.extensions>
 
         <!-- mobile-plugins component -->
         <mobile.plugins>mobile-plugins</mobile.plugins>
@@ -134,8 +138,9 @@
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
                                 <if>
                                     <and>
-                                        <available file="${siddhi.extensions}/${target}/${coverge-report}/${individual.test.report.name}" />
-
+                                        <available file="${siddhi.json.extensions}/${target}/${coverge-report}/${individual.test.report.name}" />
+                                        <available file="${siddhi.device.extensions}/${target}/${coverge-report}/${individual.test.report.name}" />
+                                        <available file="${android.api}/${target}/${coverge-report}/${individual.test.report.name}" />
                                     </and>
                                     <then>
                                         <taskdef name="report" classname="org.jacoco.ant.ReportTask">
@@ -144,7 +149,10 @@
                                         <mkdir dir="${basedir}/target/coverage-report" />
                                         <report>
                                             <executiondata>
-                                                <fileset dir="${siddhi.extensions}/${target}/${coverge-report}">
+                                                <fileset dir="${siddhi.device.extensions}/${target}/${coverge-report}">
+                                                    <include name="${individual.test.report.name}" />
+                                                </fileset>
+                                                <fileset dir="${siddhi.json.extensions}/${target}/${coverge-report}">
                                                     <include name="${individual.test.report.name}" />
                                                 </fileset>
                                                 <fileset dir="${android.api}/${target}/${coverge-report}">
@@ -308,12 +316,22 @@
                                                         </sourcefiles>
                                                     </group>
                                                     <group name="siddhi-extensions">
-                                                        <classfiles>
-                                                            <fileset dir="${siddhi.extensions}/${target}/${classes}" />
-                                                        </classfiles>
-                                                        <sourcefiles encoding="UTF-8">
-                                                            <fileset dir="${siddhi.extensions}/${source}" />
-                                                        </sourcefiles>
+                                                        <group name="org.wso2.extension.siddhi.execution.json">
+                                                            <classfiles>
+                                                                <fileset dir="${siddhi.json.extensions}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${siddhi.json.extensions}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
+                                                        <group name="org.wso2.extension.siddhi.device">
+                                                            <classfiles>
+                                                                <fileset dir="${siddhi.device.extensions}/${target}/${classes}" />
+                                                            </classfiles>
+                                                            <sourcefiles encoding="UTF-8">
+                                                                <fileset dir="${siddhi.device.extensions}/${source}" />
+                                                            </sourcefiles>
+                                                        </group>
                                                     </group>
                                                 </group>
                                                 <group name="mobile-plugins">
