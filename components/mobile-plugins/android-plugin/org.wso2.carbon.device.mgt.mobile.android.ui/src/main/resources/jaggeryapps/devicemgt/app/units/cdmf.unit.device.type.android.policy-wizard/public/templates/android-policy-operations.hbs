@@ -485,57 +485,15 @@
                             </label>
                         </div>
                         <br>
-                        <div class="wr-input-control worker-profile-or-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="ensure-verifying-apps-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="ensureVerifyApps"/>
-                                <span class="helper" title="Ensure app verification.">
-                                Ensure verifying apps
-                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
-                            </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control worker-profile-or-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="enable-auto-timing-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="enableAutoTime"/>
-                                <span class="helper" title="Enables the auto time feature that is in the device's Settings &gt; Date &amp; Time.">
-                                Enable auto timing
-                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
-                            </span>
-                            </label>
-                        </div>
-                        <br>
-                        <div class="wr-input-control worker-profile-or-owner">
-                            <label class="wr-input-control checkbox">
-                                <input id="disable-screen-capture-enabled" type="checkbox" class="operationDataKeys"
-                                       data-key="disableScreenCapture"/>
-                                <span class="helper" title="Screen capturing would be disabled.">
-                                Disable screen capture
-                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
-                            </span>
-                            </label>
-                        </div>
                         <div class="device-owner">
                             <ul class="message message-info device-owner">
                                 <i class="icon fw fw-info"></i>
                                 <a id="policy-listing-status-msg"> Below Restrictions are valid only when the Agent is
                                     the
                                     <b>device owner</b>.</a>
-                                {{#unless isdeviceownerenabled}}
-                                    <p><i>Please change the configuration <b>'isDeviceOwnerEnabled'</b> to
-                                        <b>'true'</b> if you have enabled device owner for the agent.</i></p>
-                                {{/unless}}
                             </ul>
                         </div>
                         <br/>
-                        <div
-                            {{#unless isdeviceownerenabled}}
-                            class="testing" title="Please change the configuration 'isDeviceOwnerEnabled' to
-                         'true' if you have enabled device owner for the agent."
-                            {{/unless}}
-                        >
                             <div class="wr-input-control device-owner">
                                 <label class="wr-input-control checkbox">
                                     <input id="disallow-SMS-enabled" type="checkbox" class="operationDataKeys"
@@ -547,6 +505,38 @@
                                 </label>
                             </div>
                             <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="ensure-verifying-apps-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="ensureVerifyApps"/>
+                                    <span class="helper" title="Ensure app verification.">
+                                Ensure verifying apps
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="enable-auto-timing-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="enableAutoTime"/>
+                                    <span class="helper" title="Enables the auto time feature that is in the device's Settings &gt; Date &amp; Time.">
+                                Enable auto timing
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                                </label>
+                            </div>
+                            <br>
+                            <div class="wr-input-control device-owner">
+                                <label class="wr-input-control checkbox">
+                                    <input id="disable-screen-capture-enabled" type="checkbox" class="operationDataKeys"
+                                           data-key="disableScreenCapture"/>
+                                    <span class="helper" title="Screen capturing would be disabled.">
+                                Disable screen capture
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                                </label>
+                            </div>
                             <div class="wr-input-control device-owner">
                                 <label class="wr-input-control checkbox">
                                     <input id="volume-adjust-enabled" type="checkbox" class="operationDataKeys"
