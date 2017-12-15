@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<!-- This file contains the list of permissions that are associated with URL end points
+    of the web app. Each permission should contain the name, permission path, API path
+    (URL) and HTTP method.
+    When defining dynamic paths for APIs, path variables are denoted by '*' notation.
+    For ex:
+    Actual API endpoint: mdm-android-agent/1.0.0/operation/{device-id}
+    URL to be represented here: /operation/*
+    NOTE: All the endpoints of the web app should be available in this file. Otherwise
+    it will result 403 error at the runtime.
+-->
+<PermissionConfiguration>
+    <APIVersion></APIVersion>
+
+    <!-- Configuration related permissions -->
+
+    <Permission>
+        <name>View Tenant configuration</name>
+        <path>/device-mgt/admin/platform-configs/view</path>
+        <url>/configuration</url>
+        <method>GET</method>
+    </Permission>
+
+    <Permission>
+        <name>Modify Tenant configuration</name>
+        <path>/device-mgt/admin/platform-configs/add</path>
+        <url>/configuration</url>
+        <method>PUT</method>
+    </Permission>
+
+    <Permission>
+        <name>Add Tenant configuration</name>
+        <path>/device-mgt/admin/platform-configs/add</path>
+        <url>/configuration</url>
+        <method>PUT</method>
+    </Permission>
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/configuration/license</url>
+        <method>GET</method>
+    </Permission>
+
+    <!-- End of Configuration related permissions -->
+
+    <!-- Device related permissions -->
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/devices</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/devices/*</url>
+        <method>DELETE</method>
+    </Permission>
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/devices/*</url>
+        <method>PUT</method>
+    </Permission>
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/devices/*/applications</url>
+        <method>PUT</method>
+    </Permission>
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/devices/*/pending-operations</url>
+        <method>PUT</method>
+    </Permission>
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/devices/*/status</url>
+        <method>GET</method>
+    </Permission>
+
+    <!-- End of device related permissions -->
+
+    <!-- Event related permissions -->
+
+    <Permission>
+        <name>Enroll</name>
+        <path>/device-mgt/user/device/enroll/android</path>
+        <url>/events/publish</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>View Events</name>
+        <path>/device-mgt/admin/events/view</path>
+        <url>/events/publish</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>GET Events</name>
+        <path>/device-mgt/admin/events/get</path>
+        <url>/events</url>
+        <method>GET</method>
+    </Permission>
+
+
+
+    <!-- End of event related permissions -->
+
+    <!-- Operations related permissions -->
+
+    <Permission>
+        <name>Get installed applications</name>
+        <path>/device-mgt/admin/device/android/operation/get-installed-applications</path>
+        <url>/admin/devices/applications</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Blacklist applications</name>
+        <path>/device-mgt/admin/device/android/operation/blacklist-applications</path>
+        <url>/admin/devices/blacklist-applications</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Change lock code</name>
+        <path>/device-mgt/admin/device/android/operation/change-lock-code</path>
+        <url>/admin/devices/change-lock-code</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Clear password</name>
+        <path>/device-mgt/admin/device/android/operation/clear-password</path>
+        <url>/admin/devices/clear-password</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Logcat</name>
+        <path>/device-mgt/admin/device/android/operation/logcat</path>
+        <url>/admin/devices/logcat</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Configure VPN</name>
+        <path>/device-mgt/admin/device/android/operation/configure-vpn</path>
+        <url>/admin/devices/configure-vpn</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Configure WiFi</name>
+        <path>/device-mgt/admin/device/android/operation/configure-wifi</path>
+        <url>/admin/devices/configure-wifi</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Control camera</name>
+        <path>/device-mgt/admin/device/android/operation/control-camera</path>
+        <url>/admin/devices/control-camera</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Encrypt storage</name>
+        <path>/device-mgt/admin/device/android/operation/encrypt-storage</path>
+        <url>/admin/devices/encrypt-storage</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Enterprise wipe</name>
+        <path>/device-mgt/admin/device/android/operation/enterprise-wipe</path>
+        <url>/admin/devices/enterprise-wipe</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Get device info</name>
+        <path>/device-mgt/admin/device/android/operation/get-info</path>
+        <url>/admin/devices/info</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Install application</name>
+        <path>/device-mgt/admin/device/android/operation/install-application</path>
+        <url>/admin/devices/install-application</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Get location details</name>
+        <path>/device-mgt/admin/device/android/operation/location</path>
+        <url>/admin/devices/location</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Lock device</name>
+        <path>/device-mgt/admin/device/android/operation/lock-device</path>
+        <url>/admin/devices/lock-devices</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Mute device</name>
+        <path>/device-mgt/admin/device/android/operation/mute</path>
+        <url>/admin/devices/mute</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Reboot device</name>
+        <path>/device-mgt/admin/device/android/operation/reboot</path>
+        <url>/admin/devices/reboot</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Ring device</name>
+        <path>/device-mgt/admin/device/android/operation/ring</path>
+        <url>/admin/devices/ring</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Send notification</name>
+        <path>/device-mgt/admin/device/android/operation/send-notification</path>
+        <url>/admin/devices/send-notification</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Set password policy</name>
+        <path>/device-mgt/admin/device/android/operation/set-password-policy</path>
+        <url>/admin/devices/set-password-policy</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Set web clip</name>
+        <path>/device-mgt/admin/device/android/operation/set-webclip</path>
+        <url>/admin/devices/set-webclip</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Uninstall application</name>
+        <path>/device-mgt/admin/device/android/operation/uninstall-application</path>
+        <url>/admin/devices/uninstall-application</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Unlock device</name>
+        <path>/device-mgt/admin/device/android/operation/unlock-device</path>
+        <url>/admin/devices/unlock-devices</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Update applications</name>
+        <path>/device-mgt/admin/device/android/operation/update-application</path>
+        <url>/admin/devices/update-application</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Upgrade firmware</name>
+        <path>/device-mgt/admin/device/android/operation/upgrade-firmware</path>
+        <url>/admin/devices/upgrade-firmware</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Wipe device</name>
+        <path>/device-mgt/admin/device/android/operation/wipe</path>
+        <url>/admin/devices/wipe</url>
+        <method>POST</method>
+    </Permission>
+
+    <!-- End of operation related permissions -->
+
+</PermissionConfiguration>
