@@ -354,6 +354,8 @@ var InitiateViewOption = null;
                                             var viewModel = {};
                                             viewModel["policy"] = activePolicy;
                                             viewModel["deviceType"] = deviceType;
+                                            viewModel["deviceId"] = deviceId;
+                                            viewModel["appContext"] = context;
                                             data = JSON.parse(data);
                                             var content;
                                             if (data["complianceData"]) {
