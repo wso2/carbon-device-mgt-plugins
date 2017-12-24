@@ -452,6 +452,15 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
         return null;
     }
 
+    @Override public List<Activity> getFilteredActivities(String operationCode, int limit, int offset)
+            throws OperationManagementException {
+        return null;
+    }
+
+    @Override public int getTotalCountOfFilteredActivities(String operationCode) throws OperationManagementException {
+        return 0;
+    }
+
     @Override
     public int getActivityCountUpdatedAfter(long l) throws OperationManagementException {
         return 0;
