@@ -44,6 +44,11 @@ public class NotificationManagementServiceMock implements NotificationManagement
         return false;
     }
 
+    @Override public boolean updateAllNotifications(Notification.Status status, int tenantID)
+            throws NotificationManagementException {
+        return false;
+    }
+
     @Override
     public List<Notification> getAllNotifications() throws NotificationManagementException {
         return null;
