@@ -29,7 +29,7 @@
     <target name="zip" depends="clean">
         <zip destfile="${target-dir}/android-tryit.ZIP" update="true" duplicate="preserve">
             <zipfileset
-                    dir="src/main/resources/jaggeryapps/android-web-agent/app/pages/mdm.page.enrollments.android.download-agent/public/asset/"
+                    dir="src/main/resources/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.android.type-view/public/assets/"
                     includes="android-agent.apk" fullpath="resources/android-agent.apk"/>
             <zipfileset
                     dir="target/"

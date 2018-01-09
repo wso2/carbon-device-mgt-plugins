@@ -26,7 +26,7 @@ function onRequest(context) {
     if (isCloud) {
         viewModel["enrollmentURL"] = "https://play.google.com/store/apps/details?id=org.wso2.iot.agent";
     } else {
-        viewModel["enrollmentURL"] = devicemgtProps["managerHTTPSURL"] + devicemgtProps["androidEnrollmentDir"];
+        viewModel["enrollmentURL"] = devicemgtProps["androidAgentDownloadURL"];
     }
     return viewModel;
 }

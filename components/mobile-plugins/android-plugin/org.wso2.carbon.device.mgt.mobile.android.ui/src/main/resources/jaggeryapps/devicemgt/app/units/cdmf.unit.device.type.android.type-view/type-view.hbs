@@ -44,18 +44,13 @@
                 </div>
             {{else}}
                 <div class="text-center">
-                    <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk"
+                    <a href="{{enrollmentURL}}"
                        class="btn-operations remove-margin download_agent">
                         <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
                 </div>
             {{/if}}
         {{/if}}
     </div>
-    <!--<p class="doc-link">Please scan the QR code to download the APK on to your android device or click
-            <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk">here</a>
-            to save it to your computer.</p>
-        <p class="doc-link">For further instructions and troubleshooting please visit the following <a href="https://docs.wso2.com/display/IoTS300/Android"
-                                     target="_blank">link</a>.</p>-->
     {{#if isCloud}}
         <p class="doc-link text-center">Need help? Read <a
             {{#if isVirtual}}
