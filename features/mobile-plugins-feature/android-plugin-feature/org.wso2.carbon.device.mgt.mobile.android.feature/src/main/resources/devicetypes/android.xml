@@ -107,7 +107,7 @@
         </Feature>
         <Feature code="CLEAR_PASSWORD">
             <Name>Clear Password</Name>
-            <Description>Clear current password</Description>
+            <Description>Clear current password (This functionality is only working with profile owners from Android 7.0 API 24 onwards.)</Description>
             <Operation context="/api/device-mgt/android/v1.0/admin/devices/clear-password" method="POST" type="application/json">
             </Operation>
         </Feature>
@@ -137,7 +137,7 @@
         </Feature>
         <Feature code="CHANGE_LOCK_CODE">
             <Name>Change Lock-code</Name>
-            <Description>Change current lock code</Description>
+            <Description>Change current lock code (This functionality is only working with profile owners from Android 7.0 API 24 onwards.)</Description>
             <Operation context="/api/device-mgt/android/v1.0/admin/devices/change-lock-code" method="POST" type="application/json">
             </Operation>
         </Feature>
