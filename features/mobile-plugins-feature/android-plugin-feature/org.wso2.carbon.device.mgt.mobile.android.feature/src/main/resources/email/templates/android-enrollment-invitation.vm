@@ -39,7 +39,7 @@
 
                 <p style="font-size: 1em; font-family: Arial, Helvetica; line-height: 170%; color: #666666; margin: 5px 0px;">
                     You have been invited by $first-name to enrol your android device in WSO2 IoT Server.
-                    Click <a href="$base-url-https/android-web-agent/enrollment">here</a> to begin device enrolment from
+                    Click <a href="$base-url-https/devicemgt/public/cdmf.unit.device.type.android.type-view/assets/android-agent.apk">here</a> to download device agent in to
                     your Android device.</p>
 
                 <p style="font-size: 1em; font-family: Arial, Helvetica; line-height: 170%; color: #666666; margin: 5px 0px;">
