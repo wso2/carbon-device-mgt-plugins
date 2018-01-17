@@ -194,7 +194,7 @@ public class AgentUI extends JFrame {
         lblAgentName.setText("Device Name: " + AgentManager.getInstance().getDeviceName());
 
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel2.setText("Copyright (c) 2015, WSO2 Inc.");
+        jLabel2.setText("Copyright (c) 2018, WSO2 Inc.");
 
         jPanel1.setBackground(new Color(220, 220, 220));
 

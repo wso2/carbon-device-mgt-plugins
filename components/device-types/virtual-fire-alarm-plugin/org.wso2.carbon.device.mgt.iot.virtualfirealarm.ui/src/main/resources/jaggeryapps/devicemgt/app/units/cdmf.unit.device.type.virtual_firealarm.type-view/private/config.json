@@ -1,6 +1,6 @@
 {
   "deviceType": {
-    "label": "Virtual Firealarm",
+    "label": "Virtual Fire Alarm",
     "category": "virtual",
     "downloadAgentUri": "virtual_firealarm/device/download",
     "scopes" : [

@@ -1,7 +1,7 @@
 {
     "deviceType": {
         "label": "Android",
-        "virtualLabel": "virtual Android",
+        "virtualLabel": "Virtual Android",
         "category": "hybrid",
         "analyticsEnabled": "false",
         "groupingEnabled": "true",
