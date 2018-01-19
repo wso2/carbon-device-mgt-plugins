@@ -163,13 +163,12 @@ function onRequest(context) {
                 }
 
                 viewModel["externalMemory"] = {};
-                viewModel["externalMemory"]["total"] = replaceNaNVal(Math.
-                    round(filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 100) / 100);
                 if (filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] != 0) {
+                    viewModel["externalMemory"]["total"] = replaceNaNVal(Math.round
+                    (filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 100) / 100);
                     viewModel["externalMemory"]["usage"] = replaceNaNVal(Math.
-                        round((filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] -
-                            filteredDeviceData["latestDeviceInfo"]["externalAvailableMemory"])
-                            / filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 10000) / 100);
+                    round((filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] -
+                    filteredDeviceData["latestDeviceInfo"]["externalAvailableMemory"])* 100) /100);
                 } else {
                     viewModel["externalMemory"]["usage"] = 0;
                 }
