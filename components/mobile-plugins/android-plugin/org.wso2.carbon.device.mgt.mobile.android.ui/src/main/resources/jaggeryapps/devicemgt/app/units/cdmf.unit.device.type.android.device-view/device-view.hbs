@@ -55,7 +55,7 @@
           <div class="vital-strip">
             {{#if device.deviceInfoAvailable}}
               {{#if device.BatteryLevel}}
-                <p title="Total used /Total available storage" data-toggle="tooltip">
+                <p title="Battery level percentage" data-toggle="tooltip">
                     <i class="icon fw fw-battery fw-2x"></i>
                     <span>{{device.BatteryLevel.value}}%</span>
                 </p>
@@ -67,17 +67,17 @@
                 </p>
               {{/if}}
               {{#if device.internalMemory}}
-                <p title="Total used /Total available internal storage" data-toggle="tooltip">
+                <p title="Free space / Total available internal storage" data-toggle="tooltip">
                     <i class="icon fw fw-hdd fw-2x fw-rotate-90"></i>
                     <span>{{device.internalMemory.usage}}</span>
-                    <span class="memory-amt">GB Used/{{device.internalMemory.total}}GB Total</span>
+                    <span class="memory-amt">GB Free/{{device.internalMemory.total}}GB Total</span>
                 </p>
               {{/if}}
               {{#if device.externalMemory}}
-                <p title="Total used /Total available external storage" data-toggle="tooltip">
+                <p title="Free space / Total available external storage" data-toggle="tooltip">
                     <i class="icon fw fw-usb-drive fw-2x"></i>
                     <span>{{device.externalMemory.usage}}</span>
-                    <span class="memory-amt">GB Used/{{device.externalMemory.total}}GB Total</span>
+                    <span class="memory-amt">GB Free/{{device.externalMemory.total}}GB Total</span>
                 </p>
               {{/if}}
             {{else}}
