@@ -231,6 +231,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            domFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            domFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             DocumentBuilder builder;
 
             builder = domFactory.newDocumentBuilder();
