@@ -347,6 +347,11 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
     }
 
     @Override
+    public List<String> getPolicyMonitoringEnableDeviceTypes() throws DeviceManagementException {
+        return null;
+    }
+
+    @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         return false;
     }
@@ -438,6 +443,11 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
 
     @Override
     public Activity getOperationByActivityId(String s) throws OperationManagementException {
+        return null;
+    }
+
+    @Override
+    public List<Activity> getOperationByActivityIds(List<String> list) throws OperationManagementException {
         return null;
     }
 
