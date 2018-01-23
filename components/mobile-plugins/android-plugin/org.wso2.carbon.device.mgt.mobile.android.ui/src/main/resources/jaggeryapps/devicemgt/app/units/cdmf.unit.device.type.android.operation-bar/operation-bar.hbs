@@ -76,9 +76,9 @@
                             </div>
 
                             <div id="operation-form">
-                                <form action="{{params.0.uri}}" method="{{params.0.method}}"
+                                <form id="form-{{operation}}" action="{{params.0.uri}}" method="{{params.0.method}}"
                                       style="padding-bottom: 20px;"
-                                      data-payload="{{payload}}" id="form-{{operation}}"
+                                      data-payload="{{payload}}"
                                       data-device-id="{{../device.deviceIdentifier}}"
                                       data-content-type="{{params.0.contentType}}"
                                       data-operation-code="{{operation}}">
@@ -144,14 +144,14 @@
                                             </div>
                                         {{/equal}}
                                     {{/each}}
-                                    <button id="btnSend" type="button" onclick="submitForm('form-{{operation}}')"
-                                            class="btn btn-default">Send
+                                    <button type="button" onclick="submitForm('form-{{operation}}')"
+                                            class="btn btn-default btnSend">Send
                                         to Device</button>
-                                    <label id="lblSending" class="wr-input-label hidden"><i
-                                            class="fw fw-lifecycle fw-spin fw-2x"></i> Sending..</label>
-                                    <label id="lblSent" class="wr-input-label hidden"><i
-                                            class="fw fw-check fw-2x"></i> Sent</label>
-                                    <i id="lbl-execution" class="fw fw-wso2-logo fw-pulse fw-2x hidden"> Executing Operation </i>
+                                    <label class="wr-input-label hidden"><i
+                                            class="fw fw-lifecycle fw-spin fw-2x lblSending"></i> Sending..</label>
+                                    <label class="wr-input-label hidden"><i
+                                            class="fw fw-check fw-2x lblSent"></i> Sent</label>
+                                    <i class="fw fw-wso2-logo fw-pulse fw-2x hidden lbl-execution"> Executing Operation </i>
                                 </form>
                             </div>
                         </div>

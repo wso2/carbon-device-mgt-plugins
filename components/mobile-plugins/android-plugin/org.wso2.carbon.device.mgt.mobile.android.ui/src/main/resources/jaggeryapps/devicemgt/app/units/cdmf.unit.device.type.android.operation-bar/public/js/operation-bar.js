@@ -30,9 +30,9 @@ function operationSelect(selection) {
     showPopup();
 }
 
-var resetLoader = function () {
-    $("#btnSend").removeClass("hidden");
-    $('#lbl-execution').addClass("hidden");
+var resetLoader = function (formId) {
+    $('#' + formId + ' .btnSend').removeClass("hidden");
+    $('#' + formId + ' .lbl-execution').addClass("hidden");
 };
 
 /**
@@ -111,8 +111,8 @@ function fillUserName() {
 }
 
 function submitForm(formId) {
-    $("#btnSend").addClass("hidden");
-    $("#lbl-execution").removeClass("hidden");
+    $('#' + formId + " .btnSend").addClass("hidden");
+    $('#' + formId + " .lbl-execution").removeClass("hidden");
     var form = $("#" + formId);
     var uri = form.attr("action");
     var deviceId = form.data("device-id");
@@ -172,7 +172,7 @@ function submitForm(formId) {
             statusIcon.attr("class", defaultStatusClasses + " fw-check");
             description.html(res);
             // console.log("success!");
-            resetLoader();
+            resetLoader(formId);
             $(modalPopupContent).html(content.html());
         };
         var errorCallBack = function (response) {
@@ -187,7 +187,7 @@ function submitForm(formId) {
             }
             description.html(reason);
             // console.log("Error!");
-            resetLoader();
+            resetLoader(formId);
             $(modalPopupContent).html(content.html());
         };
         //executing http request
@@ -205,11 +205,11 @@ function submitForm(formId) {
             title.html("An Error Occurred!");
             statusIcon.attr("class", defaultStatusClasses + " fw-error");
             description.html("This operation requires http method: " + httpMethod + " which is not supported yet!");
-            resetLoader();
+            resetLoader(formId);
             $(modalPopupContent).html(content.html());
         }
     } else {
-        resetLoader();
+        resetLoader(formId);
         $(".modal #operation-error-msg span").text(validaterString);
         $(".modal #operation-error-msg").removeClass("hidden");
     }
@@ -222,13 +222,13 @@ $(document).on('submit', 'form', function (e) {
         method: "post"
     });
 
-    var btnSubmit = $('#btnSend', this);
+    var btnSubmit = $('.btnSend', this);
     btnSubmit.addClass('hidden');
 
-    var lblSending = $('#lblSending', this);
+    var lblSending = $('.lblSending', this);
     lblSending.removeClass('hidden');
 
-    var lblSent = $('#lblSent', this);
+    var lblSent = $('.lblSent', this);
     postOperationRequest.done(function (data) {
         lblSending.addClass('hidden');
         lblSent.removeClass('hidden');
