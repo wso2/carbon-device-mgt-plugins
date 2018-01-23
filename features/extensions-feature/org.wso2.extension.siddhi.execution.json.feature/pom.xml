@@ -20,13 +20,13 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions-feature</artifactId>
-        <version>4.0.114-SNAPSHOT</version>
+        <version>4.0.114</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>org.wso2.extension.siddhi.execution.json.feature</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.114-SNAPSHOT</version>
+    <version>4.0.114</version>
     <name>WSO2 Siddhi Execution Extension - Json Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains Siddhi extension feature for changing a json string to individual properties.</description>
