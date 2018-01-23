@@ -70,7 +70,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             log.debug("Invoking Android device event logging.");
         }
         try {
-            if (!DeviceManagerUtil.isOperationAnalyticsEnabled()) {
+            if (!DeviceManagerUtil.isPublishLocationResponseEnabled()) {
                 return Response.status(Response.Status.ACCEPTED).entity("Event is publishing has not enabled.").build();
             }
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier(eventBeanWrapper.getDeviceIdentifier(),
