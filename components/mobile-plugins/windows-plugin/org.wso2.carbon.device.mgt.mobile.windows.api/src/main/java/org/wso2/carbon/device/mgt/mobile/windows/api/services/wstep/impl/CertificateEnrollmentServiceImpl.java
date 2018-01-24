@@ -239,8 +239,7 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
 
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            domFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            domFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            domFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             Document document = builder.parse(wapProvisioningFilePath);
