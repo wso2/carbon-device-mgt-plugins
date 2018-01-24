@@ -22,10 +22,10 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentConstants
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.virtual.VirtualHardwareManager;
 
-import javax.swing.*;
 import java.awt.*;
-import java.net.URI;
 import java.net.URL;
+import java.util.Calendar;
+import javax.swing.*;
 
 public class AgentUI extends JFrame {
 
@@ -193,8 +193,10 @@ public class AgentUI extends JFrame {
         lblAgentName.setHorizontalAlignment(SwingConstants.LEFT);
         lblAgentName.setText("Device Name: " + AgentManager.getInstance().getDeviceName());
 
+        Calendar now = Calendar.getInstance();
+        int currentYear = now.get(Calendar.YEAR);
         jLabel2.setHorizontalAlignment(SwingConstants.CENTER);
-        jLabel2.setText("Copyright (c) 2015, WSO2 Inc.");
+        jLabel2.setText("Copyright (c) " + currentYear + ", WSO2 Inc.");
 
         jPanel1.setBackground(new Color(220, 220, 220));
 
