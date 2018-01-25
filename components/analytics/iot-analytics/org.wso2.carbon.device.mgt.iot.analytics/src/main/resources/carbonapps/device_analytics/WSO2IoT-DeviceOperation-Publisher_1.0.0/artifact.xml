@@ -16,6 +16,7 @@
   ~ under the License.
   -->
 
-<artifact name="WSO2IoT-DeviceOperation-Publisher" version="1.0.0" type="event/publisher" serverRole="GeoDashboard">
+<artifact name="WSO2IoT-DeviceOperation-Publisher" version="1.0.0" type="event/publisher"
+          serverRole="DataAnalyticsServer">
     <file>WSO2IoT-DeviceOperation-Publisher_1.0.0.xml</file>
 </artifact>
