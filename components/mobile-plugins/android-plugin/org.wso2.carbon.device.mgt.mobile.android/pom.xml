@@ -22,7 +22,7 @@
     <parent>
         <artifactId>android-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.118-SNAPSHOT</version>
+        <version>4.0.119-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -60,6 +60,7 @@
                             org.osgi.service.component,
                             org.apache.commons.logging,
                             javax.xml,
+                            javax.xml.stream,
                             javax.xml.bind.*,
                             javax.sql,
                             javax.xml.parsers; version=0.0.0,

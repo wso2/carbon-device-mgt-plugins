@@ -47,6 +47,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
@@ -128,17 +131,21 @@ public class AndroidDeviceManager implements DeviceManager {
                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             resource = MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
             if (resource != null) {
-                JAXBContext context = JAXBContext.newInstance(PlatformConfiguration.class);
-                Unmarshaller unmarshaller = context.createUnmarshaller();
-                return (PlatformConfiguration) unmarshaller.unmarshal(
+                XMLInputFactory factory = XMLInputFactory.newFactory();
+                factory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+                factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+                XMLStreamReader reader = factory.createXMLStreamReader(
                         new StringReader(new String((byte[]) resource.getContent(), Charset.
                                 forName(AndroidPluginConstants.MobilePluginConstants.CHARSET_UTF8))));
+                JAXBContext context = JAXBContext.newInstance(PlatformConfiguration.class);
+                Unmarshaller unmarshaller = context.createUnmarshaller();
+                return (PlatformConfiguration) unmarshaller.unmarshal(reader);
             }
             return null;
         } catch (AndroidDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
-        } catch (JAXBException e) {
+        } catch (JAXBException | XMLStreamException e) {
             throw new DeviceManagementException(
                     "Error occurred while parsing the Android configuration : " + e.getMessage(), e);
         } catch (RegistryException e) {
