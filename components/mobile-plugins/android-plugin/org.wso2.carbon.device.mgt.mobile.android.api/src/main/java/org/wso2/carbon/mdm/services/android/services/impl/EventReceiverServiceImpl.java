@@ -107,8 +107,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
                 return Response.status(Response.Status.CREATED).entity(message).build();
             } else {
                 log.warn("Error occurred while trying to publish the event. This could be due to unavailability " +
-                        "of the publishing service. Please make sure that analytics server is running and accessible by " +
-                        "this server");
+                        "of the publishing service. Please make sure that analytics server is running and accessible " +
+                        "by this server");
                 throw new UnexpectedServerErrorException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(503l).setMessage("Error occurred due to " +
                                 "unavailability of the publishing service.").build());
