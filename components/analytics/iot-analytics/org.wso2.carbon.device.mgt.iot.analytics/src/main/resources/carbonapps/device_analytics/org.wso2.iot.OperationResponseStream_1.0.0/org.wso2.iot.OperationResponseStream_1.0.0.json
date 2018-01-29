@@ -1,0 +1,42 @@
+{
+  "name": "org.wso2.iot.OperationResponseStream",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "IoT Server Operation Response Stream",
+  "metaData": [
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceType",
+      "type": "STRING"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "timeStamp",
+      "type": "LONG"
+    },
+    {
+      "name": "id",
+      "type": "INT"
+    },
+    {
+      "name": "code",
+      "type": "STRING"
+    },
+    {
+      "name": "type",
+      "type": "STRING"
+    },
+    {
+      "name": "status",
+      "type": "STRING"
+    },
+    {
+      "name": "response",
+      "type": "STRING"
+    }
+  ]
+}

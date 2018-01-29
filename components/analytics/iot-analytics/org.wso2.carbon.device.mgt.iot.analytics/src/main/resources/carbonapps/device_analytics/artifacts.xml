@@ -22,9 +22,13 @@
         <!-- CEP Artifacts -->
         <dependency artifact="org.wso2.iot.DeviceInfoStream" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
+        <dependency artifact="org.wso2.iot.OperationResponseStream" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
         <dependency artifact="org.wso2.iot.operation" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="WSO2IoT-DeviceInfo-Receiver" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
+        <dependency artifact="WSO2IoT-OperationResponse-Receiver" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="WSO2IoT-DeviceOperation-Publisher" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>

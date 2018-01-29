@@ -16,6 +16,6 @@
   ~ under the License.
   -->
 
-<artifact name="WSO2IoT-DeviceInfo-Receiver" version="1.0.0" type="event/receiver" serverRole="GeoDashboard">
+<artifact name="WSO2IoT-DeviceInfo-Receiver" version="1.0.0" type="event/receiver" serverRole="DataAnalyticsServer">
     <file>WSO2IoT-DeviceInfo-Receiver_1.0.0.xml</file>
 </artifact>
