@@ -303,6 +303,15 @@ function connect(target) {
 				}
 			}
 		};
+        ws.onerror = function (event) {
+            var websocketURL = event.currentTarget.url;
+            websocketURL = websocketURL.replace("wss://","https://");
+            var uriParts = websocketURL.split("/");
+            websocketURL = uriParts[0] + "//" + uriParts[2];
+            var errorMsg = $("#websocker-onerror").html();
+            errorMsg = errorMsg.replace(new RegExp('\\$webSocketURL', 'g'), websocketURL);
+            $("#stat-section").html("<div class='alert alert-danger'>" + errorMsg + "</div>");
+        };
 	}
 }
 
