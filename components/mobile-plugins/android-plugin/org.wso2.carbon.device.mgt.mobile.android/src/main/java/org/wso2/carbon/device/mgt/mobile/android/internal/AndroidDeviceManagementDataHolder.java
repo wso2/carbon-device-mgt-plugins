@@ -19,7 +19,6 @@
 package org.wso2.carbon.device.mgt.mobile.android.internal;
 
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.android.impl.fcm.FCMService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -29,7 +28,6 @@ public class AndroidDeviceManagementDataHolder {
 
 	private RegistryService registryService;
     private DeviceManagementService androidDeviceManagementService;
-    private FCMService fcmService;
 
 	private static AndroidDeviceManagementDataHolder thisInstance = new AndroidDeviceManagementDataHolder();
 
@@ -57,11 +55,4 @@ public class AndroidDeviceManagementDataHolder {
         this.androidDeviceManagementService = androidDeviceManagementService;
     }
 
-    public FCMService getFCMService() {
-		return fcmService;
-	}
-
-	public void setFCMService(FCMService fcmService) {
-		this.fcmService = fcmService;
-	}
 }
