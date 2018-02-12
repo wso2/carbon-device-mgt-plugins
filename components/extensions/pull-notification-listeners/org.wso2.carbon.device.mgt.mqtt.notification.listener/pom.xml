@@ -22,7 +22,7 @@
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 		<artifactId>pull-notification-listeners</artifactId>
-		<version>4.0.127</version>
+		<version>4.0.128-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
