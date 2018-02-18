@@ -59,6 +59,9 @@
     {{/each}}
 
 </div>
+<div class="hide" id="websocker-onerror">
+    Realtime Analytics is not available. Failed to connect to the websocket. Please make sure; '<a style="color: white" href="$webSocketURL">$webSocketURL</a>' is available and re-try again.
+</div>
 
 {{#zone "bottomJs"}}
     {{js "js/moment.min.js"}}
