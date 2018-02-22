@@ -261,10 +261,10 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 			} else {
 				deviceList = deviceManagementService.
 						getDevicesOfUser(username,
-								MDMAppConstants.ANDROID);
+						                 MDMAppConstants.ANDROID);
 				deviceList.addAll(deviceManagementService.
 						getDevicesOfUser(username,
-								MDMAppConstants.IOS));
+						                 MDMAppConstants.IOS));
 			}
 			devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
