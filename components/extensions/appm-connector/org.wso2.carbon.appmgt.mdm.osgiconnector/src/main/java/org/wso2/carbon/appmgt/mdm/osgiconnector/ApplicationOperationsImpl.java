@@ -256,11 +256,15 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
                         .getDeviceManagementService(applicationOperationDevice.getTenantId()).
                                 getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername());
             } else {
-                deviceList = MDMServiceAPIUtils
-                        .getDeviceManagementService(applicationOperationDevice.getTenantId()).
-                                getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername(),
-                                        applicationOperationDevice.getPlatform());
-            }
+				deviceList = MDMServiceAPIUtils
+						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
+								getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername(),
+										MDMAppConstants.ANDROID);
+				deviceList.addAll(MDMServiceAPIUtils
+						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
+								getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername(),
+										MDMAppConstants.IOS));
+			}
             devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
 				log.debug("device list got from mdm "+ deviceList.toString());
