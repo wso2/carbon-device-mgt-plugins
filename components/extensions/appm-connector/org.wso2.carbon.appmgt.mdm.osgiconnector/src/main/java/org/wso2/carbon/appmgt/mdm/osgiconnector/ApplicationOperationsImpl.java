@@ -44,6 +44,7 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.appmgt.mobile.utils.User;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
@@ -250,22 +251,22 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 		List<Device> devices;
 		List<org.wso2.carbon.device.mgt.common.Device> deviceList = null;
 		try {
-            if (MDMAppConstants.WEBAPP.equals
-                    (applicationOperationDevice.getPlatform())) {
-                deviceList = MDMServiceAPIUtils
-                        .getDeviceManagementService(applicationOperationDevice.getTenantId()).
-                                getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername());
-            } else {
-				deviceList = MDMServiceAPIUtils
-						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
-								getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername(),
-										MDMAppConstants.ANDROID);
-				deviceList.addAll(MDMServiceAPIUtils
-						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
-								getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername(),
-										MDMAppConstants.IOS));
+			DeviceManagementProviderService deviceManagementService = MDMServiceAPIUtils
+					.getDeviceManagementService(applicationOperationDevice.getTenantId());
+			final String username = applicationOperationDevice.getCurrentUser().getUsername();
+			if (MDMAppConstants.WEBAPP.equals
+					(applicationOperationDevice.getPlatform())) {
+				deviceList = deviceManagementService.
+						getDevicesOfUser(username);
+			} else {
+				deviceList = deviceManagementService.
+						getDevicesOfUser(username,
+								MDMAppConstants.ANDROID);
+				deviceList.addAll(deviceManagementService.
+						getDevicesOfUser(username,
+								MDMAppConstants.IOS));
 			}
-            devices = new ArrayList<>(deviceList.size());
+			devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
 				log.debug("device list got from mdm "+ deviceList.toString());
 			}
