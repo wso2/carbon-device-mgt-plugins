@@ -21,7 +21,7 @@
     <parent>
         <artifactId>virtual-fire-alarm-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.133</version>
+        <version>4.0.134-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
