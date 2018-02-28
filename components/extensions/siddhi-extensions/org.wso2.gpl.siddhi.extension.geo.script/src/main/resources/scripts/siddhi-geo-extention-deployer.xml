@@ -31,7 +31,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.iot.devicemgt-plugins</groupId>
     <artifactId>analytics-scripts</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.2.0</version>
     <packaging>pom</packaging>
     <name>Executing Analytics Scripts</name>
     <url>http://wso2.org</url>
@@ -193,7 +193,7 @@
         </repository>
     </repositories>
     <properties>
-        <org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version>3.1.0-SNAPSHOT</org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version>
+        <org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version>3.2.0</org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version>
         <siddhi-gpl-execution-geo-feature.version>3.2.0</siddhi-gpl-execution-geo-feature.version>
     </properties>
 </project>
