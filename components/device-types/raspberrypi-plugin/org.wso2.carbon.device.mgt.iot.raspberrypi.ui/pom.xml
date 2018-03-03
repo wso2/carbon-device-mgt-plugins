@@ -23,7 +23,7 @@
     <parent>
         <artifactId>raspberrypi-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>4.0.135-SNAPSHOT</version>
+        <version>4.0.135</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
