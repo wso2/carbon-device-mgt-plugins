@@ -20,13 +20,13 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions-feature</artifactId>
-        <version>4.0.135</version>
+        <version>4.0.136-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>org.wso2.carbon.appmgt.mdm.osgiconnector.feature</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.135</version>
+    <version>4.0.136-SNAPSHOT</version>
     <name>WSO2 Carbon - App management MDM OSGI Connector</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for APP management OSGI MDM connection
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.appmgt.mdm.osgiconnector</artifactId>
-	    <version>4.0.135</version>
+	    <version>4.0.136-SNAPSHOT</version>
 		<exclusions>
 		     <exclusion>
                         <groupId>org.apache.ws.commons.axiom</groupId>
