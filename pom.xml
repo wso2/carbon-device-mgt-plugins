@@ -1225,7 +1225,7 @@
         <carbon.devicemgt.plugins.version>4.0.137-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
-        <carbon.commons.version>4.4.8</carbon.commons.version>
+        <carbon.commons.version>4.6.21</carbon.commons.version>
 
         <!-- Carbon Deployment -->
         <carbon.deployment.version>4.7.10</carbon.deployment.version>
