@@ -203,14 +203,16 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
             throw new DeviceManagementException(msg);
         }
         if (apiApplicationKey == null) {
-            String adminUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration().getAdminUserName();
+            String adminUsername =
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
+                            .getAdminUserName();
             String tenantAdminDomainName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
             String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
                     .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
                     .getThreadLocalCarbonContext().getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {RaspberrypiConstants.DEVICE_TYPE};
-            try{
+            try {
                 PrivilegedCarbonContext.startTenantFlow();
                 PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantAdminDomainName);
                 PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(adminUsername);
