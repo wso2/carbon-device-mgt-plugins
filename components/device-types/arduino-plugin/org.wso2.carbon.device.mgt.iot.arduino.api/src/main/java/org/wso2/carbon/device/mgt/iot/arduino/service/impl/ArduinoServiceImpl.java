@@ -222,11 +222,13 @@ public class ArduinoServiceImpl implements ArduinoService {
                 .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
                 .getThreadLocalCarbonContext().getTenantDomain();
         if (apiApplicationKey == null) {
-            String adminUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration().getAdminUserName();
+            String adminUsername =
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
+                            .getAdminUserName();
             String tenantAdminDomainName = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {ArduinoConstants.DEVICE_TYPE};
-            try{
+            try {
                 PrivilegedCarbonContext.startTenantFlow();
                 PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantAdminDomainName);
                 PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(adminUsername);
