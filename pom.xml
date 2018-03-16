@@ -1216,7 +1216,7 @@
 
         <!-- Carbon Device Management -->
         <carbon.devicemgt.version>3.1.22</carbon.devicemgt.version>
-        <carbon.devicemgt.version.range>[3.0.0, 4.0.0)</carbon.devicemgt.version.range>
+        <carbon.devicemgt.version.range>[3.1.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.53</carbon.appmgt.version>
