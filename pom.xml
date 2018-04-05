@@ -1209,13 +1209,13 @@
         <orbit.tomcat.jdbc.pooling.version>7.0.34.wso2v2</orbit.tomcat.jdbc.pooling.version>
 
         <!-- CXF version -->
-        <cxf.version>3.2.0</cxf.version>
+        <cxf.version>2.7.16</cxf.version>
         <cxf.bindings.version>2.5.11</cxf.bindings.version>
         <jackson.version>1.9.0</jackson.version>
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>3.1.22</carbon.devicemgt.version>
+        <carbon.devicemgt.version>3.1.29-SNAPSHOT</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[3.1.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
