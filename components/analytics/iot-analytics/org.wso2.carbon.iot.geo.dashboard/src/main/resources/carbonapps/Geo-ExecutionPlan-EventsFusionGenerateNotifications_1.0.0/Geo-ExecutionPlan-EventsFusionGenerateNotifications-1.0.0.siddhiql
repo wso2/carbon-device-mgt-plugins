@@ -17,11 +17,8 @@ define stream alertsOut ( id string, state string, information string, timeStamp
 @Export('iot.per.device.stream.geo.FusedSpatialEvent:1.0.0')
 define stream dataOut ( id string, latitude double, longitude double, timeStamp long, type string, speed float, heading float, state string, information string, notify bool );
 
-from dataIn#window.geodashboard:eventsFusion(eventId, state, information)
-insert into innerStream;
-
-from innerStream
-select id, latitude, longitude, timeStamp, type, speed, heading, state , information, geodashboard:needToNotify(id,information) as notify
+from dataIn
+select id, latitude, longitude, timeStamp, type, speed, heading, state , information, (str:strcmp("ALERTED", state) == 0) as notify
 insert into dataOut;
 
 from dataOut[notify == true]
