@@ -65,7 +65,7 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>
-                                        ${project.build.directory}/maven-shared-archive-resources
+                                        ${project.build.directory}/maven-shared-archive-resources/carbonapps
                                     </outputDirectory>
                                     <includes>**/*</includes>
                                 </artifactItem>
