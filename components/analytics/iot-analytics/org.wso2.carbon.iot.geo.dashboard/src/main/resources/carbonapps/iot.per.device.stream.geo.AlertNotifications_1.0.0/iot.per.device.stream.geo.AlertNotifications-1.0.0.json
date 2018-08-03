@@ -9,6 +9,10 @@
       "type": "STRING"
     },
     {
+      "name": "owner",
+      "type": "STRING"
+    },
+    {
       "name": "state",
       "type": "STRING"
     },

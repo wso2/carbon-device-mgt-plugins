@@ -70,13 +70,14 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android device event logging.");
         }
+        Device device;
         try {
             if (!DeviceManagerUtil.isPublishLocationResponseEnabled()) {
                 return Response.status(Response.Status.ACCEPTED).entity("Event is publishing has not enabled.").build();
             }
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier(eventBeanWrapper.getDeviceIdentifier(),
                                                                      AndroidConstants.DEVICE_TYPE_ANDROID);
-            Device device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+            device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
             if (device != null && EnrolmentInfo.Status.ACTIVE != device.getEnrolmentInfo().getStatus()){
                 return Response.status(Response.Status.ACCEPTED).entity("Device is not in Active state.").build();
             } else if (device == null){
@@ -93,7 +94,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
         }
         Message message = new Message();
-        Object[] metaData = {eventBeanWrapper.getDeviceIdentifier(), AndroidConstants.DEVICE_TYPE_ANDROID};
+        Object[] metaData = {eventBeanWrapper.getDeviceIdentifier(), device.getEnrolmentInfo().getOwner(),
+                AndroidConstants.DEVICE_TYPE_ANDROID};
         String eventPayload = eventBeanWrapper.getPayload();
         JsonObject jsonObject = gson.fromJson(eventPayload, JsonObject.class);
         Object[] payload = {

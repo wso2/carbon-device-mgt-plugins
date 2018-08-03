@@ -9,13 +9,13 @@
 @Plan:trace('false')
 
 @Import('org.wso2.iot.LocationStream:1.0.0')
-define stream dataIn (meta_deviceId string, meta_deviceType string, timeStamp long, latitude double, longitude double);
+define stream dataIn (meta_deviceId string, meta_owner string, meta_deviceType string, timeStamp long, latitude double, longitude double);
 
 @Export('org.wso2.geo.StandardSpatialEvents:1.0.0')
-define stream dataOut (id string, latitude double, longitude double, timeStamp long, type string, speed float, heading float, eventId string);
+define stream dataOut (id string, owner string, latitude double, longitude double, timeStamp long, type string, speed float, heading float, eventId string);
 
 from every fs1=dataIn -> fs2=dataIn[fs2.timeStamp > fs1.timeStamp and fs1.meta_deviceId == fs2.meta_deviceId]
-select fs1.meta_deviceId as id, fs2.latitude, fs2.longitude, fs2.timeStamp, fs1.meta_deviceType as type,
+select fs1.meta_deviceId as id, fs1.meta_owner as owner, fs2.latitude, fs2.longitude, fs2.timeStamp, fs1.meta_deviceType as type,
 convert(geo:distance(fs2.latitude, fs2.longitude, fs1.latitude, fs1.longitude) * 3600/(fs2.timeStamp - fs1.timeStamp), 'float') as speed,
 0.0f as heading, UUID() as eventId
 group by fs1.meta_deviceId
