@@ -20,8 +20,10 @@ package org.wso2.extension.siddhi.device.utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
+import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 /**
  * This class holds utility methods to retrieve data.
@@ -31,6 +33,8 @@ public class DeviceUtils {
     private static Log log = LogFactory.getLog(DeviceUtils.class);
     private static DeviceManagementProviderService deviceManagementProviderService;
     private static GroupManagementProviderService groupManagementProviderService;
+    private static NotificationManagementService notificationManagementService;
+    private static JWTClientManagerService jwtClientManagerService;
 
     private DeviceUtils(){
     }
@@ -63,5 +67,35 @@ public class DeviceUtils {
             throw new IllegalStateException(msg);
         }
         return groupManagementProviderService;
+    }
+
+    public static NotificationManagementService getNotificationManagementService() {
+        if (notificationManagementService != null) {
+            return notificationManagementService;
+        }
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        notificationManagementService =
+                (NotificationManagementService) ctx.getOSGiService(NotificationManagementService.class, null);
+        if (notificationManagementService == null) {
+            String msg = "Notification Management service has not initialized.";
+            log.error(msg);
+            throw new IllegalStateException(msg);
+        }
+        return notificationManagementService;
+    }
+
+    public static JWTClientManagerService getJWTClientManagerService() {
+        if (jwtClientManagerService != null) {
+            return jwtClientManagerService;
+        }
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        jwtClientManagerService =
+                (JWTClientManagerService) ctx.getOSGiService(JWTClientManagerService.class, null);
+        if (jwtClientManagerService == null) {
+            String msg = "JWTClient Manager service has not initialized.";
+            log.error(msg);
+            throw new IllegalStateException(msg);
+        }
+        return jwtClientManagerService;
     }
 }

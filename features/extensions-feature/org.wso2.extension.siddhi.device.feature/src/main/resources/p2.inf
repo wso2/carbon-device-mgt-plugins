@@ -1,0 +1,2 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.extension.siddhi.device_${feature.version}/conf/siddhi-integration.xml,target:${installFolder}/../../conf/siddhi-integration.xml,overwrite:true);\
