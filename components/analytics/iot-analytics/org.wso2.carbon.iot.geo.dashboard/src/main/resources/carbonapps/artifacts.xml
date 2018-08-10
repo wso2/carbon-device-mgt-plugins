@@ -24,6 +24,7 @@
         <dependency artifact="WSO2IoT-EventSink-FusedStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-Pass_through" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="WSO2IoT-Geo-ExecutionPlan" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="WSO2IoT-GeoAlerts-ExecutionPlan" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="WSO2IoT-Geo-AlertNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-Publisher-WebSocketLocal-FusedSpacialEvent" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-Publisher-WebSocketLocal-GeoAlertNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
