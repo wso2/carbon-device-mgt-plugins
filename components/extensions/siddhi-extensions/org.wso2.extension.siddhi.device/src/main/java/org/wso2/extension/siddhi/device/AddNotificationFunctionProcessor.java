@@ -106,7 +106,10 @@ public class AddNotificationFunctionProcessor extends StreamFunctionProcessor {
         try {
             isNotified = notificationManagementService.addNotification(new DeviceIdentifier(deviceId, deviceType), notification);
         } catch (NotificationManagementException e) {
-            log.error("Error occurred while adding notification for " + deviceType + " device with id " + deviceId, e);
+            // We are not throwing this exception to siddhi runtime as it will break the complete siddhi execution
+            // flow for the event stream coming in.
+            log.error("Error occurred while adding notification '" + notification.toString() + "' for " +
+                    deviceType + " device with id " + deviceId, e);
         }
 
         return new Object[]{isNotified};
