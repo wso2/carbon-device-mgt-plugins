@@ -22,3 +22,5 @@ hasDevicesOfUser=org.wso2.extension.siddhi.device.HasDevicesOfUserFunctionExecut
 getDevicesOfStatus=org.wso2.extension.siddhi.device.GetDevicesOfStatusFunctionExecutor
 hasDevicesOfStatus=org.wso2.extension.siddhi.device.HasDevicesOfStatusFunctionExecutor
 isEnrolled=org.wso2.extension.siddhi.device.IsEnrolledFunctionExecutor
+addNotification=org.wso2.extension.siddhi.device.AddNotificationFunctionProcessor
+addOperation=org.wso2.extension.siddhi.device.AddOperationFunctionProcessor

@@ -1,0 +1,16 @@
+/* Enter a unique ExecutionPlan */
+@Plan:name('WSO2IoT-Operation-ExecutionPlan')
+
+/* Enter a unique description for ExecutionPlan */
+@Plan:description('Publish operations to devices coming from org.wso2.iot.operation stream')
+
+/* define streams/tables and write queries here ... */
+
+@Plan:trace('false')
+
+@Import('org.wso2.iot.operation:1.0.0')
+define stream dataIn (meta_deviceIdentifiers string, meta_deviceType string, code string, type string, isEnabled bool, payLoad string);
+
+from dataIn#device:addOperation(meta_deviceIdentifiers, meta_deviceType, code, type, isEnabled, payLoad)
+select *
+insert into drop;

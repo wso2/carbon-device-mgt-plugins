@@ -30,7 +30,7 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="WSO2IoT-OperationResponse-Receiver" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="WSO2IoT-DeviceOperation-Publisher" version="1.0.0" include="true"
+        <dependency artifact="WSO2IoT-Operation-ExecutionPlan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
     </artifact>
 </artifacts>

@@ -56,6 +56,42 @@
             <artifactId>json</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jaxrs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-slf4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okio</groupId>
+            <artifactId>okio</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
             <scope>test</scope>
@@ -125,14 +161,43 @@
                             org.wso2.extension.siddhi.device.*
                         </Export-Package>
                         <Import-Package>
+                            feign,
+                            feign.codec,
+                            feign.auth,
+                            feign.gson,
+                            feign.slf4j,
+                            javax.net.ssl,
+                            javax.xml,
+                            javax.xml.bind,
+                            javax.xml.bind.annotation,
+                            javax.xml.parsers;resolution:=optional,
+                            org.apache.commons.lang,
+                            org.w3c.dom,
+                            org.wso2.carbon.base,
+                            org.wso2.carbon.utils,
+                            org.wso2.carbon.user.api,
                             org.json;version="${orbit.version.json.range}",
                             org.wso2.siddhi.core.*,
                             org.wso2.siddhi.query.api.*,
                             org.wso2.carbon.device.mgt.core.*,
                             org.wso2.carbon.device.mgt.common.*,
+                            org.wso2.carbon.identity.jwt.client.*,
                             org.apache.commons.logging,
-                            org.wso2.carbon.context
+                            org.wso2.carbon.context,
+                            android.util;resolution:=optional,
+                            javax.annotation;resolution:=optional,
+                            javax.net;resolution:=optional,
+                            javax.security.auth.x500;resolution:=optional,
+                            javax.crypto;resolution:=optional,
+                            javax.crypto.spec;resolution:=optional
                         </Import-Package>
+                        <Embed-Dependency>
+                            jsr311-api,
+                            feign-jaxrs,
+                            feign-okhttp,
+                            okhttp,
+                            okio
+                        </Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>

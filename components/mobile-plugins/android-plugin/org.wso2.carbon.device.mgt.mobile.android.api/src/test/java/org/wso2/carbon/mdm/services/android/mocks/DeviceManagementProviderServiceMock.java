@@ -529,7 +529,8 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
     }
 
     @Override
-    public List<GeoCluster> findGeoClusters(GeoCoordinate geoCoordinate, GeoCoordinate geoCoordinate1, int i) throws DeviceManagementException {
+    public List<GeoCluster> findGeoClusters(String deviceType, GeoCoordinate geoCoordinate,
+                                            GeoCoordinate geoCoordinate1, int i) throws DeviceManagementException {
         return null;
     }
 }
