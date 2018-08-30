@@ -170,7 +170,8 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return Response.status(Response.Status.OK).entity("Android platform configuration has been updated successfully.").build();
+        return Response.status(Response.Status.OK)
+                .entity("Android platform configuration has been updated successfully.").build();
     }
 
 
