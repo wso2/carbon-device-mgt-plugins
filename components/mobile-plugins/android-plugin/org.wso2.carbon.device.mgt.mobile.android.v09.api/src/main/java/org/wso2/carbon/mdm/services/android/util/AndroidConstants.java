@@ -104,6 +104,7 @@ public final class AndroidConstants {
         public static final String LOGCAT = "LOGCAT";
         public static final String APP_RESTRICTION = "APP-RESTRICTION";
         public static final String WORK_PROFILE = "WORK_PROFILE";
+        public static final String NOTIFIER_FREQUENCY = "NOTIFIER_FREQUENCY";
     }
 
     public final class StatusCodes {
@@ -122,6 +123,7 @@ public final class AndroidConstants {
         public static final String LICENSE_KEY = "androidEula";
         public static final String LANGUAGE_US = "en_US";
         public static final String CONTENT_TYPE_TEXT = "text";
+        public static final String NOTIFIER_FREQUENCY = "notifierFrequency";
     }
 
     public final class ApplicationProperties {
