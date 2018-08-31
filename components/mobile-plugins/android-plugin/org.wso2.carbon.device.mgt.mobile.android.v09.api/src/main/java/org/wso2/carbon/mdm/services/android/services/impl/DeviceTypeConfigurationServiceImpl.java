@@ -164,11 +164,6 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
-        } catch (NullPointerException e) {
-            msg = "Error occurred while reading notifierFrequency value.";
-            log.error(msg, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         } catch (OperationManagementException e) {
             msg = "Error occurred while modifying configuration settings of Android platform.";
             log.error(msg, e);
