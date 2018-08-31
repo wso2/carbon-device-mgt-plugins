@@ -20,13 +20,20 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.operation.mgt.ProfileOperation;
 import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.bean.NotifierFrequency;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceTypeConfigurationService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
@@ -114,6 +121,29 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
                     AndroidAPIUtils.getDeviceManagementService().addLicense(DeviceManagementConstants.
                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, license);
                     licenseEntry = entry;
+                } else if (AndroidConstants.TenantConfigProperties.NOTIFIER_FREQUENCY.equals(entry.getName())) {
+                    List<Device> deviceList = AndroidAPIUtils.
+                            getDeviceManagementService().
+                            getAllDevices(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+                    List<DeviceIdentifier> deviceIdList = new ArrayList<>();
+                    for (Device device : deviceList) {
+                        deviceIdList.add(new DeviceIdentifier(device.getDeviceIdentifier(),device.getType()));
+                    }
+                    if (entry.getValue() != null) {
+                        NotifierFrequency notifierFrequency = new NotifierFrequency();
+                        notifierFrequency.setValue(Integer.parseInt(entry.getValue().toString()));
+                        ProfileOperation operation = new ProfileOperation();
+                        operation.setCode(AndroidConstants.OperationCodes.NOTIFIER_FREQUENCY);
+                        operation.setPayLoad(notifierFrequency.toJSON());
+                        operation.setType(Operation.Type.CONFIG);
+                        operation.setEnabled(true);
+                        AndroidAPIUtils.getDeviceManagementService().addOperation(
+                                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID,
+                                operation, deviceIdList);
+                    } else {
+                        return Response.status(Response.Status.BAD_REQUEST)
+                                .entity("No value specified for notifierFrequency.").build();
+                    }
                 }
             }
 
@@ -122,14 +152,29 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             }
             configuration.setConfiguration(configs);
             AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
-            //AndroidAPIUtils.getGCMService().resetTenantConfigCache();
         } catch (DeviceManagementException e) {
             msg = "Error occurred while modifying configuration settings of Android platform";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
+        } catch (NumberFormatException e) {
+            msg = "Error occurred while reading notification frequency.";
+            log.error(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
+        } catch (OperationManagementException e) {
+            msg = "Error occurred while modifying configuration settings of Android platform.";
+            log.error(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
+        } catch (InvalidDeviceException e) {
+            msg = "Error occurred with the device.";
+            log.error(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return Response.status(Response.Status.OK).entity("Android platform configuration has been updated successfully.").build();
+        return Response.status(Response.Status.OK)
+                .entity("Android platform configuration has been updated successfully.").build();
     }
 
 
