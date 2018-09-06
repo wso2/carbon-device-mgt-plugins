@@ -21,6 +21,7 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
+import java.net.HttpURLConnection;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
@@ -1018,22 +1019,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
     }
 
-    private static boolean hasValidAPKContentType(String contentType){
-        if (contentType != null){
-            switch (contentType) {
-                case MediaType.APPLICATION_OCTET_STREAM:
-                case "application/android":
-                    return true;
-            }
-        }
-        return false;
-    }
-
     private static void validateApplicationUrl(String apkUrl) {
         try {
             URL url = new URL(apkUrl);
             URLConnection conn = url.openConnection();
-            if (!hasValidAPKContentType(conn.getContentType())) {
+            if(((HttpURLConnection) conn).getResponseCode() != HttpURLConnection.HTTP_OK) {
                 String errorMessage = "URL is not pointed to a downloadable file.";
                 log.error(errorMessage);
                 throw new BadRequestException(
