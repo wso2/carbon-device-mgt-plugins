@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 import java.util.Map;
 
 /**
@@ -72,66 +73,89 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
         sessionQueryParamList.add(session.getQueryString());
         sessionQueryParam.put(RemoteSessionConstants.QUERY_STRING, sessionQueryParamList);
 
-        // Validate the token
-        OAuthAuthenticator oAuthAuthenticator = RemoteSessionManagementDataHolder.getInstance().getOauthAuthenticator();
-        AuthenticationInfo authenticationInfo = oAuthAuthenticator.isAuthenticated(sessionQueryParam);
+        if (operationId == null) {
+            // Validate the token
+            OAuthAuthenticator oAuthAuthenticator = RemoteSessionManagementDataHolder.getInstance().getOauthAuthenticator();
+            AuthenticationInfo authenticationInfo = oAuthAuthenticator.isAuthenticated(sessionQueryParam);
 
-        if (authenticationInfo != null && authenticationInfo.isAuthenticated()) {
-            try {
-                PrivilegedCarbonContext.startTenantFlow();
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(authenticationInfo
-                                .getTenantDomain()
-                        , true);
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(authenticationInfo.getUsername());
-                if (deviceId != null && !deviceId.isEmpty() && deviceType != null && !deviceType.isEmpty()) {
-                    DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-                    deviceIdentifier.setId(deviceId);
-                    deviceIdentifier.setType(deviceType);
+            if (authenticationInfo != null && authenticationInfo.isAuthenticated()) {
+                try {
+                    PrivilegedCarbonContext.startTenantFlow();
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(authenticationInfo
+                                    .getTenantDomain()
+                            , true);
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(authenticationInfo.getUsername());
+                    if (deviceId != null && !deviceId.isEmpty() && deviceType != null && !deviceType.isEmpty()) {
+                        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+                        deviceIdentifier.setId(deviceId);
+                        deviceIdentifier.setType(deviceType);
 
-                    // Check authorization of user for given device
-                    boolean userAuthorized = RemoteSessionManagementDataHolder.getInstance()
-                            .getDeviceAccessAuthorizationService()
-                            .isUserAuthorized(deviceIdentifier, authenticationInfo.getUsername());
-                    if (userAuthorized) {
-                        // set common settings for session
-                        session.setMaxBinaryMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
-                                .getMaxMessageBufferSize());
-                        session.setMaxTextMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
-                                .getMaxMessageBufferSize());
-                        session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
+                        // Check authorization of user for given device
+                        boolean userAuthorized = RemoteSessionManagementDataHolder.getInstance()
+                                .getDeviceAccessAuthorizationService()
+                                .isUserAuthorized(deviceIdentifier, authenticationInfo.getUsername());
+                        if (userAuthorized) {
+                            // set common settings for session
+                            session.setMaxBinaryMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
+                                    .getMaxMessageBufferSize());
+                            session.setMaxTextMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
+                                    .getMaxMessageBufferSize());
+                            session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
 
-                        // if session initiated using operation id means request came from device
-                        if (operationId != null) {
-                            // create new device session
-                            initializeDeviceSession(session, authenticationInfo.getTenantDomain(), deviceType, deviceId,
-                                    operationId);
+                            // if session initiated using operation id means request came from device
+//                            if (operationId != null) {
+//                                // create new device session
+//                                initializeDeviceSession(session, authenticationInfo.getTenantDomain(), deviceType, deviceId,
+//                                        operationId);
+//                            } else {
+                                // create new client session
+                                initializeClientSession(session, authenticationInfo.getTenantDomain(), deviceType,
+                                        deviceId);
+//                            }
+                            log.info("Current remote sessions count: " + RemoteSessionManagementDataHolder.getInstance()
+                                    .getSessionMap().size());
+
                         } else {
-                            // create new client session
-                            initializeClientSession(session, authenticationInfo.getTenantDomain(), deviceType,
-                                    deviceId);
+                            throw new RemoteSessionManagementException("Missing device Id or type ");
                         }
-                        log.info("Current remote sessions count: " + RemoteSessionManagementDataHolder.getInstance()
-                                .getSessionMap().size());
-
                     } else {
-                        throw new RemoteSessionManagementException("Missing device Id or type ");
+                        throw new RemoteSessionManagementException("Unauthorized Access for the device Type : " + deviceType
+                                + " , deviceId : " + deviceId);
                     }
-                } else {
-                    throw new RemoteSessionManagementException("Unauthorized Access for the device Type : " + deviceType
-                            + " , deviceId : " + deviceId);
+                } catch (OperationManagementException | InvalidDeviceException e) {
+                    throw new RemoteSessionManagementException("Error occurred while adding initial operation for the " +
+                            "device Type : " + deviceType + " , deviceId : " + deviceId);
+                } catch (DeviceAccessAuthorizationException e) {
+                    throw new RemoteSessionManagementException("Error occurred while device access authorization for the " +
+                            "device Type : " + deviceType + " , " + "deviceId : " + deviceId);
+                } finally {
+                    PrivilegedCarbonContext.endTenantFlow();
                 }
-            } catch (OperationManagementException | InvalidDeviceException e) {
-                throw new RemoteSessionManagementException("Error occurred while adding initial operation for the " +
-                        "device Type : " + deviceType + " , deviceId : " + deviceId);
-            } catch (DeviceAccessAuthorizationException e) {
-                throw new RemoteSessionManagementException("Error occurred while device access authorization for the " +
-                        "device Type : " + deviceType + " , " + "deviceId : " + deviceId);
-            } finally {
-                PrivilegedCarbonContext.endTenantFlow();
+
+            } else {
+                throw new RemoteSessionManagementException("Invalid token");
             }
 
         } else {
-            throw new RemoteSessionManagementException("Invalid token");
+            // set common settings for session
+            session.setMaxBinaryMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
+                    .getMaxMessageBufferSize());
+            session.setMaxTextMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
+                    .getMaxMessageBufferSize());
+            session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
+            String uuid = session.getQueryString();
+
+            if(uuid != null && uuid.isEmpty()){
+                log.error("Could not find a UUID related to the remote session");
+            } else {
+                String tenantDomain = RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap().remove(uuid);
+                if(tenantDomain == null || tenantDomain.isEmpty()){
+                    log.error("Invalid UUID, could not create the remote session");
+                } else {
+                    // create new device session
+                    initializeDeviceSession(session, tenantDomain, deviceType, deviceId, operationId, uuid);
+                }
+            }
         }
     }
 
@@ -194,6 +218,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                 .getId());
         if (remoteSession != null) {
             //String operationId = remoteSession.getOperationId();
+            RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap().remove(remoteSession.getUuidToValidateDevice());
             String deviceKey = remoteSession.getTenantDomain() + "/" + remoteSession.getDeviceType() + "/" +
                     remoteSession.getDeviceId();
             RemoteSession lastSession = RemoteSessionManagementDataHolder.getInstance()
@@ -239,8 +264,9 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
     private void initializeClientSession(Session session, String tenantDomain, String deviceType, String deviceId) throws RemoteSessionManagementException,
             OperationManagementException, InvalidDeviceException {
 
+        String uuidToValidateDevice = UUID.randomUUID().toString();
         RemoteSession clientRemote = new RemoteSession(session, tenantDomain, deviceType, deviceId, RemoteSessionConstants
-                .CONNECTION_TYPE.CLIENT);
+                .CONNECTION_TYPE.CLIENT, uuidToValidateDevice);
         String deviceKey = tenantDomain + "/" + deviceType + "/" + deviceId;
         // Create new remote control operation to start the session
         RemoteSession activeSession = RemoteSessionManagementDataHolder.getInstance().getActiveDeviceClientSessionMap
@@ -277,6 +303,12 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                 operation.setControl(Operation.Control.NO_REPEAT);
                 JSONObject payload = new JSONObject();
                 payload.put("serverUrl", RemoteSessionManagementDataHolder.getInstance().getServerUrl());
+                payload.put("uuidToValidateDevice", uuidToValidateDevice);
+                String uuidToTenantMap = RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap
+                        ().putIfAbsent(uuidToValidateDevice, tenantDomain);
+                if (log.isDebugEnabled()) {
+                    log.debug("UUID " + uuidToTenantMap + " is generated against the tenant : " + tenantDomain);
+                }
                 operation.setPayLoad(payload.toString());
                 String date = new SimpleDateFormat(RemoteSessionConstants.DATE_FORMAT_NOW).format(new Date());
                 operation.setCreatedTimeStamp(date);
@@ -287,6 +319,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                 clientRemote.setOperationId(activity.getActivityId().replace(DeviceManagementConstants
                         .OperationAttributes.ACTIVITY, ""));
                 RemoteSessionManagementDataHolder.getInstance().getSessionMap().put(session.getId(), clientRemote);
+
                 log.info("Client remote session opened for session id: " + session.getId() + " device Type : " +
                         deviceType + " , " + "deviceId : " + deviceId);
             } else {
@@ -307,7 +340,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
      * @throws RemoteSessionManagementException throws when session has errors with accessing device resources
      */
     private void initializeDeviceSession(Session session, String tenantDomain, String deviceType, String deviceId,
-                                         String operationId) throws RemoteSessionManagementException {
+                                         String operationId, String uuidToValidateDevice) throws RemoteSessionManagementException {
         String deviceKey = tenantDomain + "/" + deviceType + "/" + deviceId;
         RemoteSession activeSession = RemoteSessionManagementDataHolder.getInstance()
                 .getActiveDeviceClientSessionMap().get(deviceKey);
@@ -317,7 +350,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
             if (clientRemote != null) {
                 if (clientRemote.getOperationId().equals(operationId)) {
                     RemoteSession deviceRemote = new RemoteSession(session, tenantDomain, deviceType, deviceId,
-                            RemoteSessionConstants.CONNECTION_TYPE.DEVICE);
+                            RemoteSessionConstants.CONNECTION_TYPE.DEVICE, uuidToValidateDevice);
                     deviceRemote.setOperationId(operationId);
                     deviceRemote.setPeerSession(clientRemote);
                     clientRemote.setPeerSession(deviceRemote);

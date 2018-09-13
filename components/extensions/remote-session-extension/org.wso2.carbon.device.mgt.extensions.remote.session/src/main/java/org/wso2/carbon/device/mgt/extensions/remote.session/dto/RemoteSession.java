@@ -34,7 +34,11 @@ import java.nio.ByteBuffer;
 public class RemoteSession {
 
     private static final Log log = LogFactory.getLog(RemoteSession.class);
-    private String tenantDomain, operationId, deviceType, deviceId;
+    private String tenantDomain;
+    private String operationId;
+    private String deviceType;
+    private String deviceId;
+    private String uuidToValidateDevice;
     private long lastMessageTimeStamp = System.currentTimeMillis();
     private RemoteSession peerSession;
     private Session mySession;
@@ -45,12 +49,13 @@ public class RemoteSession {
     private RemoteSessionConstants.CONNECTION_TYPE connectionType;
 
     public RemoteSession(Session session, String tenantDomain, String deviceType, String deviceId,
-                         RemoteSessionConstants.CONNECTION_TYPE connectionType) {
+                         RemoteSessionConstants.CONNECTION_TYPE connectionType, String uuidToValidateDevice) {
         this.mySession = session;
         this.deviceType = deviceType;
         this.deviceId = deviceId;
         this.tenantDomain = tenantDomain;
         this.connectionType = connectionType;
+        this.uuidToValidateDevice = uuidToValidateDevice;
         maxMessagesPerSecond = RemoteSessionManagementDataHolder.getInstance().getMaxMessagesPerSecond();
         messageAllowance = maxMessagesPerSecond;
         messageRatePerSecond = (double) maxMessagesPerSecond / 1000;
@@ -107,6 +112,10 @@ public class RemoteSession {
         } else {
             return true;
         }
+    }
+
+    public String getUuidToValidateDevice() {
+        return uuidToValidateDevice;
     }
 
     public Session getMySession() {
