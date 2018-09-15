@@ -73,6 +73,7 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
         sessionQueryParamList.add(session.getQueryString());
         sessionQueryParam.put(RemoteSessionConstants.QUERY_STRING, sessionQueryParamList);
 
+        // if session initiated using operation id means request came from device.
         if (operationId == null) {
             // Validate the token
             OAuthAuthenticator oAuthAuthenticator = RemoteSessionManagementDataHolder.getInstance().getOauthAuthenticator();
@@ -102,16 +103,8 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                                     .getMaxMessageBufferSize());
                             session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
 
-                            // if session initiated using operation id means request came from device
-//                            if (operationId != null) {
-//                                // create new device session
-//                                initializeDeviceSession(session, authenticationInfo.getTenantDomain(), deviceType, deviceId,
-//                                        operationId);
-//                            } else {
-                                // create new client session
-                                initializeClientSession(session, authenticationInfo.getTenantDomain(), deviceType,
-                                        deviceId);
-//                            }
+                            initializeClientSession(session, authenticationInfo.getTenantDomain(), deviceType, deviceId);
+
                             log.info("Current remote sessions count: " + RemoteSessionManagementDataHolder.getInstance()
                                     .getSessionMap().size());
 
@@ -145,11 +138,11 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
             session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
             String uuid = session.getQueryString();
 
-            if(uuid != null && uuid.isEmpty()){
+            if (uuid != null && uuid.isEmpty()) {
                 log.error("Could not find a UUID related to the remote session");
             } else {
                 String tenantDomain = RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap().remove(uuid);
-                if(tenantDomain == null || tenantDomain.isEmpty()){
+                if (tenantDomain == null || tenantDomain.isEmpty()) {
                     log.error("Invalid UUID, could not create the remote session");
                 } else {
                     // create new device session
@@ -304,10 +297,11 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                 JSONObject payload = new JSONObject();
                 payload.put("serverUrl", RemoteSessionManagementDataHolder.getInstance().getServerUrl());
                 payload.put("uuidToValidateDevice", uuidToValidateDevice);
-                String uuidToTenantMap = RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap
-                        ().putIfAbsent(uuidToValidateDevice, tenantDomain);
+                RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap
+                        ().put(uuidToValidateDevice, tenantDomain);
                 if (log.isDebugEnabled()) {
-                    log.debug("UUID " + uuidToTenantMap + " is generated against the tenant : " + tenantDomain);
+                    log.debug("UUID " + uuidToValidateDevice + " is generated against the tenant : " +
+                            RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap().get(uuidToValidateDevice));
                 }
                 operation.setPayLoad(payload.toString());
                 String date = new SimpleDateFormat(RemoteSessionConstants.DATE_FORMAT_NOW).format(new Date());
