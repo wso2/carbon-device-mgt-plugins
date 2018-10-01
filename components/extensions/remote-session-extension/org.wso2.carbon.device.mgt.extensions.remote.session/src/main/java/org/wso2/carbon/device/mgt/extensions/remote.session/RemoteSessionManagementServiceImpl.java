@@ -131,12 +131,16 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                     .getMaxMessageBufferSize());
             session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
 
-            if (token != null && token.isEmpty()) {
-                log.error("Could not find a UUID related to the remote session.");
+            if (token == null || token.isEmpty()) {
+                String message = "Could not find a UUID related to the remote session.";
+                log.error(message);
+                throw new RemoteSessionManagementException(message);
             } else {
                 String tenantDomain = RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap().remove(token);
                 if (tenantDomain == null || tenantDomain.isEmpty()) {
-                    log.error("Invalid UUID, could not create the remote session.");
+                    String message = "Invalid UUID (" + token + "), could not create the remote session.";
+                    log.error(message);
+                    throw new RemoteSessionManagementException(message);
                 } else {
                     // create new device session
                     initializeDeviceSession(session, tenantDomain, deviceType, deviceId, operationId, token);
