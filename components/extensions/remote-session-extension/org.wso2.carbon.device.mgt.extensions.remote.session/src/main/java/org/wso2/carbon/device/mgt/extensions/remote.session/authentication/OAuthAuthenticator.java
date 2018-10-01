@@ -14,7 +14,6 @@
 
 package org.wso2.carbon.device.mgt.extensions.remote.session.authentication;
 
-
 import org.wso2.carbon.device.mgt.extensions.remote.session.authentication.oauth.OAuthTokenValidator;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class OAuthAuthenticator {
         oAuthTokenValidator = new OAuthTokenValidator(globalProperties);
     }
 
-    public AuthenticationInfo isAuthenticated(Map<String, List<String>> webSocketConnectionProperties) {
-        return oAuthTokenValidator.validateToken(webSocketConnectionProperties);
+    public AuthenticationInfo isAuthenticated(String token) {
+        return oAuthTokenValidator.validateToken(token);
     }
 }

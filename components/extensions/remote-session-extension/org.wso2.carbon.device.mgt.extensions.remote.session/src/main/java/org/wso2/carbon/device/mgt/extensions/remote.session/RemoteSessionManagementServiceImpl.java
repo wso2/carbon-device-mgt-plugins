@@ -42,11 +42,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.Map;
 
 /**
  * Class @{@link RemoteSessionManagementServiceImpl} is the implementation of @{@link RemoteSessionManagementService}
@@ -68,16 +65,13 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
         }
 
         // Read Query Parameters for obtain the token
-        Map<String, List<String>> sessionQueryParam = new HashMap();
-        List<String> sessionQueryParamList = new LinkedList<>();
-        sessionQueryParamList.add(session.getQueryString());
-        sessionQueryParam.put(RemoteSessionConstants.QUERY_STRING, sessionQueryParamList);
+        String token = getTokenFromSession(session);
 
         // if session initiated using operation id means request came from device.
         if (operationId == null) {
             // Validate the token
             OAuthAuthenticator oAuthAuthenticator = RemoteSessionManagementDataHolder.getInstance().getOauthAuthenticator();
-            AuthenticationInfo authenticationInfo = oAuthAuthenticator.isAuthenticated(sessionQueryParam);
+            AuthenticationInfo authenticationInfo = oAuthAuthenticator.isAuthenticated(token);
 
             if (authenticationInfo != null && authenticationInfo.isAuthenticated()) {
                 try {
@@ -136,17 +130,16 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
             session.setMaxTextMessageBufferSize(RemoteSessionManagementDataHolder.getInstance()
                     .getMaxMessageBufferSize());
             session.setMaxIdleTimeout(RemoteSessionManagementDataHolder.getInstance().getMaxIdleTimeout());
-            String uuid = session.getQueryString();
 
-            if (uuid != null && uuid.isEmpty()) {
-                log.error("Could not find a UUID related to the remote session");
+            if (token != null && token.isEmpty()) {
+                log.error("Could not find a UUID related to the remote session.");
             } else {
-                String tenantDomain = RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap().remove(uuid);
+                String tenantDomain = RemoteSessionManagementDataHolder.getInstance().getUuidToTenantMap().remove(token);
                 if (tenantDomain == null || tenantDomain.isEmpty()) {
-                    log.error("Invalid UUID, could not create the remote session");
+                    log.error("Invalid UUID, could not create the remote session.");
                 } else {
                     // create new device session
-                    initializeDeviceSession(session, tenantDomain, deviceType, deviceId, operationId, uuid);
+                    initializeDeviceSession(session, tenantDomain, deviceType, deviceId, operationId, token);
                 }
             }
         }
@@ -369,5 +362,34 @@ public class RemoteSessionManagementServiceImpl implements RemoteSessionManageme
                     operationId + " device Type : " + deviceType + " , " + "deviceId : " + deviceId);
         }
 
+    }
+
+    /**
+     * Retrieving the token from the http session
+     *
+     * @param session WebSocket session
+     * @return retrieved token
+     */
+    private String getTokenFromSession(Session session) {
+        if (session == null) {
+            return null;
+        }
+        String queryString = session.getQueryString();
+        if (queryString != null) {
+            String[] allQueryParamPairs = queryString.split(RemoteSessionConstants.OAuthTokenValidator
+                    .QUERY_STRING_SEPERATOR);
+            for (String keyValuePair : allQueryParamPairs) {
+                String[] queryParamPair = keyValuePair.split(RemoteSessionConstants.OAuthTokenValidator
+                        .QUERY_KEY_VALUE_SEPERATOR);
+                if (queryParamPair.length != 2) {
+                    log.warn("Invalid query string [" + queryString + "] passed in.");
+                    break;
+                }
+                if (queryParamPair[0].equals(RemoteSessionConstants.OAuthTokenValidator.TOKEN_IDENTIFIER)) {
+                    return queryParamPair[1];
+                }
+            }
+        }
+        return null;
     }
 }
