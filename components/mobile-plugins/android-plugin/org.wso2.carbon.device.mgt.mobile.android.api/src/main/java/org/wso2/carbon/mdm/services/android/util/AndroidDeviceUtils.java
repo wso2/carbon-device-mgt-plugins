@@ -305,13 +305,13 @@ public class AndroidDeviceUtils {
             deviceInfo.getDeviceDetailsMap().put("batteryLevel", getProperty(prop.getValue(), "BATTERY_LEVEL"));
             deviceInfo.getDeviceDetailsMap().put("batteryScale", getProperty(prop.getValue(), "SCALE"));
             deviceInfo.getDeviceDetailsMap().put("batteryVoltage",
-                                                 getProperty(prop.getValue(), "BATTERY_VOLTAGE"));
+                    getProperty(prop.getValue(), "BATTERY_VOLTAGE"));
             deviceInfo.getDeviceDetailsMap().put("batteryTemperature",
-                                                 getProperty(prop.getValue(), "TEMPERATURE"));
+                    getProperty(prop.getValue(), "TEMPERATURE"));
             deviceInfo.getDeviceDetailsMap().put("batteryCurrentTemperature",
-                                                 getProperty(prop.getValue(), "CURRENT_AVERAGE"));
+                    getProperty(prop.getValue(), "CURRENT_AVERAGE"));
             deviceInfo.getDeviceDetailsMap().put("batteryTechnology",
-                                                 getProperty(prop.getValue(), "TECHNOLOGY"));
+                    getProperty(prop.getValue(), "TECHNOLOGY"));
             deviceInfo.getDeviceDetailsMap().put("batteryHealth", getProperty(prop.getValue(), "HEALTH"));
             deviceInfo.getDeviceDetailsMap().put("batteryStatus", getProperty(prop.getValue(), "STATUS"));
         } else if (prop.getName().equalsIgnoreCase("NETWORK_INFO")) {
@@ -319,29 +319,47 @@ public class AndroidDeviceUtils {
             deviceInfo.setConnectionType(getProperty(prop.getValue(), "CONNECTION_TYPE"));
 
             deviceInfo.getDeviceDetailsMap().put("mobileSignalStrength",
-                                                 getProperty(prop.getValue(), "MOBILE_SIGNAL_STRENGTH"));
+                    getProperty(prop.getValue(), "MOBILE_SIGNAL_STRENGTH"));
             deviceInfo.getDeviceDetailsMap().put("wifiSignalStrength",
-                                                 getProperty(prop.getValue(), "WIFI_SIGNAL_STRENGTH"));
+                    getProperty(prop.getValue(), "WIFI_SIGNAL_STRENGTH"));
         } else if (prop.getName().equalsIgnoreCase("DEVICE_INFO")) {
-            deviceInfo.setBatteryLevel(Double.parseDouble(
-                    getProperty(prop.getValue(), "BATTERY_LEVEL")));
-            deviceInfo.setInternalTotalMemory(Double.parseDouble(
-                    getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY")));
-            deviceInfo.setInternalAvailableMemory(Double.parseDouble(
-                    getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY")));
-            deviceInfo.setExternalTotalMemory(Double.parseDouble(
-                    getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY")));
-            deviceInfo.setExternalAvailableMemory(Double.parseDouble(
-                    getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY")));
+            if (!getProperty(prop.getValue(), "BATTERY_LEVEL").equals("")) {
+                deviceInfo.setBatteryLevel(Double.parseDouble(
+                        getProperty(prop.getValue(), "BATTERY_LEVEL")));
+            }
+            if (!getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY").equals("")) {
+                deviceInfo.setInternalTotalMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY")));
+            }
+            if (!getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY").equals("")) {
+                deviceInfo.setInternalAvailableMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY")));
+            }
+            if (!getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY").equals("")) {
+                deviceInfo.setExternalTotalMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY")));
+            }
+            if (!getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY").equals("")) {
+                deviceInfo.setExternalAvailableMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY")));
+            }
+            if (!getProperty(prop.getValue(), "PASSCODE_ENABLED").equals("")) {
+                deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
+                        getProperty(prop.getValue(), "PASSCODE_ENABLED"));
+            }
+            if (!getProperty(prop.getValue(), "OPERATOR").equals("")) {
+                deviceInfo.getDeviceDetailsMap().put("operator",
+                        getProperty(prop.getValue(), "OPERATOR"));
+            }
+            if (!getProperty(prop.getValue(), "PHONE_NUMBER").equals("")) {
+                deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
+                        getProperty(prop.getValue(), "PHONE_NUMBER"));
+            }
+            if (!getProperty(prop.getValue(), "OPERATOR").equals("")) {
+                deviceInfo.getDeviceDetailsMap().put("operator",
+                        getProperty(prop.getValue(), "OPERATOR"));
+            }
 
-            deviceInfo.getDeviceDetailsMap().put("encryptionEnabled",
-                                                 getProperty(prop.getValue(), "ENCRYPTION_ENABLED"));
-            deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
-                                                 getProperty(prop.getValue(), "PASSCODE_ENABLED"));
-            deviceInfo.getDeviceDetailsMap().put("operator",
-                                                 getProperty(prop.getValue(), "OPERATOR"));
-            deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
-                                                 getProperty(prop.getValue(), "PHONE_NUMBER"));
         } else if (prop.getName().equalsIgnoreCase("IMEI")) {
             deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
         } else if (prop.getName().equalsIgnoreCase("IMSI")) {
