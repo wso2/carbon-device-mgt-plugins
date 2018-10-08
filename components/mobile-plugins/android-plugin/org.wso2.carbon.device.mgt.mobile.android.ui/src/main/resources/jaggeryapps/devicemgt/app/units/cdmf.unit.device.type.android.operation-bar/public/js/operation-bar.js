@@ -282,7 +282,7 @@ function validateFileTransferParameters(payload) {
         returnVal = "Please enter File URL";
     } else if (!payload.upload && !payload.fileURL) {
         returnVal = "Please enter the URL to upload file from device";
-    } else if (protocol === "HTTP" && !(payload.fileURL).startsWith("http:")) {
+    } else if (protocol === "HTTP" && !(payload.fileURL.startsWith("http:") || payload.fileURL.startsWith("https:"))) {
         returnVal = "Please enter HTTP URL"
     } else if (protocol === "FTP" && !(payload.fileURL).startsWith("ftp:")) {
         returnVal = "Please enter FTP URL"
