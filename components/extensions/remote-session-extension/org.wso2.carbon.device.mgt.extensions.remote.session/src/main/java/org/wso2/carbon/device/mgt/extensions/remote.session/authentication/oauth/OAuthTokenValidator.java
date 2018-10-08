@@ -40,8 +40,6 @@ public class OAuthTokenValidator {
     private static String cookie;
     private GenericObjectPool stubs;
     private static Log log = LogFactory.getLog(OAuthTokenValidator.class);
-    private static OAuthTokenValidator oAuthTokenValidator;
-
 
     public OAuthTokenValidator(Map<String, String> globalProperties) {
         this.stubs = new GenericObjectPool(new OAuthTokenValidatorStubFactory(globalProperties));
@@ -50,11 +48,10 @@ public class OAuthTokenValidator {
     /**
      * This method gets a string accessToken and validates it
      *
-     * @param webSocketConnectionProperties WebSocket connection information including http headers
+     * @param token oauth token
      * @return AuthenticationInfo with the validated results.
      */
-    public AuthenticationInfo validateToken(Map<String, List<String>> webSocketConnectionProperties) {
-        String token = getTokenFromSession(webSocketConnectionProperties);
+    public AuthenticationInfo validateToken(String token) {
         if (token == null) {
             AuthenticationInfo authenticationInfo = new AuthenticationInfo();
             authenticationInfo.setAuthenticated(false);
@@ -65,10 +62,6 @@ public class OAuthTokenValidator {
             Object stub = this.stubs.borrowObject();
             if (stub != null) {
                 tokenValidationServiceStub = (OAuth2TokenValidationServiceStub) stub;
-                if (cookie != null) {
-                    tokenValidationServiceStub._getServiceClient().getOptions().setProperty(
-                            HTTPConstants.COOKIE_STRING, cookie);
-                }
                 return getAuthenticationInfo(token, tokenValidationServiceStub);
             } else {
                 log.warn("Stub initialization failed.");
@@ -145,53 +138,4 @@ public class OAuthTokenValidator {
         return authenticationInfo;
     }
 
-    /**
-     * Retrieving the token from the http header
-     *
-     * @param webSocketConnectionProperties WebSocket connection information including http headers
-     * @return retrieved token
-     */
-    private String getToken(Map<String, List<String>> webSocketConnectionProperties) {
-        String cookieString = webSocketConnectionProperties.get(RemoteSessionConstants.OAuthTokenValidator.COOKIE)
-                .get(0);
-        String[] properties = cookieString.split(RemoteSessionConstants.OAuthTokenValidator.COOKIE_KEYPAIR_SEPERATOR);
-        String token;
-        for (String keyValuePair : properties) {
-            if (RemoteSessionConstants.OAuthTokenValidator.TOKEN_IDENTIFIER.equals((keyValuePair.
-                    split(RemoteSessionConstants.OAuthTokenValidator.COOKIE_KEY_VALUE_SEPERATOR)[0]).trim())) {
-                token = (keyValuePair.split(RemoteSessionConstants.OAuthTokenValidator.COOKIE_KEY_VALUE_SEPERATOR)
-                        [1]).trim();
-                return token;
-            }
-        }
-        log.error("WebSocket token should be specified in cookie");
-        return null;
-    }
-
-    /**
-     * Retrieving the token from the http session
-     *
-     * @param webSocketConnectionProperties WebSocket connection information including http headers
-     * @return retrieved token
-     */
-    private String getTokenFromSession(Map<String, List<String>> webSocketConnectionProperties) {
-        String queryString = webSocketConnectionProperties.get(RemoteSessionConstants.OAuthTokenValidator
-                .QUERY_STRING).get(0);
-        if (queryString != null) {
-            String[] allQueryParamPairs = queryString.split(RemoteSessionConstants.OAuthTokenValidator
-                    .QUERY_STRING_SEPERATOR);
-            for (String keyValuePair : allQueryParamPairs) {
-                String[] queryParamPair = keyValuePair.split(RemoteSessionConstants.OAuthTokenValidator
-                        .QUERY_KEY_VALUE_SEPERATOR);
-                if (queryParamPair.length != 2) {
-                    log.warn("Invalid query string [" + queryString + "] passed in.");
-                    break;
-                }
-                if (queryParamPair[0].equals(RemoteSessionConstants.OAuthTokenValidator.TOKEN_IDENTIFIER)) {
-                    return queryParamPair[1];
-                }
-            }
-        }
-        return null;
-    }
 }
