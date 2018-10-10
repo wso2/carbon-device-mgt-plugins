@@ -24,6 +24,7 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
@@ -124,25 +125,28 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
                 } else if (AndroidConstants.TenantConfigProperties.NOTIFIER_FREQUENCY.equals(entry.getName())) {
                     List<Device> deviceList = AndroidAPIUtils.
                             getDeviceManagementService().
-                            getAllDevices(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+                            getAllDevices(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, false);
                     List<DeviceIdentifier> deviceIdList = new ArrayList<>();
                     for (Device device : deviceList) {
-                        deviceIdList.add(new DeviceIdentifier(device.getDeviceIdentifier(),device.getType()));
+                        if (EnrolmentInfo.Status.REMOVED != device.getEnrolmentInfo().getStatus()) {
+                            deviceIdList.add(new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+                        }
                     }
-                    if (entry.getValue() != null) {
-                        NotifierFrequency notifierFrequency = new NotifierFrequency();
-                        notifierFrequency.setValue(Integer.parseInt(entry.getValue().toString()));
-                        ProfileOperation operation = new ProfileOperation();
-                        operation.setCode(AndroidConstants.OperationCodes.NOTIFIER_FREQUENCY);
-                        operation.setPayLoad(notifierFrequency.toJSON());
-                        operation.setType(Operation.Type.CONFIG);
-                        operation.setEnabled(true);
-                        AndroidAPIUtils.getDeviceManagementService().addOperation(
-                                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID,
-                                operation, deviceIdList);
-                    } else {
-                        return Response.status(Response.Status.BAD_REQUEST)
-                                .entity("No value specified for notifierFrequency.").build();
+                    if (!deviceIdList.isEmpty()) {
+                        if (entry.getValue() != null) {
+                            NotifierFrequency notifierFrequency = new NotifierFrequency();
+                            notifierFrequency.setValue(Integer.parseInt(entry.getValue().toString()));
+                            ProfileOperation operation = new ProfileOperation();
+                            operation.setCode(AndroidConstants.OperationCodes.NOTIFIER_FREQUENCY);
+                            operation.setPayLoad(notifierFrequency.toJSON());
+                            operation.setEnabled(true);
+                            AndroidAPIUtils.getDeviceManagementService().addOperation(
+                                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID,
+                                    operation, deviceIdList);
+                        } else {
+                            return Response.status(Response.Status.BAD_REQUEST)
+                                    .entity("No value specified for notifierFrequency.").build();
+                        }
                     }
                 }
             }
