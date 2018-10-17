@@ -79,9 +79,9 @@ public class AndroidDeviceUtils {
         Device device = AndroidAPIUtils.getDeviceManagementService().
                 getDevice(deviceIdentifier, false);
         return !(device == null || device.getDeviceIdentifier() == null ||
-                 device.getDeviceIdentifier().isEmpty() ||
-                 device.getEnrolmentInfo() == null ||
-                 EnrolmentInfo.Status.REMOVED.equals(device.getEnrolmentInfo().getStatus()));
+                device.getDeviceIdentifier().isEmpty() ||
+                device.getEnrolmentInfo() == null ||
+                EnrolmentInfo.Status.REMOVED.equals(device.getEnrolmentInfo().getStatus()));
     }
 
     public static DeviceIdentifier convertToDeviceIdentifierObject(String deviceId) {
@@ -166,12 +166,12 @@ public class AndroidDeviceUtils {
         deviceIdentifier.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
 
         if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
-            AndroidConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
+                AndroidConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
                 log.debug("Received compliance status from MONITOR operation ID: " + operation.getId());
             }
             AndroidAPIUtils.getPolicyManagerService().checkPolicyCompliance(deviceIdentifier,
-                                                                            getComplianceFeatures(operation.getPayLoad()));
+                    getComplianceFeatures(operation.getPayLoad()));
         } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
                 OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
@@ -194,7 +194,7 @@ public class AndroidDeviceUtils {
             }
 
         } else if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
-                   AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
+                AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
             try {
                 DeviceLocation location = new Gson().fromJson(operation.getOperationResponse(), DeviceLocation.class);
                 // reason for checking "location.getLatitude() != null" because when device fails to provide
@@ -359,7 +359,6 @@ public class AndroidDeviceUtils {
                 deviceInfo.getDeviceDetailsMap().put("operator",
                         getProperty(prop.getValue(), "OPERATOR"));
             }
-
         } else if (prop.getName().equalsIgnoreCase("IMEI")) {
             deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
         } else if (prop.getName().equalsIgnoreCase("IMSI")) {
@@ -394,7 +393,7 @@ public class AndroidDeviceUtils {
             if (element.isJsonObject()) {
                 JsonObject jsonObject = element.getAsJsonObject();
                 if (jsonObject.has("name")
-                    && jsonObject.get("name").getAsString().equalsIgnoreCase(needed)) {
+                        && jsonObject.get("name").getAsString().equalsIgnoreCase(needed)) {
                     if (jsonObject.has("value") && jsonObject.get("value") != JsonNull.INSTANCE) {
                         return jsonObject.get("value").getAsString().replace("%", "");
                     } else {
@@ -440,7 +439,7 @@ public class AndroidDeviceUtils {
      */
     public static BadRequestException buildBadRequestException(String description) {
         ErrorResponse errorResponse = getErrorResponse(AndroidConstants.
-                                                               ErrorMessages.STATUS_BAD_REQUEST_MESSAGE_DEFAULT, 400l, description);
+                ErrorMessages.STATUS_BAD_REQUEST_MESSAGE_DEFAULT, 400l, description);
         return new BadRequestException(errorResponse);
     }
 
