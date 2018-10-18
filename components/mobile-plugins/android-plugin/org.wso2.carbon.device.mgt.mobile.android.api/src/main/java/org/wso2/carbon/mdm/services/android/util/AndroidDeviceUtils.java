@@ -294,9 +294,17 @@ public class AndroidDeviceUtils {
             deviceInfo.getDeviceDetailsMap().put("IOW", getProperty(prop.getValue(), "IOW"));
             deviceInfo.getDeviceDetailsMap().put("IRQ", getProperty(prop.getValue(), "IRQ"));
         } else if (prop.getName().equalsIgnoreCase("RAM_INFO")) {
-            deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "TOTAL_MEMORY")));
-            deviceInfo.setAvailableRAMMemory(Double.parseDouble(
-                    getProperty(prop.getValue(), "AVAILABLE_MEMORY")));
+            if (!getProperty(prop.getValue(), "TOTAL_MEMORY").equals("")) {
+                deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "TOTAL_MEMORY")));
+            } else {
+                deviceInfo.setTotalRAMMemory(-1D);
+            }
+            if (!getProperty(prop.getValue(), "AVAILABLE_MEMORY").equals("")) {
+                deviceInfo.setAvailableRAMMemory(Double.parseDouble(
+                        getProperty(prop.getValue(), "AVAILABLE_MEMORY")));
+            } else {
+                deviceInfo.setAvailableRAMMemory(-1D);
+            }
             deviceInfo.getDeviceDetailsMap().put("ramThreshold", getProperty(prop.getValue(), "THRESHOLD"));
             deviceInfo.getDeviceDetailsMap().put("ramLowMemory", getProperty(prop.getValue(), "LOW_MEMORY"));
         } else if (prop.getName().equalsIgnoreCase("BATTERY_INFO")) {
@@ -326,39 +334,42 @@ public class AndroidDeviceUtils {
             if (!getProperty(prop.getValue(), "BATTERY_LEVEL").equals("")) {
                 deviceInfo.setBatteryLevel(Double.parseDouble(
                         getProperty(prop.getValue(), "BATTERY_LEVEL")));
+            } else {
+                deviceInfo.setBatteryLevel(-1D);
             }
             if (!getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY").equals("")) {
                 deviceInfo.setInternalTotalMemory(Double.parseDouble(
                         getProperty(prop.getValue(), "INTERNAL_TOTAL_MEMORY")));
+            } else {
+                deviceInfo.setInternalTotalMemory(-1D);
             }
             if (!getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY").equals("")) {
                 deviceInfo.setInternalAvailableMemory(Double.parseDouble(
                         getProperty(prop.getValue(), "INTERNAL_AVAILABLE_MEMORY")));
+            } else {
+                deviceInfo.setInternalAvailableMemory(-1D);
             }
             if (!getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY").equals("")) {
                 deviceInfo.setExternalTotalMemory(Double.parseDouble(
                         getProperty(prop.getValue(), "EXTERNAL_TOTAL_MEMORY")));
+            } else {
+                deviceInfo.setExternalTotalMemory(-1D);
             }
             if (!getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY").equals("")) {
                 deviceInfo.setExternalAvailableMemory(Double.parseDouble(
                         getProperty(prop.getValue(), "EXTERNAL_AVAILABLE_MEMORY")));
+            } else {
+                deviceInfo.setExternalAvailableMemory(-1D);
             }
-            if (!getProperty(prop.getValue(), "PASSCODE_ENABLED").equals("")) {
-                deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
-                        getProperty(prop.getValue(), "PASSCODE_ENABLED"));
-            }
-            if (!getProperty(prop.getValue(), "OPERATOR").equals("")) {
-                deviceInfo.getDeviceDetailsMap().put("operator",
-                        getProperty(prop.getValue(), "OPERATOR"));
-            }
-            if (!getProperty(prop.getValue(), "PHONE_NUMBER").equals("")) {
-                deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
-                        getProperty(prop.getValue(), "PHONE_NUMBER"));
-            }
-            if (!getProperty(prop.getValue(), "OPERATOR").equals("")) {
-                deviceInfo.getDeviceDetailsMap().put("operator",
-                        getProperty(prop.getValue(), "OPERATOR"));
-            }
+            deviceInfo.getDeviceDetailsMap().put("passcodeEnabled",
+                    getProperty(prop.getValue(), "PASSCODE_ENABLED"));
+            deviceInfo.getDeviceDetailsMap().put("operator",
+                    getProperty(prop.getValue(), "OPERATOR"));
+            deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
+                    getProperty(prop.getValue(), "PHONE_NUMBER"));
+            deviceInfo.getDeviceDetailsMap().put("operator",
+                    getProperty(prop.getValue(), "OPERATOR"));
+
         } else if (prop.getName().equalsIgnoreCase("IMEI")) {
             deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
         } else if (prop.getName().equalsIgnoreCase("IMSI")) {
