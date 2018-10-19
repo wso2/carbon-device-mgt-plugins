@@ -107,9 +107,9 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
             auth.setPreemptiveAuthentication(true);
             String username = tokenValidationProperties.get(WebsocketConstants.USERNAME);
             String password = tokenValidationProperties.get(WebsocketConstants.PASSWORD);
-            auth.setPassword(username);
-            auth.setUsername(password);
-            Options options = client.getOptions();
+            auth.setUsername(username);
+			auth.setPassword(password);
+			Options options = client.getOptions();
             options.setProperty(HTTPConstants.AUTHENTICATE, auth);
             options.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Constants.VALUE_TRUE);
             client.setOptions(options);
