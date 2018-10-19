@@ -1230,7 +1230,7 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>3.1.34</carbon.devicemgt.version>
+        <carbon.devicemgt.version>3.1.45</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[3.1.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
