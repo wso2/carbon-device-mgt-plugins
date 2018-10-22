@@ -107,8 +107,8 @@ public class OAuthTokenValidatorStubFactory extends BasePoolableObjectFactory {
             auth.setPreemptiveAuthentication(true);
             String username = tokenValidationProperties.get(RemoteSessionConstants.USERNAME);
             String password = tokenValidationProperties.get(RemoteSessionConstants.PASSWORD);
-            auth.setPassword(username);
-            auth.setUsername(password);
+            auth.setUsername(username);
+            auth.setPassword(password);
             Options options = client.getOptions();
             options.setProperty(HTTPConstants.AUTHENTICATE, auth);
             options.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Constants.VALUE_TRUE);
