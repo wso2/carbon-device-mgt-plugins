@@ -413,6 +413,11 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
     }
 
     @Override
+    public Operation getNextPendingOperation(DeviceIdentifier deviceIdentifier, long l) throws OperationManagementException {
+        return null;
+    }
+
+    @Override
     public void updateOperation(DeviceIdentifier deviceIdentifier, Operation operation)
             throws OperationManagementException {
 
@@ -472,7 +477,17 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
     }
 
     @Override
+    public List<Activity> getActivitiesUpdatedAfterByUser(long l, String s, int i, int i1) throws OperationManagementException {
+        return null;
+    }
+
+    @Override
     public int getActivityCountUpdatedAfter(long l) throws OperationManagementException {
+        return 0;
+    }
+
+    @Override
+    public int getActivityCountUpdatedAfterByUser(long l, String s) throws OperationManagementException {
         return 0;
     }
 
