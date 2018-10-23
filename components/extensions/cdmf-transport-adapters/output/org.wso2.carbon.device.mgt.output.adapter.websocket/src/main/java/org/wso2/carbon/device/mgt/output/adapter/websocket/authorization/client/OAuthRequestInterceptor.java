@@ -18,15 +18,14 @@ import feign.Client;
 import feign.Feign;
 import feign.FeignException;
 import feign.Logger;
-import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import feign.Response;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
 import feign.slf4j.Slf4jLogger;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfiguration;
@@ -38,12 +37,24 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.PropertyUtils;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 
-
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.*;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Map;
 
@@ -68,24 +79,35 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
 
     private static final String CONNECTION_USERNAME = "username";
     private static final String CONNECTION_PASSWORD = "password";
-    private static final String TOKEN_ENDPOINT = "tokenUrl";
     private static final String TOKEN_REFRESH_TIME_OFFSET = "tokenRefreshTimeOffset";
-    private static final String TOKEN_SCOPES = "scopes";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";
     private static final String TOKEN_ENDPOINT_CONTEXT = "tokenUrl";
     private static String username;
     private static String password;
     private static String tokenEndpoint;
     private static String deviceMgtServerUrl;
-    private static String scopes;
-    private static Map<String, String> globalProperties;
+    private static String clientHash = "";
 
 
     /**
      * Creates an interceptor that authenticates all requests.
      */
     public OAuthRequestInterceptor(Map<String, String> globalProperties) {
-        this.globalProperties = globalProperties;
+        try {
+            InetAddress inetAddress = InetAddress.getLocalHost();
+            String ip = inetAddress.getHostAddress();
+            if (ip != null && ip.equals("127.0.0.1")) {
+                clientHash = ip.replace(".", "");
+            } else {
+                clientHash = RandomStringUtils.random(8, true, true);
+            }
+        } catch (UnknownHostException e) {
+            log.warn("Error occurred while generating unique hash for node.");
+            clientHash = RandomStringUtils.random(8, true, true);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Client hash: " + clientHash);
+        }
         try {
             deviceMgtServerUrl = getDeviceMgtServerUrl(globalProperties);
             refreshTimeOffset = getRefreshTimeOffset(globalProperties) * 1000;
@@ -108,7 +130,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         if (tokenInfo == null) {
             if (apiApplicationKey == null) {
                 ApiRegistrationProfile apiRegistrationProfile = new ApiRegistrationProfile();
-                apiRegistrationProfile.setApplicationName(APPLICATION_NAME);
+                apiRegistrationProfile.setApplicationName(APPLICATION_NAME + "-" + clientHash);
                 apiRegistrationProfile.setIsAllowedToAllDomains(false);
                 apiRegistrationProfile.setIsMappingAnExistingOAuthApp(false);
                 apiRegistrationProfile.setTags(DEVICE_MANAGEMENT_SERVICE_TAG);
