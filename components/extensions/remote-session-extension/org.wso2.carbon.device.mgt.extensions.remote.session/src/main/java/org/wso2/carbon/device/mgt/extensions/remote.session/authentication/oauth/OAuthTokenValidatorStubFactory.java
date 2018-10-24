@@ -116,8 +116,12 @@ public class OAuthTokenValidatorStubFactory extends BasePoolableObjectFactory {
             if (hostURL.getProtocol().equals("https")) {
                 // set up ssl factory since axis2 https notification is used.
                 EasySSLProtocolSocketFactory sslProtocolSocketFactory = createProtocolSocketFactory();
-                Protocol authhttps = new Protocol(hostURL.getProtocol()
-                        , (ProtocolSocketFactory) sslProtocolSocketFactory, hostURL.getPort());
+                int port = hostURL.getPort();
+                if (port == -1) {
+                    port = 443;
+                }
+                Protocol authhttps = new Protocol(hostURL.getProtocol(),
+                        (ProtocolSocketFactory) sslProtocolSocketFactory, port);
                 Protocol.registerProtocol(hostURL.getProtocol(), authhttps);
                 options.setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, authhttps);
             }
