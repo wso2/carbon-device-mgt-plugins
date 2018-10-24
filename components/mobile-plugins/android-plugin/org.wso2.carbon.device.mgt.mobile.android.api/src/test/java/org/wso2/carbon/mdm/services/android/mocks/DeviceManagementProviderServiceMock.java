@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.MonitoringOperation;
+import org.wso2.carbon.device.mgt.common.OperationMonitoringTaskConfig;
 import org.wso2.carbon.device.mgt.common.PaginationRequest;
 import org.wso2.carbon.device.mgt.common.PaginationResult;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
@@ -499,6 +500,11 @@ public class DeviceManagementProviderServiceMock implements DeviceManagementProv
     @Override
     public int getDeviceMonitoringFrequency(String s) {
         return 0;
+    }
+
+    @Override
+    public OperationMonitoringTaskConfig getDeviceMonitoringConfig(String s) {
+        return null;
     }
 
     @Override
