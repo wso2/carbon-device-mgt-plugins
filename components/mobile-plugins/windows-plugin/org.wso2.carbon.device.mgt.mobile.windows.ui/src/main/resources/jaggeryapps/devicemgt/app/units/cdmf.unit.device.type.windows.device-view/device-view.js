@@ -26,7 +26,7 @@ function onRequest(context) {
     if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var response = deviceModule.viewDevice(deviceType, deviceId, owner);
-        if (response["status"] == "success") {
+        if (response["status"] === "success") {
             deviceViewData["deviceFound"] = true;
             deviceViewData["isAuthorized"] = true;
 
@@ -34,6 +34,15 @@ function onRequest(context) {
 
             // creating deviceView information model from filtered device data
             var viewModel = {};
+            var deviceInfoServiceAPI = devicemgtProps["deviceInfoServiceAPI"];
+            var deviceLocationServiceAPI = devicemgtProps["deviceLocationServiceAPI"];
+
+            if (deviceInfoServiceAPI){
+              viewModel["deviceInfoServiceAPI"] = deviceInfoServiceAPI.replace("%device-type%", deviceType)
+            }
+            if (deviceLocationServiceAPI){
+              viewModel['deviceLocationServiceAPI'] = deviceLocationServiceAPI.replace("%device-type%", deviceType)
+            }
             if (filteredDeviceData["type"]) {
                 viewModel["type"] = filteredDeviceData["type"];
                 viewModel.isNotWindows = true;

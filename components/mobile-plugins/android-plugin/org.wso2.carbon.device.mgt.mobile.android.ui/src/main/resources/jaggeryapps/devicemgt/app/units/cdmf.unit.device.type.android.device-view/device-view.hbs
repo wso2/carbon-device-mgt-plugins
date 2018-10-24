@@ -12,11 +12,13 @@
 
         {{#zone "device-details-header"}}
             <h1 class="device-id"
-            data-deviceid="{{device.deviceIdentifier}}"
-            data-type="{{device.type}}"
-            data-ownership="{{device.ownership}}"
-            data-owner="{{device.owner}}"
-            data-status="{{device.status}}">
+                data-deviceid="{{device.deviceIdentifier}}"
+                data-type="{{device.type}}"
+                data-ownership="{{device.ownership}}"
+                data-owner="{{device.owner}}"
+                data-status="{{device.status}}"
+                data-deviceinfoservice="{{device.deviceInfoServiceAPI}}"
+                data-devicelocationservice="{{device.deviceLocationServiceAPI}}">
             {{device.owner}}'s {{device.name}}
               <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
               Firmware Build Date: {{device.osBuildDate}}
