@@ -26,30 +26,42 @@ var InitiateViewOption = null;
     var devStatus = deviceId.data("status");
     var payload = [deviceIdentifier];
     var operationTable;
-    var serviceUrl;
 
-    if (deviceType == "ios") {
-        serviceUrl = "/ios/operation/deviceinfo";
-    } else if (deviceType == "android") {
-        //var serviceUrl = "/mdm-android-agent/operation/device-info";
-        serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
-    }
-
-    if (serviceUrl && ("REMOVED" !== devStatus)) {
+    if ("REMOVED" !== devStatus) {
+      var deviceInfoServiceAPI = deviceId.data("deviceinfoservice");
+      var deviceLocationServiceAPI = deviceId.data("devicelocationservice");
+      if (deviceInfoServiceAPI) {
         invokerUtil.post(
-            serviceUrl,
-            payload,
-            // success-callback
-            function () {
-                $(".panel-body").show();
-            },
-            // error-callback
-            function () {
-                var defaultInnerHTML =
-                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
-                $(".panel-body").append(defaultInnerHTML);
-            }
+          deviceInfoServiceAPI,
+          payload,
+          // success-callback
+          function () {
+            $(".panel-body").show();
+          },
+          // error-callback
+          function () {
+            var defaultInnerHTML =
+              "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
+            $(".panel-body").append(defaultInnerHTML);
+          }
         );
+      }
+      if (deviceLocationServiceAPI) {
+        invokerUtil.post(
+          deviceLocationServiceAPI,
+          payload,
+          // success-callback
+          function () {
+            $(".panel-body").show();
+          },
+          // error-callback
+          function () {
+            var defaultInnerHTML =
+              "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
+            $(".panel-body").append(defaultInnerHTML);
+          }
+        );
+      }
     }
 
 

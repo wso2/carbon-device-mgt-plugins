@@ -24,19 +24,28 @@ function onRequest(context) {
     var deviceViewData = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
     var carbonServer = require("carbon").server;
-    var constants = require("/app/modules/constants.js")
+    var constants = require("/app/modules/constants.js");
 
     if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var response = deviceModule.viewDevice(deviceType, deviceId, owner);
-        if (response["status"] == "success") {
+        if (response["status"] === "success") {
             deviceViewData["deviceFound"] = true;
             deviceViewData["isAuthorized"] = true;
 
             var filteredDeviceData = response["content"];
 
-// creating deviceView information model from filtered device data
+            // creating deviceView information model from filtered device data
             var viewModel = {};
+            var deviceInfoServiceAPI = devicemgtProps["deviceInfoServiceAPI"];
+            var deviceLocationServiceAPI = devicemgtProps["deviceLocationServiceAPI"];
+
+            if (deviceInfoServiceAPI){
+              viewModel["deviceInfoServiceAPI"] = deviceInfoServiceAPI.replace("%device-type%", deviceType)
+            }
+            if (deviceLocationServiceAPI){
+              viewModel['deviceLocationServiceAPI'] = deviceLocationServiceAPI.replace("%device-type%", deviceType)
+            }
             if (filteredDeviceData["type"]) {
                 viewModel["type"] = filteredDeviceData["type"];
                 viewModel.isNotWindows = true;
