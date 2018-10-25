@@ -33,8 +33,6 @@ public class WebsocketConstants {
     public static final String TOKEN_VALIDATION_CONTEX = "/services/OAuth2TokenValidationService";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
-    public static final String TOKEN_PARAM = "token";
-    public static final String META_DATA = "metaData";
-    public static final String PAYLOAD_DATA = "payloadData";
-    public static final String EVENT = "event";
+    public static final String DEVICE_ID = "deviceId";
+    public static final String DEVICE_TYPE = "deviceType";
 }

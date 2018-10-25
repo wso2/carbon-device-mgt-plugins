@@ -21,8 +21,6 @@ import feign.Client;
 import feign.Feign;
 import feign.FeignException;
 import feign.Logger;
-import feign.Request;
-import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
@@ -37,6 +35,7 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.
         .DeviceAccessAuthorizationAdminService;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.DeviceAuthorizationResult;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.constants.WebsocketConstants;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.PropertyUtils;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebSocketSessionRequest;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
@@ -49,7 +48,6 @@ import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -61,8 +59,6 @@ public class DeviceAuthorizer implements Authorizer {
     private static DeviceAccessAuthorizationAdminService deviceAccessAuthorizationAdminService;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";
-    private static final String DEVICE_ID = "deviceId";
-    private static final String DEVICE_TYPE = "deviceType";
     private static Log log = LogFactory.getLog(DeviceAuthorizer.class);
     public DeviceAuthorizer() {
     }
@@ -84,8 +80,8 @@ public class DeviceAuthorizer implements Authorizer {
     public  synchronized boolean isAuthorized(AuthenticationInfo authenticationInfo, Session session, String stream) {
         WebSocketSessionRequest webSocketSessionRequest = new WebSocketSessionRequest(session);
         Map<String, String> queryParams = webSocketSessionRequest.getQueryParamValuePairs();
-        String deviceId = queryParams.get(DEVICE_ID);
-        String deviceType = queryParams.get(DEVICE_TYPE);
+        String deviceId = queryParams.get(WebsocketConstants.DEVICE_ID);
+        String deviceType = queryParams.get(WebsocketConstants.DEVICE_TYPE);
 
         if (deviceId != null && !deviceId.isEmpty() && deviceType != null && !deviceType.isEmpty()) {
 
