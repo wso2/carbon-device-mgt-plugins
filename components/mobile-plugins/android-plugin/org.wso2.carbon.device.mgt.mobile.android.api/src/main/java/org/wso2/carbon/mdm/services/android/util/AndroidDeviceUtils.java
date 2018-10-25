@@ -224,6 +224,9 @@ public class AndroidDeviceUtils {
         // Parsing json string to get applications list.
         if (operation.getOperationResponse() != null) {
             JsonElement jsonElement = new JsonParser().parse(operation.getOperationResponse());
+            if (!jsonElement.isJsonArray() && jsonElement.getAsString().equals("SAME_APPLICATION_LIST")) {
+                return;
+            }
             JsonArray jsonArray = jsonElement.getAsJsonArray();
             Application app;
             List<Application> applications = new ArrayList<>(jsonArray.size());
