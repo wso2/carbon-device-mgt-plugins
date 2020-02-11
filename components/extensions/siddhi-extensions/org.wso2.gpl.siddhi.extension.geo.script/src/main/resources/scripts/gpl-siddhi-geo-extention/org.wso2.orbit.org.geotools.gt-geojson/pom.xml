@@ -85,7 +85,7 @@
     <repositories>
         <repository>
             <id>geomajas-nexus</id>
-            <url>http://apps.geomajas.org/nexus/content/groups/public/</url>
+            <url>https://apps.geomajas.org/nexus/content/groups/public/</url>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>daily</updatePolicy>
@@ -98,7 +98,7 @@
         <repository>
             <id>wso2.gpl.releases</id>
             <name>WSO2 GPL Maven Repository</name>
-            <url>http://maven.wso2.org/nexus/content/repositories/wso2gpl/</url>
+            <url>https://maven.wso2.org/nexus/content/repositories/wso2gpl/</url>
         </repository>
     </distributionManagement>
 
